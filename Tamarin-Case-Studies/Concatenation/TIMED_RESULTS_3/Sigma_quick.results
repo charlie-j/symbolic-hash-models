@@ -1,0 +1,760 @@
+Compressed Results
+{
+    "target_secA": {
+        "AllCol_RO": "false",
+        "CP_Clo_PI1_RO": "timeout",
+        "ACT_CP_Clo_PI2": "timeout",
+        "ACT_CP_Clo_i": "timeout",
+        "CP_Clo_PI1_RO_i": "timeout",
+        "ACT_Clo_IP_PI1_i": "timeout",
+        "ACT_Adv_CP_Clo_PI1_i": "missing",
+        "ACT_Adv_CP_Clo_PI1": "missing",
+        "ACT_Adv_CP_PI1_i": "true",
+        "ACT_CP_Clo_PI1_i": "timeout",
+        "ACT_CP_Clo_PI1": "timeout",
+        "ACT_Adv_Clo_IP_PI1_i": "missing",
+        "ACT_Adv_Clo_IP_PI1": "true",
+        "ACT_Adv_Clo_PI1_i": "true",
+        "ACT_Adv_CP_Clo_PI2_i": "missing",
+        "ACT_Adv_CP_Clo_PI2": "missing",
+        "ACT_CP_Clo_PI2_i": "timeout",
+        "ACT_Adv_Clo_IP_PI2_i": "missing",
+        "ACT_Clo_IP_PI2_i": "timeout",
+        "ACT_Adv_CP_Clo_i": "missing",
+        "ACT_Adv_CP_Clo": "missing",
+        "ACT_CP_Clo": "timeout",
+        "ACT_Adv_Clo_IP_i": "missing",
+        "ACT_Clo_IP_i": "timeout",
+        "ACN_Adv_CP_Clo_PI1_i": "missing",
+        "ACN_Adv_CP_Clo_PI1": "missing",
+        "ACN_CP_Clo_PI1_i": "timeout",
+        "ACN_CP_Clo_PI1": "timeout",
+        "ACN_Adv_Clo_IP_PI1_i": "missing",
+        "ACN_Clo_IP_PI1_i": "timeout",
+        "ACN_Adv_CP_Clo_PI2_i": "missing",
+        "ACN_Adv_CP_Clo_PI2": "missing",
+        "ACN_CP_Clo_PI2_i": "timeout",
+        "ACN_CP_Clo_PI2": "timeout",
+        "ACN_Adv_Clo_IP_PI2_i": "missing",
+        "ACN_Clo_IP_PI2_i": "timeout",
+        "ACN_Adv_CP_Clo_i": "missing",
+        "ACN_Adv_CP_Clo": "missing",
+        "ACN_CP_Clo_i": "timeout",
+        "ACN_CP_Clo": "timeout",
+        "ACN_Adv_Clo_IP_i": "missing",
+        "ACN_Clo_IP_i": "timeout",
+        "Adv_CP_Clo_PI1_RO_i": "missing",
+        "Adv_CP_Clo_PI1_RO": "timeout",
+        "Adv_Clo_IP_PI1_RO_i": "missing",
+        "Clo_IP_PI1_RO_i": "timeout",
+        "Adv_CP_Clo_PI2_RO_i": "missing",
+        "Adv_CP_Clo_PI2_RO": "timeout",
+        "CP_Clo_PI2_RO_i": "timeout",
+        "CP_Clo_PI2_RO": "timeout",
+        "Adv_Clo_IP_PI2_RO_i": "missing",
+        "Clo_IP_PI2_RO_i": "timeout",
+        "Adv_CP_Clo_RO_i": "missing",
+        "Adv_CP_Clo_RO": "timeout",
+        "CP_Clo_RO_i": "timeout",
+        "CP_Clo_RO": "timeout",
+        "Adv_Clo_IP_RO_i": "missing",
+        "Clo_IP_RO_i": "timeout"
+    },
+    "target_secB": {
+        "AllCol_RO": "false",
+        "CP_Clo_PI1_RO": "timeout",
+        "ACT_CP_Clo_PI2": "timeout",
+        "ACT_CP_Clo_i": "timeout",
+        "CP_Clo_PI1_RO_i": "timeout",
+        "ACT_Adv_CP_Clo_PI1_i": "missing",
+        "ACT_Adv_CP_Clo_PI1": "missing",
+        "ACT_Adv_CP_PI1_i": "true",
+        "ACT_CP_Clo_PI1_i": "timeout",
+        "ACT_CP_Clo_PI1": "timeout",
+        "ACT_Adv_Clo_IP_PI1_i": "true",
+        "ACT_Adv_CP_Clo_PI2_i": "missing",
+        "ACT_Adv_CP_Clo_PI2": "missing",
+        "ACT_CP_Clo_PI2_i": "timeout",
+        "ACT_Adv_CP_Clo_i": "missing",
+        "ACT_Adv_CP_Clo": "missing",
+        "ACT_CP_Clo": "timeout",
+        "ACN_Adv_CP_Clo_PI1_i": "missing",
+        "ACN_Adv_CP_Clo_PI1": "missing",
+        "ACN_CP_Clo_PI1_i": "timeout",
+        "ACN_CP_Clo_PI1": "timeout",
+        "ACN_Adv_CP_Clo_PI2_i": "missing",
+        "ACN_Adv_CP_Clo_PI2": "missing",
+        "ACN_CP_Clo_PI2_i": "timeout",
+        "ACN_CP_Clo_PI2": "timeout",
+        "ACN_Adv_CP_Clo_i": "missing",
+        "ACN_Adv_CP_Clo": "missing",
+        "ACN_CP_Clo_i": "timeout",
+        "ACN_CP_Clo": "timeout",
+        "Adv_CP_Clo_PI1_RO_i": "missing",
+        "Adv_CP_Clo_PI1_RO": "timeout",
+        "Adv_CP_Clo_PI2_RO_i": "missing",
+        "Adv_CP_Clo_PI2_RO": "timeout",
+        "CP_Clo_PI2_RO_i": "timeout",
+        "CP_Clo_PI2_RO": "timeout",
+        "Adv_CP_Clo_RO_i": "missing",
+        "Adv_CP_Clo_RO": "timeout",
+        "CP_Clo_RO_i": "timeout",
+        "CP_Clo_RO": "timeout"
+    },
+    "target_agree_B_to_A": {
+        "AllCol_RO": "false",
+        "CP_Clo_PI1_RO": "timeout",
+        "ACT_CP_Clo_PI2": "timeout",
+        "ACT_CP_Clo_i": "timeout",
+        "CP_Clo_PI1_RO_i": "timeout",
+        "ACT_Clo_IP_PI1_i": "timeout",
+        "ACT_Adv_CP_Clo_PI1_i": "missing",
+        "ACT_Adv_CP_Clo_PI1": "missing",
+        "ACT_Adv_CP_PI1_i": "true",
+        "ACT_CP_Clo_PI1_i": "timeout",
+        "ACT_CP_Clo_PI1": "timeout",
+        "ACT_Adv_Clo_IP_PI1_i": "missing",
+        "ACT_Adv_Clo_IP_PI1": "true",
+        "ACT_Adv_Clo_PI1_i": "true",
+        "ACT_Adv_CP_Clo_PI2_i": "missing",
+        "ACT_Adv_CP_Clo_PI2": "missing",
+        "ACT_CP_Clo_PI2_i": "timeout",
+        "ACT_Adv_Clo_IP_PI2_i": "missing",
+        "ACT_Clo_IP_PI2_i": "timeout",
+        "ACT_Adv_CP_Clo_i": "missing",
+        "ACT_Adv_CP_Clo": "missing",
+        "ACT_CP_Clo": "timeout",
+        "ACT_Adv_Clo_IP_i": "missing",
+        "ACT_Clo_IP_i": "timeout",
+        "ACN_Adv_CP_Clo_PI1_i": "missing",
+        "ACN_Adv_CP_Clo_PI1": "missing",
+        "ACN_CP_Clo_PI1_i": "timeout",
+        "ACN_CP_Clo_PI1": "timeout",
+        "ACN_Adv_Clo_IP_PI1_i": "missing",
+        "ACN_Clo_IP_PI1_i": "timeout",
+        "ACN_Adv_CP_Clo_PI2_i": "missing",
+        "ACN_Adv_CP_Clo_PI2": "missing",
+        "ACN_CP_Clo_PI2_i": "timeout",
+        "ACN_CP_Clo_PI2": "timeout",
+        "ACN_Adv_Clo_IP_PI2_i": "missing",
+        "ACN_Clo_IP_PI2_i": "timeout",
+        "ACN_Adv_CP_Clo_i": "missing",
+        "ACN_Adv_CP_Clo": "missing",
+        "ACN_CP_Clo_i": "timeout",
+        "ACN_CP_Clo": "timeout",
+        "ACN_Adv_Clo_IP_i": "missing",
+        "ACN_Clo_IP_i": "timeout",
+        "Adv_CP_Clo_PI1_RO_i": "missing",
+        "Adv_CP_Clo_PI1_RO": "timeout",
+        "Adv_Clo_IP_PI1_RO_i": "missing",
+        "Clo_IP_PI1_RO_i": "timeout",
+        "Adv_CP_Clo_PI2_RO_i": "missing",
+        "Adv_CP_Clo_PI2_RO": "timeout",
+        "CP_Clo_PI2_RO_i": "timeout",
+        "CP_Clo_PI2_RO": "timeout",
+        "Adv_Clo_IP_PI2_RO_i": "missing",
+        "Clo_IP_PI2_RO_i": "timeout",
+        "Adv_CP_Clo_RO_i": "missing",
+        "Adv_CP_Clo_RO": "timeout",
+        "CP_Clo_RO_i": "timeout",
+        "CP_Clo_RO": "timeout",
+        "Adv_Clo_IP_RO_i": "missing",
+        "Clo_IP_RO_i": "timeout"
+    },
+    "target_agree_A_to_B_or_Bbis": {
+        "AllCol_RO": "false",
+        "CP_Clo_PI1_RO": "timeout",
+        "ACT_CP_Clo_PI2": "timeout",
+        "ACT_CP_Clo_i": "timeout",
+        "CP_Clo_PI1_RO_i": "timeout",
+        "ACT_Adv_CP_Clo_PI1_i": "missing",
+        "ACT_Adv_CP_Clo_PI1": "missing",
+        "ACT_Adv_CP_PI1_i": "true",
+        "ACT_CP_Clo_PI1_i": "timeout",
+        "ACT_CP_Clo_PI1": "timeout",
+        "ACT_Adv_Clo_IP_PI1_i": "true",
+        "ACT_Adv_CP_Clo_PI2_i": "missing",
+        "ACT_Adv_CP_Clo_PI2": "missing",
+        "ACT_CP_Clo_PI2_i": "timeout",
+        "ACT_Adv_CP_Clo_i": "missing",
+        "ACT_Adv_CP_Clo": "missing",
+        "ACT_CP_Clo": "timeout",
+        "ACN_Adv_CP_Clo_PI1_i": "missing",
+        "ACN_Adv_CP_Clo_PI1": "missing",
+        "ACN_CP_Clo_PI1_i": "timeout",
+        "ACN_CP_Clo_PI1": "timeout",
+        "ACN_Adv_CP_Clo_PI2_i": "missing",
+        "ACN_Adv_CP_Clo_PI2": "missing",
+        "ACN_CP_Clo_PI2_i": "timeout",
+        "ACN_CP_Clo_PI2": "timeout",
+        "ACN_Adv_CP_Clo_i": "missing",
+        "ACN_Adv_CP_Clo": "missing",
+        "ACN_CP_Clo_i": "timeout",
+        "ACN_CP_Clo": "timeout",
+        "Adv_CP_Clo_PI1_RO_i": "missing",
+        "Adv_CP_Clo_PI1_RO": "timeout",
+        "Adv_CP_Clo_PI2_RO_i": "missing",
+        "Adv_CP_Clo_PI2_RO": "timeout",
+        "CP_Clo_PI2_RO_i": "timeout",
+        "CP_Clo_PI2_RO": "timeout",
+        "Adv_CP_Clo_RO_i": "missing",
+        "Adv_CP_Clo_RO": "timeout",
+        "CP_Clo_RO_i": "timeout",
+        "CP_Clo_RO": "timeout"
+    }
+}
+TOTAL Tamarin calls: 362
+TOTAL execution time forSigma/sigma.spthy: 302.0777688026428
+Timed Results
+{
+    "target_secA": {
+        "AllCol_RO": [
+            "false",
+            11.71140432357788
+        ],
+        "CP_Clo_PI1_RO": [
+            "timeout",
+            30
+        ],
+        "ACT_CP_Clo_PI2": [
+            "timeout",
+            30
+        ],
+        "ACT_CP_Clo_i": [
+            "timeout",
+            30
+        ],
+        "CP_Clo_PI1_RO_i": [
+            "timeout",
+            30
+        ],
+        "ACT_Clo_IP_PI1_i": [
+            "timeout",
+            30
+        ],
+        "ACT_Adv_CP_Clo_PI1_i": "missing",
+        "ACT_Adv_CP_Clo_PI1": "missing",
+        "ACT_Adv_CP_PI1_i": [
+            "true",
+            5.978636980056763
+        ],
+        "ACT_CP_Clo_PI1_i": [
+            "timeout",
+            30
+        ],
+        "ACT_CP_Clo_PI1": [
+            "timeout",
+            30
+        ],
+        "ACT_Adv_Clo_IP_PI1_i": "missing",
+        "ACT_Adv_Clo_IP_PI1": [
+            "true",
+            11.05665636062622
+        ],
+        "ACT_Adv_Clo_PI1_i": [
+            "true",
+            4.783152341842651
+        ],
+        "ACT_Adv_CP_Clo_PI2_i": "missing",
+        "ACT_Adv_CP_Clo_PI2": "missing",
+        "ACT_CP_Clo_PI2_i": [
+            "timeout",
+            30
+        ],
+        "ACT_Adv_Clo_IP_PI2_i": "missing",
+        "ACT_Clo_IP_PI2_i": [
+            "timeout",
+            30
+        ],
+        "ACT_Adv_CP_Clo_i": "missing",
+        "ACT_Adv_CP_Clo": "missing",
+        "ACT_CP_Clo": [
+            "timeout",
+            30
+        ],
+        "ACT_Adv_Clo_IP_i": "missing",
+        "ACT_Clo_IP_i": [
+            "timeout",
+            30
+        ],
+        "ACN_Adv_CP_Clo_PI1_i": "missing",
+        "ACN_Adv_CP_Clo_PI1": "missing",
+        "ACN_CP_Clo_PI1_i": [
+            "timeout",
+            30
+        ],
+        "ACN_CP_Clo_PI1": [
+            "timeout",
+            30
+        ],
+        "ACN_Adv_Clo_IP_PI1_i": "missing",
+        "ACN_Clo_IP_PI1_i": [
+            "timeout",
+            30
+        ],
+        "ACN_Adv_CP_Clo_PI2_i": "missing",
+        "ACN_Adv_CP_Clo_PI2": "missing",
+        "ACN_CP_Clo_PI2_i": [
+            "timeout",
+            30
+        ],
+        "ACN_CP_Clo_PI2": [
+            "timeout",
+            30
+        ],
+        "ACN_Adv_Clo_IP_PI2_i": "missing",
+        "ACN_Clo_IP_PI2_i": [
+            "timeout",
+            30
+        ],
+        "ACN_Adv_CP_Clo_i": "missing",
+        "ACN_Adv_CP_Clo": "missing",
+        "ACN_CP_Clo_i": [
+            "timeout",
+            30
+        ],
+        "ACN_CP_Clo": [
+            "timeout",
+            30
+        ],
+        "ACN_Adv_Clo_IP_i": "missing",
+        "ACN_Clo_IP_i": [
+            "timeout",
+            30
+        ],
+        "Adv_CP_Clo_PI1_RO_i": "missing",
+        "Adv_CP_Clo_PI1_RO": [
+            "timeout",
+            30
+        ],
+        "Adv_Clo_IP_PI1_RO_i": "missing",
+        "Clo_IP_PI1_RO_i": [
+            "timeout",
+            30
+        ],
+        "Adv_CP_Clo_PI2_RO_i": "missing",
+        "Adv_CP_Clo_PI2_RO": [
+            "timeout",
+            30
+        ],
+        "CP_Clo_PI2_RO_i": [
+            "timeout",
+            30
+        ],
+        "CP_Clo_PI2_RO": [
+            "timeout",
+            30
+        ],
+        "Adv_Clo_IP_PI2_RO_i": "missing",
+        "Clo_IP_PI2_RO_i": [
+            "timeout",
+            30
+        ],
+        "Adv_CP_Clo_RO_i": "missing",
+        "Adv_CP_Clo_RO": [
+            "timeout",
+            30
+        ],
+        "CP_Clo_RO_i": [
+            "timeout",
+            30
+        ],
+        "CP_Clo_RO": [
+            "timeout",
+            30
+        ],
+        "Adv_Clo_IP_RO_i": "missing",
+        "Clo_IP_RO_i": [
+            "timeout",
+            30
+        ]
+    },
+    "target_secB": {
+        "AllCol_RO": [
+            "false",
+            1.0088515281677246
+        ],
+        "CP_Clo_PI1_RO": [
+            "timeout",
+            30
+        ],
+        "ACT_CP_Clo_PI2": [
+            "timeout",
+            30
+        ],
+        "ACT_CP_Clo_i": [
+            "timeout",
+            30
+        ],
+        "CP_Clo_PI1_RO_i": [
+            "timeout",
+            30
+        ],
+        "ACT_Adv_CP_Clo_PI1_i": "missing",
+        "ACT_Adv_CP_Clo_PI1": "missing",
+        "ACT_Adv_CP_PI1_i": [
+            "true",
+            1.1919636726379395
+        ],
+        "ACT_CP_Clo_PI1_i": [
+            "timeout",
+            30
+        ],
+        "ACT_CP_Clo_PI1": [
+            "timeout",
+            30
+        ],
+        "ACT_Adv_Clo_IP_PI1_i": [
+            "true",
+            2.8498294353485107
+        ],
+        "ACT_Adv_CP_Clo_PI2_i": "missing",
+        "ACT_Adv_CP_Clo_PI2": "missing",
+        "ACT_CP_Clo_PI2_i": [
+            "timeout",
+            30
+        ],
+        "ACT_Adv_CP_Clo_i": "missing",
+        "ACT_Adv_CP_Clo": "missing",
+        "ACT_CP_Clo": [
+            "timeout",
+            30
+        ],
+        "ACN_Adv_CP_Clo_PI1_i": "missing",
+        "ACN_Adv_CP_Clo_PI1": "missing",
+        "ACN_CP_Clo_PI1_i": [
+            "timeout",
+            30
+        ],
+        "ACN_CP_Clo_PI1": [
+            "timeout",
+            30
+        ],
+        "ACN_Adv_CP_Clo_PI2_i": "missing",
+        "ACN_Adv_CP_Clo_PI2": "missing",
+        "ACN_CP_Clo_PI2_i": [
+            "timeout",
+            30
+        ],
+        "ACN_CP_Clo_PI2": [
+            "timeout",
+            30
+        ],
+        "ACN_Adv_CP_Clo_i": "missing",
+        "ACN_Adv_CP_Clo": "missing",
+        "ACN_CP_Clo_i": [
+            "timeout",
+            30
+        ],
+        "ACN_CP_Clo": [
+            "timeout",
+            30
+        ],
+        "Adv_CP_Clo_PI1_RO_i": "missing",
+        "Adv_CP_Clo_PI1_RO": [
+            "timeout",
+            30
+        ],
+        "Adv_CP_Clo_PI2_RO_i": "missing",
+        "Adv_CP_Clo_PI2_RO": [
+            "timeout",
+            30
+        ],
+        "CP_Clo_PI2_RO_i": [
+            "timeout",
+            30
+        ],
+        "CP_Clo_PI2_RO": [
+            "timeout",
+            30
+        ],
+        "Adv_CP_Clo_RO_i": "missing",
+        "Adv_CP_Clo_RO": [
+            "timeout",
+            30
+        ],
+        "CP_Clo_RO_i": [
+            "timeout",
+            30
+        ],
+        "CP_Clo_RO": [
+            "timeout",
+            30
+        ]
+    },
+    "target_agree_B_to_A": {
+        "AllCol_RO": [
+            "false",
+            11.828733205795288
+        ],
+        "CP_Clo_PI1_RO": [
+            "timeout",
+            30
+        ],
+        "ACT_CP_Clo_PI2": [
+            "timeout",
+            30
+        ],
+        "ACT_CP_Clo_i": [
+            "timeout",
+            30
+        ],
+        "CP_Clo_PI1_RO_i": [
+            "timeout",
+            30
+        ],
+        "ACT_Clo_IP_PI1_i": [
+            "timeout",
+            30
+        ],
+        "ACT_Adv_CP_Clo_PI1_i": "missing",
+        "ACT_Adv_CP_Clo_PI1": "missing",
+        "ACT_Adv_CP_PI1_i": [
+            "true",
+            5.37762188911438
+        ],
+        "ACT_CP_Clo_PI1_i": [
+            "timeout",
+            30
+        ],
+        "ACT_CP_Clo_PI1": [
+            "timeout",
+            30
+        ],
+        "ACT_Adv_Clo_IP_PI1_i": "missing",
+        "ACT_Adv_Clo_IP_PI1": [
+            "true",
+            9.896358728408813
+        ],
+        "ACT_Adv_Clo_PI1_i": [
+            "true",
+            4.44285249710083
+        ],
+        "ACT_Adv_CP_Clo_PI2_i": "missing",
+        "ACT_Adv_CP_Clo_PI2": "missing",
+        "ACT_CP_Clo_PI2_i": [
+            "timeout",
+            30
+        ],
+        "ACT_Adv_Clo_IP_PI2_i": "missing",
+        "ACT_Clo_IP_PI2_i": [
+            "timeout",
+            30
+        ],
+        "ACT_Adv_CP_Clo_i": "missing",
+        "ACT_Adv_CP_Clo": "missing",
+        "ACT_CP_Clo": [
+            "timeout",
+            30
+        ],
+        "ACT_Adv_Clo_IP_i": "missing",
+        "ACT_Clo_IP_i": [
+            "timeout",
+            30
+        ],
+        "ACN_Adv_CP_Clo_PI1_i": "missing",
+        "ACN_Adv_CP_Clo_PI1": "missing",
+        "ACN_CP_Clo_PI1_i": [
+            "timeout",
+            30
+        ],
+        "ACN_CP_Clo_PI1": [
+            "timeout",
+            30
+        ],
+        "ACN_Adv_Clo_IP_PI1_i": "missing",
+        "ACN_Clo_IP_PI1_i": [
+            "timeout",
+            30
+        ],
+        "ACN_Adv_CP_Clo_PI2_i": "missing",
+        "ACN_Adv_CP_Clo_PI2": "missing",
+        "ACN_CP_Clo_PI2_i": [
+            "timeout",
+            30
+        ],
+        "ACN_CP_Clo_PI2": [
+            "timeout",
+            30
+        ],
+        "ACN_Adv_Clo_IP_PI2_i": "missing",
+        "ACN_Clo_IP_PI2_i": [
+            "timeout",
+            30
+        ],
+        "ACN_Adv_CP_Clo_i": "missing",
+        "ACN_Adv_CP_Clo": "missing",
+        "ACN_CP_Clo_i": [
+            "timeout",
+            30
+        ],
+        "ACN_CP_Clo": [
+            "timeout",
+            30
+        ],
+        "ACN_Adv_Clo_IP_i": "missing",
+        "ACN_Clo_IP_i": [
+            "timeout",
+            30
+        ],
+        "Adv_CP_Clo_PI1_RO_i": "missing",
+        "Adv_CP_Clo_PI1_RO": [
+            "timeout",
+            30
+        ],
+        "Adv_Clo_IP_PI1_RO_i": "missing",
+        "Clo_IP_PI1_RO_i": [
+            "timeout",
+            30
+        ],
+        "Adv_CP_Clo_PI2_RO_i": "missing",
+        "Adv_CP_Clo_PI2_RO": [
+            "timeout",
+            30
+        ],
+        "CP_Clo_PI2_RO_i": [
+            "timeout",
+            30
+        ],
+        "CP_Clo_PI2_RO": [
+            "timeout",
+            30
+        ],
+        "Adv_Clo_IP_PI2_RO_i": "missing",
+        "Clo_IP_PI2_RO_i": [
+            "timeout",
+            30
+        ],
+        "Adv_CP_Clo_RO_i": "missing",
+        "Adv_CP_Clo_RO": [
+            "timeout",
+            30
+        ],
+        "CP_Clo_RO_i": [
+            "timeout",
+            30
+        ],
+        "CP_Clo_RO": [
+            "timeout",
+            30
+        ],
+        "Adv_Clo_IP_RO_i": "missing",
+        "Clo_IP_RO_i": [
+            "timeout",
+            30
+        ]
+    },
+    "target_agree_A_to_B_or_Bbis": {
+        "AllCol_RO": [
+            "false",
+            0.9584660530090332
+        ],
+        "CP_Clo_PI1_RO": [
+            "timeout",
+            30
+        ],
+        "ACT_CP_Clo_PI2": [
+            "timeout",
+            30
+        ],
+        "ACT_CP_Clo_i": [
+            "timeout",
+            30
+        ],
+        "CP_Clo_PI1_RO_i": [
+            "timeout",
+            30
+        ],
+        "ACT_Adv_CP_Clo_PI1_i": "missing",
+        "ACT_Adv_CP_Clo_PI1": "missing",
+        "ACT_Adv_CP_PI1_i": [
+            "true",
+            1.2103266716003418
+        ],
+        "ACT_CP_Clo_PI1_i": [
+            "timeout",
+            30
+        ],
+        "ACT_CP_Clo_PI1": [
+            "timeout",
+            30
+        ],
+        "ACT_Adv_Clo_IP_PI1_i": [
+            "true",
+            3.3447582721710205
+        ],
+        "ACT_Adv_CP_Clo_PI2_i": "missing",
+        "ACT_Adv_CP_Clo_PI2": "missing",
+        "ACT_CP_Clo_PI2_i": [
+            "timeout",
+            30
+        ],
+        "ACT_Adv_CP_Clo_i": "missing",
+        "ACT_Adv_CP_Clo": "missing",
+        "ACT_CP_Clo": [
+            "timeout",
+            30
+        ],
+        "ACN_Adv_CP_Clo_PI1_i": "missing",
+        "ACN_Adv_CP_Clo_PI1": "missing",
+        "ACN_CP_Clo_PI1_i": [
+            "timeout",
+            30
+        ],
+        "ACN_CP_Clo_PI1": [
+            "timeout",
+            30
+        ],
+        "ACN_Adv_CP_Clo_PI2_i": "missing",
+        "ACN_Adv_CP_Clo_PI2": "missing",
+        "ACN_CP_Clo_PI2_i": [
+            "timeout",
+            30
+        ],
+        "ACN_CP_Clo_PI2": [
+            "timeout",
+            30
+        ],
+        "ACN_Adv_CP_Clo_i": "missing",
+        "ACN_Adv_CP_Clo": "missing",
+        "ACN_CP_Clo_i": [
+            "timeout",
+            30
+        ],
+        "ACN_CP_Clo": [
+            "timeout",
+            30
+        ],
+        "Adv_CP_Clo_PI1_RO_i": "missing",
+        "Adv_CP_Clo_PI1_RO": [
+            "timeout",
+            30
+        ],
+        "Adv_CP_Clo_PI2_RO_i": "missing",
+        "Adv_CP_Clo_PI2_RO": [
+            "timeout",
+            30
+        ],
+        "CP_Clo_PI2_RO_i": [
+            "timeout",
+            30
+        ],
+        "CP_Clo_PI2_RO": [
+            "timeout",
+            30
+        ],
+        "Adv_CP_Clo_RO_i": "missing",
+        "Adv_CP_Clo_RO": [
+            "timeout",
+            30
+        ],
+        "CP_Clo_RO_i": [
+            "timeout",
+            30
+        ],
+        "CP_Clo_RO": [
+            "timeout",
+            30
+        ]
+    }
+}

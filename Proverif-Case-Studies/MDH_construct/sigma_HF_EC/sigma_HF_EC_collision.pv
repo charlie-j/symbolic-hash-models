@@ -1,0 +1,16 @@
+(* Sigma' case study with the MDH construct using computation function
+   This file consider unbounded concatenation of blocks under the hash.
+   Allow Chosen Prefix Collision.
+*)
+
+expand macro_SIGMA(equal_hash_col,System).
+
+process
+  System |
+  ! in(c,p1:bitstring);
+    in(c,p2:bitstring);
+    in(c,h1:bitstring);
+    in(c,h2:bitstring);
+    if eq_hash(buildH(p1),h1) && eq_hash(buildH(p2),h2) then
+    out(c,CPcol1(h1,h2));
+    out(c,CPcol2(h1,h2))

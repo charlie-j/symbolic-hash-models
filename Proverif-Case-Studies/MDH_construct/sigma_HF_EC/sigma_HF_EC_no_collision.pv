@@ -1,0 +1,8 @@
+(* Sigma' case study with the MDH construct using computation function
+   This file consider unbounded concatenation of blocks under the hash.
+   Does not allow Chosen Prefix Collision.
+*)
+expand macro_SIGMA(equal_hash,System).
+
+process
+   System

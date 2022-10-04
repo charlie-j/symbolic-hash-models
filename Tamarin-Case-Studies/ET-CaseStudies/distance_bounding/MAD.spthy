@@ -1,0 +1,200 @@
+/*
+		Implementation of MAD protocol
+		https://doi.org/10.1145/986858.986862
+
+		Version: One way authentication, i.e. prover authenticates to verifier
+*/
+
+theory MAD
+
+begin
+
+functions:	H/2, MAC/5, XOR/2 //doesn't terminate with built-in xor
+
+builtins: 	asymmetric-encryption
+
+equations: 	XOR(XOR(x,y), y) = x
+
+// -------------------- Protocol Rules -------------------- //
+rule Prov1:
+		[ Fr(~s),
+			Fr(~s2) ]
+	--[ Start(~s) ]->
+		[ Send($P, H(~s, ~s2)),
+			ProverState1($P, ~s, ~s2),
+			MayLeak($P, ~s) ]
+
+rule Ver1:			//fast phase starts
+		[ Fr(~b),
+			In(comm) ]
+	--[ Start(~b), 
+			Send($V, ~b) ]->
+		[ Out(~b), 
+			VerifierState1($V, ~b, comm) ]
+
+rule Prov2:
+		let resp = XOR(s, b)
+		in
+		[ ProverState1(P, s, s2),
+			In(b) ]
+	-->
+		[ Send(P, resp), 
+			ProverState2(P, s, s2, b) ]
+
+rule Ver2:			//fast phase ends
+		[ VerifierState1(V, b, comm),
+			Recv(V, resp) ]
+	-->
+		[ VerifierState2(V, b, comm, resp) ]
+
+rule Prov3:
+		let mac = MAC(k, $V, P, b, s)
+				msg = <s2, mac>
+		in
+		[ ProverState2(P, s, s2, b),
+			!Shk($V, P, k) ]
+	--[ End(s) ]->
+		[ Send(P, msg) ]
+
+rule Ver3:
+		let mac = MAC(k, V, $P, b, s)
+				msg = <s2, mac>
+				resp = XOR(s,b)
+		in
+		[ VerifierState2(V, b, H(s, s2), resp),
+			In(msg),
+			!Shk(V, $P, k)]
+	--[ DBSec(V, $P, b, resp),
+			End(b) ]->
+		[ ]
+
+//GENERIC CODE AFTER THIS LINE
+///////////////////////////////////////////////////////////////////////
+
+// ------------------- Key Generation and Compromise --------------- //
+rule LtkGen:
+	[ Fr(~k) ]--[ Once($X) ]->[	!Ltk($X, ~k), !Pk($X, pk(~k)), Out(pk(~k)) ]
+
+rule ShkGen:
+	[ Fr(~k) ]--[ Once(<$X, $Y>) ]->[ !Shk($X, $Y, ~k) ]
+
+rule LtkReveal:
+	[ !Ltk($X, k) ]--[ !Compromise($X) ]->[ Out(k), !Compromise($X) ]
+
+rule ShkRevealX:
+	[ !Shk($X, $Y, k) ]--[ !Compromise($X) ]->[ Out(k), !Compromise($X) ]
+
+rule ShkRevealY:
+	[ !Shk($X, $Y, k) ]--[ !Compromise($Y) ]->[ Out(k), !Compromise($Y) ]
+
+// ------------------- Network and Adversary  ----------------------- //
+rule DBInject:
+	[ In(m), !Compromise($X) ]-->[ Send($X, m) ]
+
+rule DBSend:
+	[ Send($X, m) ]--[ Send($X, m), Action($X) ]->[ Net(m), Out(m) ]
+
+rule DBRecv:
+	[ Net(m) ]--[ Action($Y), Recv($Y, m) ]->[ Recv($Y, m) ]
+
+// -------------------- Collusion (Leakage) Rule -------------------- //
+rule Leak:
+	[ MayLeak($X, m) ]--[ Action($X), Collusion() ]->[ Out(m) ]
+
+// ------------------- Reachability & Sanity Check ------------------ //
+// Clean trace exists
+lemma reachability:
+	exists-trace
+	"
+	Ex V P chal resp #i /*#i2*/ #j #k #l.
+		Send(V, chal)@i &
+		//Recv(P, chal)@i2 &
+		Send(P, resp)@j &
+		Recv(V, resp)@k &
+		DBSec(V, P, chal, resp)@l &
+		i<j & j<k & k<l &
+		not (Ex C #r. !Compromise(C)@r) &
+		not (Ex #c. Collusion()@c)
+	"
+
+// Each run id is unique
+lemma unique_runid:
+	"All x #i #j. (Start(x)@i & Start(x)@j) ==> #i=#j"
+
+// Each run ends after it starts
+lemma end_after_start:
+	"All x #j. End(x)@j ==> Ex #i. Start(x)@i & (#i=#j|i<j)"
+
+// For each DBSec claim there was a fast phase before it
+// *	Should this lemma fail, then the results for 
+//		the security lemmas might be wrong
+lemma fast_before_claim:
+	"
+	All V P chal resp #l. DBSec(V, P, chal, resp)@l ==>
+		(Ex #i #j. Send(V, chal)@i & Recv(V, resp)@j & i<l & j<l)	|
+		(Ex #j. !Compromise(V)@j)		
+	"
+// ------------------------ Restrictions ---------------------------- //
+// Only traces where Once(x) happened once
+restriction once:
+	"All x #i #j. (Once(x)@i & Once(x)@j) ==> #i=#j"
+
+/*
+// Runs can always be completed
+restriction completion:
+	"
+	All run #i. Start(run)@i ==> Ex #j. End(run)@j
+	"
+*/
+// ----------------- Expiry Rule and Restrictions ------------------- //
+rule SetExpiry:
+	[ ]--[ Expiry(), Once('expiry') ]->[ ]
+
+restriction no_collusion_after_expiry:
+	"All #i #j. (Expiry()@i & Collusion()@j) ==> j<i"
+
+restriction sessions_complete_before_expiry:
+	"All x #i #e. (Start(x)@i & Expiry()@e & i<e) ==> Ex #j. (End(x)@j & j<e)"
+
+
+////////////////////////////////////////////////////////////////////////
+// ------------------------ Security Lemmas ------------------------- //
+////////////////////////////////////////////////////////////////////////
+
+
+// dbsec provided that neither the prover nor verifier are compromised
+// * 	If this lemma fails, then there's a mafia fraud
+// * 	If this lemma holds and dbsec fails, then there's a 
+//		distance fraud, or a distance hijacking, or both
+lemma dbsec_hnst:
+	"
+	All V P chal resp #l. 
+		DBSec(V, P, chal, resp)@l ==>
+			(Ex #i #j #k.
+				Send(V, chal)@i &
+				Action(P)@j &
+				Recv(V, resp)@k &
+				i<j & j<k
+			) |
+			(Ex #j. !Compromise(V)@j) |
+			(Ex #j. !Compromise(P)@j) |
+			(Ex #j. Collusion()@j) //this is just to drop traces w. collusion
+	"
+
+// post-collusion security w.r.t dbsec_hnst
+// *	If this lemma holds and dbsec_hnst_collusion fails,
+//		then there's a terrorist fraud
+lemma dbsec_hnst_star:
+	"
+	All V P chal resp #e #l.
+		(DBSec(V, P, chal, resp)@l & Expiry()@e & e<l) ==>
+			(Ex #i #j #k.
+				Send(V, chal)@i &
+				Action(P)@j &
+				Recv(V, resp)@k &
+				i<j & j<k
+			) |
+			(Ex #j. !Compromise(V)@j) |
+			(Ex #j. !Compromise(P)@j)
+	"
+end

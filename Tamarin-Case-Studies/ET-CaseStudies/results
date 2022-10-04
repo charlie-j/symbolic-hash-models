@@ -1,0 +1,379 @@
+Tesla
+    
+    new_pre
+        Tesla/new_pre/TESLA_Scheme1_v2.spthy
+    
+            lemma authentic: False in 11 steps
+            lemma authentic_reachable: True in 13 steps
+    
+        Tesla/new_pre/TESLA_Scheme1.spthy
+    
+            lemma authentic: False in 13 steps
+            lemma authentic_reachable: True in 13 steps
+    
+    pre
+        Tesla/pre/TESLA_Scheme1_v2.spthy
+    
+            lemma authentic: False in 11 steps
+            lemma authentic_reachable: True in 14 steps
+    
+        Tesla/pre/TESLA_Scheme1.spthy
+    
+            lemma authentic: True in 199 steps
+            lemma authentic_reachable: True in 14 steps
+    
+    
+    
+ake
+    
+    pre
+        ake/pre/NAXOS_eCK.spthy
+    
+            lemma eCK_key_secrecy: True in 136 steps
+    
+        ake/pre/DHKEA_NAXOS_C_eCK_PFS_partially_matching.spthy
+    
+            lemma execution_match_same_key_NAXOS: True in 13 steps
+            lemma eCK_key_secrecy: True in 797 steps
+    
+        ake/pre/UM_one_pass_fix.spthy
+    
+            lemma key_agreement_reachable: True in 10 steps
+            lemma CK_secure: True in 170 steps
+    
+        ake/pre/DHKEA_NAXOS_C_eCK_PFS_keyreg_partially_matching.spthy
+    
+            lemma execution_match_same_key_NAXOS: True in 13 steps
+            lemma eCK_key_secrecy: True in 809 steps
+    
+        ake/pre/UM_three_pass.spthy
+    
+            lemma key_agreement_reachable: True in 14 steps
+            lemma CK_secure_UM3: True in 1170 steps
+    
+        ake/pre/UM_three_pass_combined_fixed.spthy
+    
+            lemma key_agreement_reachable: True in 14 steps
+            lemma CK_secure_UM3: True in 417 steps
+            lemma CK_secure: True in 142 steps
+    
+    
+    
+distance_bounding
+    
+    new_pre
+        distance_bounding/new_pre/Meadows2.spthy
+    
+            lemma reachability: True in 12 steps
+            lemma unique_runid: True in 12 steps
+            lemma end_after_start: True in 9 steps
+            lemma fast_before_claim: True in 6 steps
+            lemma dbsec: False in 11 steps
+            lemma dbsec_hnst: False in 11 steps
+            lemma dbsec_hnst_star: False in 14 steps
+    
+        distance_bounding/new_pre/CRCS.spthy
+    
+            lemma reachability: True in 12 steps
+            lemma unique_runid: True in 14 steps
+            lemma end_after_start: True in 9 steps
+            lemma fast_before_claim: True in 6 steps
+            lemma dbsec: True in 198 steps
+            lemma dbsec_hnst: True in 73 steps
+            lemma dbsec_hnst_star: True in 147 steps
+    
+        distance_bounding/new_pre/Munilla.spthy
+    
+            lemma reachability: True in 12 steps
+            lemma unique_runid: True in 14 steps
+            lemma end_after_start: True in 9 steps
+            lemma fast_before_claim: True in 6 steps
+            lemma dbsec: False in 12 steps
+            lemma dbsec_hnst: False in 12 steps
+            lemma dbsec_hnst_star: False in 14 steps
+    
+        distance_bounding/new_pre/MAD.spthy
+    
+            lemma reachability: True in 13 steps
+            lemma unique_runid: True in 12 steps
+            lemma end_after_start: True in 11 steps
+            lemma fast_before_claim: True in 8 steps
+            lemma dbsec_hnst: False in 12 steps
+            lemma dbsec_hnst_star: False in 14 steps
+    
+        distance_bounding/new_pre/CRCS_RevealSign.spthy
+    
+            lemma reachability: True in 13 steps
+            lemma unique_runid: True in 14 steps
+            lemma end_after_start: True in 9 steps
+            lemma fast_before_claim: True in 6 steps
+            lemma dbsec: False in 10 steps
+            lemma dbsec_hnst: False in 12 steps
+            lemma dbsec_hnst_star: False in 14 steps
+    
+        distance_bounding/new_pre/Meadows3.spthy
+    
+            lemma reachability: True in 12 steps
+            lemma unique_runid: True in 12 steps
+            lemma end_after_start: True in 9 steps
+            lemma fast_before_claim: True in 6 steps
+            lemma dbsec: False in 8 steps
+            lemma dbsec_hnst: False in 8 steps
+            lemma dbsec_hnst_star: False in 10 steps
+    
+        distance_bounding/new_pre/Meadows.spthy
+    
+            lemma reachability: True in 12 steps
+            lemma unique_runid: True in 12 steps
+            lemma end_after_start: True in 9 steps
+            lemma fast_before_claim: True in 6 steps
+            lemma dbsec_hnst: False in 12 steps
+            lemma dbsec_hnst_star: False in 15 steps
+    
+        distance_bounding/new_pre/KA.spthy
+    
+            lemma reachability: True in 12 steps
+            lemma unique_runid: True in 14 steps
+            lemma end_after_start: True in 6 steps
+            lemma fast_before_claim: True in 7 steps
+            lemma dbsec: True in 75 steps
+            lemma dbsec_hnst: True in 69 steps
+            lemma dbsec_hnst_star: False in 16 steps
+    
+    pre
+        distance_bounding/pre/Munilla.spthy
+    
+            lemma reachability: True in 12 steps
+            lemma unique_runid: True in 14 steps
+            lemma end_after_start: True in 9 steps
+            lemma fast_before_claim: True in 6 steps
+            lemma dbsec: True in 152 steps
+            lemma dbsec_hnst: True in 93 steps
+            lemma dbsec_hnst_star: True in 168 steps
+    
+        distance_bounding/pre/CRCS_RevealSign.spthy
+    
+            lemma reachability: True in 13 steps
+            lemma unique_runid: True in 14 steps
+            lemma end_after_start: True in 9 steps
+            lemma fast_before_claim: True in 6 steps
+            lemma dbsec: False in 10 steps
+            lemma dbsec_hnst: True in 73 steps
+            lemma dbsec_hnst_star: True in 147 steps
+    
+        distance_bounding/pre/Meadows3.spthy
+    
+            lemma reachability: True in 12 steps
+            lemma unique_runid: True in 12 steps
+            lemma end_after_start: True in 9 steps
+            lemma fast_before_claim: True in 6 steps
+            lemma dbsec: True in 47 steps
+            lemma dbsec_hnst: True in 44 steps
+            lemma dbsec_hnst_star: True in 118 steps
+    
+        distance_bounding/pre/MAD.spthy
+    
+            lemma reachability: True in 13 steps
+            lemma unique_runid: True in 12 steps
+            lemma end_after_start: True in 11 steps
+            lemma fast_before_claim: True in 8 steps
+            lemma dbsec_hnst: True in 102 steps
+            lemma dbsec_hnst_star: True in 224 steps
+    
+        distance_bounding/pre/Meadows.spthy
+    
+            lemma reachability: True in 12 steps
+            lemma unique_runid: True in 12 steps
+            lemma end_after_start: True in 9 steps
+            lemma fast_before_claim: True in 6 steps
+            lemma dbsec_hnst: True in 265 steps
+            lemma dbsec_hnst_star: True in 474 steps
+    
+        distance_bounding/pre/Meadows2.spthy
+    
+            lemma reachability: True in 12 steps
+            lemma unique_runid: True in 12 steps
+            lemma end_after_start: True in 9 steps
+            lemma fast_before_claim: True in 6 steps
+            lemma dbsec: True in 68 steps
+            lemma dbsec_hnst: True in 56 steps
+            lemma dbsec_hnst_star: True in 130 steps
+    
+        distance_bounding/pre/CRCS.spthy
+    
+            lemma reachability: True in 12 steps
+            lemma unique_runid: True in 14 steps
+            lemma end_after_start: True in 9 steps
+            lemma fast_before_claim: True in 6 steps
+            lemma dbsec: True in 198 steps
+            lemma dbsec_hnst: True in 73 steps
+            lemma dbsec_hnst_star: True in 147 steps
+    
+        distance_bounding/pre/KA.spthy
+    
+            lemma reachability: True in 12 steps
+            lemma unique_runid: True in 14 steps
+            lemma end_after_start: True in 6 steps
+            lemma fast_before_claim: True in 7 steps
+            lemma dbsec: True in 47 steps
+            lemma dbsec_hnst: True in 41 steps
+            lemma dbsec_hnst_star: True in 106 steps
+    
+    
+    
+original
+    
+    new_pre
+        original/new_pre/telegram_2HF.spthy
+    
+            lemma secserv: True in 18 steps
+            lemma hon_ex: True in 16 steps
+            lemma dis_ex: True in 14 steps
+            lemma auth: True in 176 steps
+            lemma secBoth: True in 2371 steps
+            lemma secC: True in 222 steps
+    
+        original/new_pre/sigma.spthy
+    
+            lemma helper1: True in 6 steps
+            lemma helper2: True in 4 steps
+            lemma agree_A_to_B_false: True in 5 steps
+            lemma target_secA: True in 8 steps
+            lemma target_secB: True in 8 steps
+            lemma target_agree_B_to_A: True in 5 steps
+            lemma target_agree_A_to_B_or_Bbis: True in 5 steps
+            lemma execB: True in 9 steps
+            lemma execB2: True in 17 steps
+            lemma execA: True in 11 steps
+            lemma execA2: True in 21 steps
+    
+        original/new_pre/Flickr.spthy
+    
+            lemma Sanity: True in 8 steps
+            lemma KeySecrecy: False in 4 steps
+            lemma helping_client: True in 8 steps
+            lemma helping_server: True in 8 steps
+            lemma authenticate: True in 2 steps
+            lemma authenticatePermissions: False in 8 steps
+    
+        original/new_pre/ikeV2_HF_EC_nocookie.spthy
+    
+            lemma agree_from_A_to_B_nonces_A_B: False in 10 steps
+            lemma agree_from_B_to_A_nonces_A_B: True in 15 steps
+            lemma agree_from_A_to_B_nonces_A: True in 8 steps
+            lemma agree_from_A_to_B_all: False in 10 steps
+            lemma agree_from_B_to_A_all: True in 15 steps
+            lemma agree_from_A_to_B_nonces_A_messages: False in 10 steps
+            lemma secrecy_key_A: True in 14 steps
+            lemma secrecy_key_B: True in 14 steps
+    
+        original/new_pre/ikeV2_HF_EC.spthy
+    
+            lemma agree_from_A_to_B_nonces_A_B: False in 11 steps
+            lemma agree_from_B_to_A_nonces_A_B: True in 17 steps
+            lemma agree_from_A_to_B_nonces_A: True in 8 steps
+            lemma agree_from_A_to_B_all: False in 11 steps
+            lemma agree_from_B_to_A_all: True in 17 steps
+            lemma agree_from_A_to_B_nonces_A_messages: False in 11 steps
+            lemma secrecy_key_A: True in 17 steps
+            lemma secrecy_key_B: True in 18 steps
+    
+        original/new_pre/telegram_with_HEB.spthy
+    
+            lemma secserv: True in 18 steps
+            lemma hon_ex: True in 13 steps
+            lemma dis_ex: True in 15 steps
+            lemma secBoth: True in 10 steps
+            lemma t_auth: True in 5 steps
+            lemma t_secC: True in 45 steps
+    
+        original/new_pre/sshV2_HF_EC.spthy
+    
+            lemma sanity: True in 15 steps
+            lemma secrecy_key_A: True in 10 steps
+            lemma secrecy_key_B: True in 29 steps
+            lemma trans_auth: True in 9 steps
+            lemma trans_hash_auth: True in 9 steps
+            lemma agree_keys: True in 9 steps
+            lemma agree_keys_all: True in 9 steps
+            lemma agree_Bkey_2: True in 5 steps
+            lemma agree_Bkey_all_2: True in 5 steps
+    
+    pre
+        original/pre/sigma.spthy
+    
+            lemma helper1: True in 6 steps
+            lemma helper2: True in 4 steps
+            lemma agree_A_to_B_false: True in 5 steps
+            lemma target_secA: True in 8 steps
+            lemma target_secB: True in 8 steps
+            lemma target_agree_B_to_A: True in 5 steps
+            lemma target_agree_A_to_B_or_Bbis: True in 5 steps
+            lemma execB: True in 9 steps
+            lemma execB2: True in 17 steps
+            lemma execA: True in 11 steps
+            lemma execA2: True in 21 steps
+    
+        original/pre/Flickr.spthy
+    
+            lemma Sanity: True in 8 steps
+            lemma KeySecrecy: True in 2 steps
+            lemma helping_client: True in 8 steps
+            lemma helping_server: True in 8 steps
+            lemma authenticate: True in 2 steps
+            lemma authenticatePermissions: True in 4 steps
+    
+        original/pre/telegram_2HF.spthy
+    
+            lemma secserv: True in 16 steps
+            lemma hon_ex: True in 16 steps
+            lemma dis_ex: True in 14 steps
+            lemma auth: True in 176 steps
+            lemma secBoth: True in 2019 steps
+            lemma secC: True in 186 steps
+    
+        original/pre/telegram_with_HEB.spthy
+    
+            lemma secserv: True in 16 steps
+            lemma hon_ex: True in 13 steps
+            lemma dis_ex: True in 15 steps
+            lemma secBoth: True in 8 steps
+            lemma t_auth: True in 5 steps
+            lemma t_secC: True in 25 steps
+    
+        original/pre/ikeV2_HF_EC_nocookie.spthy
+    
+            lemma agree_from_A_to_B_nonces_A_B: False in 10 steps
+            lemma agree_from_B_to_A_nonces_A_B: True in 15 steps
+            lemma agree_from_A_to_B_nonces_A: True in 8 steps
+            lemma agree_from_A_to_B_all: False in 10 steps
+            lemma agree_from_B_to_A_all: True in 15 steps
+            lemma agree_from_A_to_B_nonces_A_messages: False in 10 steps
+            lemma secrecy_key_A: True in 14 steps
+            lemma secrecy_key_B: True in 14 steps
+    
+        original/pre/ikeV2_HF_EC.spthy
+    
+            lemma agree_from_A_to_B_nonces_A_B: False in 11 steps
+            lemma agree_from_B_to_A_nonces_A_B: True in 17 steps
+            lemma agree_from_A_to_B_nonces_A: True in 8 steps
+            lemma agree_from_A_to_B_all: False in 11 steps
+            lemma agree_from_B_to_A_all: True in 17 steps
+            lemma agree_from_A_to_B_nonces_A_messages: False in 11 steps
+            lemma secrecy_key_A: True in 17 steps
+            lemma secrecy_key_B: True in 18 steps
+    
+        original/pre/sshV2_HF_EC.spthy
+    
+            lemma sanity: True in 15 steps
+            lemma secrecy_key_A: True in 10 steps
+            lemma secrecy_key_B: True in 29 steps
+            lemma trans_auth: True in 9 steps
+            lemma trans_hash_auth: True in 9 steps
+            lemma agree_keys: True in 9 steps
+            lemma agree_keys_all: True in 9 steps
+            lemma agree_Bkey_2: True in 5 steps
+            lemma agree_Bkey_all_2: True in 5 steps
+    
+    
+    

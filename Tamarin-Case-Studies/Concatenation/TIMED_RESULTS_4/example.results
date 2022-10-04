@@ -1,0 +1,218 @@
+Compressed Results
+{
+    "TypeFlawAttack_Resistance": {
+        "ACT": "false",
+        "ACN_Adv_AllCol_Clo_i": "true"
+    },
+    "GuessingHash_Resistance": {
+        "ACN": "false",
+        "AllCol_RO": "false",
+        "Adv_CP_Clo_PI1_RO_i": "true"
+    },
+    "Collision_Resistance": {
+        "Ex_RO": "false",
+        "IP_RO": "false",
+        "ACT_Adv_Clo_i": "true"
+    },
+    "PreImage_Resistance": {
+        "PI1_RO": "false",
+        "PI2_RO_i": "false",
+        "ACT_Adv_CP_Clo_PI2": "true",
+        "ACT_Adv_CP_Clo_i": "true",
+        "ACT_Adv_Clo_Ex_i": "true"
+    },
+    "SndPreImage_Resistance": {
+        "PI2_RO": "false",
+        "ACT_Adv_CP_Clo_i": "true",
+        "ACT_Adv_Clo_Ex_i": "true"
+    },
+    "ChosenPrefixCollision_Resistance": {
+        "CP_RO": "false",
+        "ACT_Adv_Clo_IP_PI1_i": "true"
+    },
+    "IdentiticalPrefixCollision_Resistance": {
+        "IP_RO": "false",
+        "ACT_Adv_Clo_PI1_i": "true"
+    },
+    "LengthExtensionCol_Resistance": {
+        "AllCol_RO": "false",
+        "Clo_Ex_RO": "false",
+        "Clo_IP_RO": "false",
+        "ACT_Adv_CP_PI1_i": "true",
+        "ACT_Adv_Clo_i": "true"
+    },
+    "LengthExtensionAdv_Resistance": {
+        "ACN": "false",
+        "Adv_RO": "false",
+        "AllCol_RO": "false",
+        "RO_i": "false",
+        "CP_PI1_RO": "true",
+        "Clo_PI1_RO": "false",
+        "CP_Clo_PI2_RO": "true"
+    },
+    "iLeaks_Resistance": {
+        "RO_i": "false",
+        "ACT_Adv_AllCol_Clo": "true"
+    }
+}
+TOTAL Tamarin calls: 460
+TOTAL execution time forExample_Hash_Library_usage.spthy: 59.74232602119446
+Timed Results
+{
+    "TypeFlawAttack_Resistance": {
+        "ACT": [
+            "false",
+            0.21891164779663086
+        ],
+        "ACN_Adv_AllCol_Clo_i": [
+            "true",
+            0.17732453346252441
+        ]
+    },
+    "GuessingHash_Resistance": {
+        "ACN": [
+            "false",
+            0.2472231388092041
+        ],
+        "AllCol_RO": [
+            "false",
+            0.26755571365356445
+        ],
+        "Adv_CP_Clo_PI1_RO_i": [
+            "true",
+            0.5306406021118164
+        ]
+    },
+    "Collision_Resistance": {
+        "Ex_RO": [
+            "false",
+            0.2887537479400635
+        ],
+        "IP_RO": [
+            "false",
+            0.30881714820861816
+        ],
+        "ACT_Adv_Clo_i": [
+            "true",
+            0.18723011016845703
+        ]
+    },
+    "PreImage_Resistance": {
+        "PI1_RO": [
+            "false",
+            0.3282942771911621
+        ],
+        "PI2_RO_i": [
+            "false",
+            0.47893786430358887
+        ],
+        "ACT_Adv_CP_Clo_PI2": [
+            "true",
+            0.28841471672058105
+        ],
+        "ACT_Adv_CP_Clo_i": [
+            "true",
+            0.2576446533203125
+        ],
+        "ACT_Adv_Clo_Ex_i": [
+            "true",
+            0.2778129577636719
+        ]
+    },
+    "SndPreImage_Resistance": {
+        "PI2_RO": [
+            "false",
+            0.29877519607543945
+        ],
+        "ACT_Adv_CP_Clo_i": [
+            "true",
+            0.2991211414337158
+        ],
+        "ACT_Adv_Clo_Ex_i": [
+            "true",
+            0.27894139289855957
+        ]
+    },
+    "ChosenPrefixCollision_Resistance": {
+        "CP_RO": [
+            "false",
+            1.2322134971618652
+        ],
+        "ACT_Adv_Clo_IP_PI1_i": [
+            "true",
+            0.40058207511901855
+        ]
+    },
+    "IdentiticalPrefixCollision_Resistance": {
+        "IP_RO": [
+            "false",
+            0.630760908126831
+        ],
+        "ACT_Adv_Clo_PI1_i": [
+            "true",
+            0.29918384552001953
+        ]
+    },
+    "LengthExtensionCol_Resistance": {
+        "AllCol_RO": [
+            "false",
+            0.3185126781463623
+        ],
+        "Clo_Ex_RO": [
+            "false",
+            0.3882176876068115
+        ],
+        "Clo_IP_RO": [
+            "false",
+            0.7987499237060547
+        ],
+        "ACT_Adv_CP_PI1_i": [
+            "true",
+            0.3578474521636963
+        ],
+        "ACT_Adv_Clo_i": [
+            "true",
+            0.1669912338256836
+        ]
+    },
+    "LengthExtensionAdv_Resistance": {
+        "ACN": [
+            "false",
+            0.2773411273956299
+        ],
+        "Adv_RO": [
+            "false",
+            0.417722225189209
+        ],
+        "AllCol_RO": [
+            "false",
+            0.33789587020874023
+        ],
+        "RO_i": [
+            "false",
+            0.5178537368774414
+        ],
+        "CP_PI1_RO": [
+            "true",
+            0.4887216091156006
+        ],
+        "Clo_PI1_RO": [
+            "false",
+            0.6306710243225098
+        ],
+        "CP_Clo_PI2_RO": [
+            "true",
+            0.6508886814117432
+        ]
+    },
+    "iLeaks_Resistance": {
+        "RO_i": [
+            "false",
+            0.4188687801361084
+        ],
+        "ACT_Adv_AllCol_Clo": [
+            "true",
+            0.24792695045471191
+        ]
+    }
+}

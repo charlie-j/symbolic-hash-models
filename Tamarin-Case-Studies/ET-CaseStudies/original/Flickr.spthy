@@ -1,0 +1,152 @@
+/*
+ *  Author: ~
+ *  Model Name: Flickr.spthy
+ *  Status: DEVELOPMENTAL
+ *
+ *  Comments: Minimal FLickr model
+ */
+
+
+ // tamarin-prover-concat interactive Flickr.spthy -D=FreshDomain -D=CR -D=LengthExtension
+
+
+/* The approach to this length extension attack is rule based
+and does only work to a fixed depth. This is no general model
+for length extensions */
+
+theory Flickr
+begin
+
+
+functions: algo/0
+functions: h/2
+
+
+
+
+// Initialize Server and Client and their shared secret
+rule Initialize:
+    [ In($S), In($C), Fr(~k) ]
+    --[ Init($S, $C, ~k), Key(~k) ]->
+    [ F_ServerState(~k, $S)
+    , ClientState(~k, $C) ]
+
+// The next two rules model the Client sending commands to the server
+// and compute a MAC using their shared secret and some hash function
+// The MAC is computed with MAC(k,data) = MD5(k|data)
+// -> Only a valid user should be able to authenticate to the server
+// with the correct permissions
+
+rule APICallFirst:
+    let
+      MAC = h(algo(),<~k,<$C,per>>) 
+    in 
+    [ In(per),ClientState(~k, $C) ]
+  --[ SendAPICall($C,per),
+      SendToServer($C,~k) ]->
+    [ Out(<$C,per,MAC>), ClientState(~k, $C)  
+    ]
+
+
+// The Server checks the validity of the Clients request using canocial
+// MAC verification
+rule ReceiveAPICall:
+    let
+      Verify = h(algo(),<~k,<$C,per>>) 
+    in
+    [ In(<$C,per,MAC>), F_ServerState(~k, $S) ]
+  --[ Processing($S,$C,per), 
+      Compare(Verify,MAC),
+      ReceiveFromClient($S,~k) ]->
+    [ F_ServerState(~k, $S)
+    ]
+
+
+
+//
+// Restrictions
+//
+
+restriction MACValidation:
+"
+All A B #j . Compare(A,B)@j ==> A=B
+"
+
+restriction Twoparties:
+"
+All A B k #j . Init(A,B,k)@j ==> not(A=B)
+"
+
+
+
+
+
+
+//
+// Lemmas
+//
+
+
+
+lemma Sanity: exists-trace
+"
+(Ex c S C #i.
+  Processing(S,C,c) @ #i 
+) 
+"
+
+lemma KeySecrecy[reuse]:
+"
+All k #i.
+  Key(k)@#i
+  ==> 
+  not (Ex #j. K(k)@j)
+"
+
+
+lemma helping_client[use_induction,reuse]:
+"
+(All C k #i.
+  SendToServer(C,k)@#i
+  ==>
+  Ex S #j.
+  Init(S,C,k)@#j
+  )
+"
+
+lemma helping_server[use_induction,reuse,hide_lemma=helping_client,heuristic=S]:
+"
+(All S k #i.
+  ReceiveFromClient(S,k)@#i
+  ==>
+  Ex C #j.
+  Init(S,C,k)@#j
+  )
+"
+
+lemma authenticate:
+"
+(All S C k #l #i.
+	SendToServer(C,k)@#i
+  &
+  ReceiveFromClient(S,k)@#l
+  &
+  #i<#l
+	==>
+	Ex #j.
+	Init(S, C, k) @ #j
+	)    
+"
+
+lemma authenticatePermissions[hide_lemma=helping_client]:
+"
+(All p S C #i.
+  Processing(S,C,p) @ #i 
+  ==>
+  Ex #j.
+  SendAPICall(C,p) @ #j
+  )    
+"
+
+
+end

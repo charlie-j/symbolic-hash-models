@@ -1,0 +1,320 @@
+/*
+ *  Author: ~
+ *  Model Name: HashDefinitions.spthy
+ *  Status: DEVELOPMENTAL
+ *
+ *  Comments:
+ */
+
+theory HashDefinitions
+begin
+
+// Choose Defintion below
+
+// Random Oracle
+#ifdef RO
+functions: h/2
+#endif
+
+// Not Pre
+#ifdef pre
+functions: h/2, pre/2
+equations: h(k,pre(k,y)) = y
+#endif
+
+// Not Pre
+#ifdef pre_alt
+functions: h/2, pre/2
+equations: h(k,pre(k,h(k,))) = h(k,x)
+#endif
+
+// Not Always Pre
+#ifdef apre
+functions: h/2, pre/1, fixed_key/0
+equations: h(fixed_key(),pre(y)) = y
+#endif
+
+// Not Everywhere Pre
+#ifdef epre
+functions: h/2, pre/1, img/0
+equations: h(k,pre(k)) = img()
+#endif
+
+// Not Pre NEW
+#ifdef newpre
+functions: h/2, pre/2, pre_conc/2
+equations: h(k,pre(k,x)) = x, pre_conc(k,h(k,y))=y
+#endif
+
+// Not Always Pre NEW
+#ifdef newapre
+functions: h/2, pre/1, fixed_key/0, pre_conc/1
+equations: h(fixed_key(),pre(y)) = y, pre_conc(h(fixed_key(),x))=x
+#endif
+
+// Not Everywhere Pre NEW
+#ifdef newepre
+functions: h/2, pre/2, preimg/0, pre_conc/2
+equations: h(k,pre(k,h(k,preimg()))) = preimg(), pre_conc(k,h(k,preimg()))=preimg()
+#endif
+
+// Not Coll
+#ifdef coll
+functions: h/2, coll_1/1, coll_2/1
+equations: h(k,coll_1(k)) = h(k,coll_2(k))
+#endif
+
+// Not Sec
+#ifdef sec
+functions: h/2, sec/3
+equations: h(k,sec(h(k,m),k,m)) = h(k,m)
+#endif
+
+// Not Always Sec
+#ifdef asec
+functions: h/2, sec/2, fixed_key/0
+equations: h(fixed_key(),sec(h(fixed_key(),m),m)) = h(fixed_key(),m)
+#endif
+
+// Not Everywhere Sec
+#ifdef esec
+functions: h/2, sec/1, fixed_mes/0
+equations: h(k,sec(k)) = h(k,fixed_mes())
+#endif
+
+
+
+
+// all collapses to one point. This actually makes everything false, except OWF.
+// functions: h/2, cons/0
+// equations: h(k,m)=cons()
+
+// fully-chosen collisions -> this does not break CR, but I don't know why... Intuitively, this makes it so that all h(k,m)=h(k,m2), so it should work as the above restriction.
+//functions: h/2, coll/3
+//equations: h(k,coll(k,m2,h(k,m))) = h(k,m), coll(k,m2,h(k,m))=m2
+
+
+//
+//
+// TESTS
+//
+//
+
+
+
+rule Pre_TestInput1:
+    [ Fr(~m) , Fr(~k) ]
+  --[ PreHonestHash(h(~k,~m))]->
+    [ Out(h(~k,~m)), Out(~k) ]
+
+rule Pre_TestInput2:
+    [ In(h(k,~m)), In(m2), In(k) ]
+  --[ TestPreimage(h(k,~m),h(k,m2)) ]->
+    [ ]
+
+rule OWF_TestInput1:
+    [ Fr(~m) , Fr(~k) ]
+  --[ OWFHonestHash(h(~k,~m),~m)]->
+    [ Out(h(~k,~m)), Out(~k) ]
+
+
+
+rule AlwaysPre_TestInput1:
+    [ Fr(~m), In(k) ]
+  --[ AlwaysPreHonestHash(h(k,~m))]->
+    [ Out(h(k,~m)) ]
+
+rule AlwaysPre_TestInput2:
+    [ In(h(k,~m)), In(m2), In(k) ]
+  --[ TestAlwaysPreimage(h(k,~m),h(k,m2)) ]->
+    [ ]
+
+
+rule EverywherePre_TestInput1:
+    [ Fr(~k), In(h1) ]
+  --[ EverywherePreimageCreateKey(~k,h1)]->
+    [ Out(~k) ]
+
+rule EverywherePre_TestInput2:
+    [ In(k), In(h1), In(m) ]
+  --[ TestEverywherePreimage(k,h1,h(k,m))]->
+    [ ]
+
+
+rule Collisions_TestInput1:
+    [ Fr(~k) ]
+  --[ CollHonestKey(~k)]->
+    [ Out(~k) ]
+
+rule Collisions_TestInput2:
+    [ In(k), In(m1), In(m2) ]
+  --[ Compare(m1,m2), TestCollisions(k,h(k,m1),h(k,m2))]->
+    [ ]
+
+
+rule Sec_TestInput1:
+    [ Fr(~m) , Fr(~k) ]
+  --[ SecHonestHash(h(~k,~m))]->
+    [ Out(h(~k,~m)), Out(~k), Out(~m)]
+
+rule Sec_TestInput2:
+    [ In(h(k,m)), In(m2), In(k) ]
+  --[ Compare(m,m2), TestSecPreimage(h(k,m),h(k,m2)) ]->
+    [ ]
+
+
+rule AlwaysSec_TestInput1:
+    [ Fr(~m) , In(k) ]
+  --[ AlwaysSecHonestHash(h(k,~m))]->
+    [ Out(h(k,~m)), Out(k), Out(~m)]
+
+rule AlwaysSec_TestInput2:
+    [ In(h(k,m)), In(m2), In(k) ]
+  --[ Compare(m,m2), TestAlwaysSecPreimage(h(k,m),h(k,m2)) ]->
+    [ ]
+
+
+rule EverywhereSec_TestInput1:
+    [ Fr(~k) , In(m) ]
+  --[ EverywhereSecHonestHash(h(~k,m))]->
+    [ Out(h(~k,m)), Out(~k), Out(m)]
+
+rule EverywhereSec_TestInput2:
+    [ In(h(k,m)), In(m2), In(k) ]
+  --[ Compare(m,m2), TestEverywhereSecPreimage(h(k,m),h(k,m2)) ]->
+    [ ]
+
+//
+//
+// Restrictions FOR TESTS
+//
+//
+
+
+
+restriction Unequal:
+"
+All m1 m2 #i. Compare(m1,m2)@i ==> not m1=m2
+"
+
+
+
+restriction PreImage:
+"
+All h1 h2 #i. TestPreimage(h1,h2)@i ==> Ex #j. PreHonestHash(h1) @ #j & j<i
+"
+
+restriction AlwaysPreImage:
+"
+All h1 h2 #i. TestAlwaysPreimage(h1,h2)@i ==> Ex #j. AlwaysPreHonestHash(h1) @ #j & j<i
+"
+
+restriction EverywherePreImage:
+"
+All k h1 h2 #i. TestEverywherePreimage(k,h1,h2)@i ==> Ex #j. EverywherePreimageCreateKey(k,h1) @ #j & j<i
+"
+
+restriction Collisions:
+"
+All k h1 h2 #i. TestCollisions(k,h1,h2)@i ==> Ex #j. CollHonestKey(k) @ #j & j<i
+"
+
+restriction SecPreimage:
+"
+All h1 h2 #i. TestSecPreimage(h1,h2)@i ==> Ex #j. SecHonestHash(h1) @ #j & j<i
+"
+
+restriction AlwaysSecPreimage:
+"
+All h1 h2 #i. TestAlwaysSecPreimage(h1,h2)@i ==> Ex #j. AlwaysSecHonestHash(h1) @ #j & j<i
+"
+
+restriction EverywhereSecPreimage:
+"
+All h1 h2 #i. TestEverywhereSecPreimage(h1,h2)@i ==> Ex #j. EverywhereSecHonestHash(h1) @ #j & j<i
+"
+//
+//
+// LEMMAS FOR TESTS
+//
+//
+
+// preimage resistance
+lemma Test_Pre: exists-trace
+"
+( Ex h1 h2 #i.
+  TestPreimage(h1,h2) @ #i
+  & h1=h2
+  )
+"
+
+
+// full preimage resistance
+/*lemma Test_OWF: exists-trace
+"
+( Ex h1 m #i #j.
+   OWFHonestHash(h1,m)@ #i & KU(m)@#j
+  )
+"*/
+
+
+// always preimage resistance
+lemma Test_Always_Pre: exists-trace
+"
+( Ex h1 h2 #i.
+  TestAlwaysPreimage(h1,h2) @ #i
+  & h1=h2
+  )
+"
+
+
+// everywhere preimage resistance
+lemma Test_Everywhere_Pre: exists-trace
+"
+( Ex k h1 h2 #i.
+  TestEverywherePreimage(k,h1,h2) @ #i
+  & h1=h2
+  )
+"
+
+
+// collision resistance
+lemma Test_Collision: exists-trace
+"
+( Ex k h1 h2 #i.
+  TestCollisions(k,h1,h2) @ #i
+  & h1=h2
+  )
+"
+
+
+// second preimage resistance
+lemma Test_Sec: exists-trace
+"
+( Ex h1 h2 #i.
+  TestSecPreimage(h1,h2) @ #i
+  & h1=h2
+  )
+"
+
+
+// always second preimage resistance
+lemma Test_Always_Sec: exists-trace
+"
+( Ex h1 h2 #i.
+  TestAlwaysSecPreimage(h1,h2) @ #i
+  & h1=h2
+  )
+"
+
+
+// everywhere second preimage resistance
+lemma Test_Everywhere_Sec: exists-trace
+"
+( Ex h1 h2 #i.
+  TestEverywhereSecPreimage(h1,h2) @ #i
+  & h1=h2
+  )
+"
+
+end

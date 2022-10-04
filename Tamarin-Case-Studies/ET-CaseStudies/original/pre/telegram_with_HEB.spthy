@@ -1,0 +1,179 @@
+theory Telegram
+
+/*
+
+As described in Fig 57 of
+
+
+https://mtpsym.github.io/paper.pdf
+
+
+As operation N = p*q is simply meant to model a proof of work, we simply model it as N=p + q, multiset
+
+RSA is asymmetric encryption, AES is symmetric.
+
+// only auth and secC potentially false
+
+==============================================================================
+summary of summaries:
+
+analyzed: telegram_HEB.spthy
+
+  WARNING: 6 wellformedness check failed!
+           The analysis results might be wrong!
+
+  orig (all-traces): analysis incomplete (1 steps)
+  secserv (all-traces): analysis incomplete (1 steps)
+  hon_ex (exists-trace): analysis incomplete (1 steps)
+  dis_ex (exists-trace): analysis incomplete (1 steps)
+  secBoth (all-traces): analysis incomplete (1 steps)
+  t_auth (all-traces): verified (927 steps)
+  t_secC (all-traces): verified (927 steps)
+
+==============================================================================
+─( 17:58:30 )─< ~/Tests >──────────────────────────────────────────────────────────────────────[ 0 ]─
+c01chja@Colossus02 $ timeout 10m tamarin-prover-concat telegram_HEB.spthy +RTS -N10 -RTS -D=SndPreImage -D=LengthExtension -D=CPcol --prove=t_*
+
+
+
+*/
+begin
+
+builtins: symmetric-encryption, asymmetric-encryption, diffie-hellman
+
+// kdf is apparently h(x||y)
+
+rule initRSAkeys:
+[Fr(~skS)]--[Single(), Key(~skS)]->[S1(~skS), !C1(pk(~skS)), Out(pk(~skS))]
+
+
+#ifdef single
+
+restriction single:
+ "All #i #j. Single()@i & Single()@j ==> #i = #j"
+
+#endif
+
+// always collapseh, whic is useless
+functions: algo/0
+functions: h/2, pre/2
+equations: h(k,pre(k,y)) = y
+functions: algo2/0
+functions: h2/2, pre2/2
+equations: h2(k,pre2(k,y)) = y
+
+rule C_sendn:
+[!C1(pk(~skS)),Fr(~n)]-->[Out(~n),C2(pk(~skS),~n)]
+
+rule S_sendN:
+  let N=<~p, ~q> in
+[S1(skS),In(n),Fr(~s),Fr(~p),Fr(~q)]-->[Out(<n,~s,N>),S2(skS,~s,n,N)]
+
+
+rule C_RSA:
+  let hr = h(algo(),<<p,q>,p,q,~n,s,~nprime>)
+      rsa = aenc(<hr,<p,q>,p,q,~n,s,~nprime> ,pk(~skS)) in// in Fig 57, pr is padding
+[C2(pk(~skS),~n), In(<~n,s,<p,q>>), Fr(~nprime)]--[Key(~nprime)]->[Out(<~n,s,p,q,rsa>), C3(pk(~skS),~n,s,p,q,~nprime)]
+
+
+rule S_AES:
+  let tkey =<nprime , ~s>
+      hr = h(algo(),<bigNprime,p,q,n,~s,nprime> )
+      hs = h(algo(),<n,~s, 'g', 'g'^(~a), ~ts>)
+      key = h2(algo2(),tkey)
+in
+[ S2(skS,~s,n,bigN), In(<n,~s,p,q, aenc( <hr,bigNprime, p,q,n,~s,nprime> ,pk(skS))>)
+, Fr(~ts) // a timestamp on the server
+, Fr(~a) // DH exponent
+]--[
+Eq(<p,q>,bigN) // remark that paper says no check on bigN and bigNprime
+]->[Out(<n,~s, senc( <hs,n,~s, 'g',  'g'^(~a), ~ts>  , key)>),
+S3(skS,~s,n,bigN, nprime, ~a, key)
+
+
+]  // we remove p', used to agree on a group, and fix the group to 'g'
+
+
+
+rule C_AES:
+  let tkey = <~nprime,s>
+      gA = 'g'^~a // force honest group
+      hs = h(algo(),<~n,s, 'g', gA, ts>)
+      hc = h(algo(),<~n,s,'retryid', 'g','g'^~b>)
+      key = h2(algo2(),tkey)
+  in
+ [C3(pk(~skS),~n,s,p,q,~nprime) , In(<~n,s, senc( <hs,~n,s, 'g', gA, ts >, key)>),Fr(~b) ]--[]->[
+Out( <~n,s , senc( < hc,~n,s, 'retryid', 'g'^~b>, key) >),
+C4(pk(~skS),~n,s,p,q,~nprime, gA, ~b,key)
+
+]
+
+
+rule S_AN:
+  let
+      gB = 'g'^~b
+      hc = h(algo(),<n,~s,'retryid', 'g',gB>)
+      thkey = gB^~a
+      hkey = h2(algo2(),thkey)
+      thnprime = <nprime ,hkey>
+      hnprime = h2(algo2(),thnprime)
+  in
+[S3(skS,~s,n,bigN, nprime, ~a, key),
+In( <n, ~s, senc(< hc, n,~s, 'retryid', gB>,key)>)
+]--[KeyS(gB^~a)
+]->[ Out( <n,~s, hnprime> ) ]
+
+
+rule C_final:
+  let
+     thkey = gA^~b
+     hkey = h2(algo2(),thkey)
+     thnprime = <~nprime, hkey>
+     hnprime = h2(algo2(),thnprime)
+  in
+[C4(pk(~skS),~n,s,p,q,~nprime, gA, ~b,key), In(<~n,s,hnprime>)]--[KeyC( gA^~b)
+]->[]
+
+
+restriction eq:
+"All x y #i. Eq(x,y)@i ==> x=y"
+
+
+lemma secserv[sources]:
+"not (Ex key #i #j. Key(key)@i & KU(key)@j)"
+
+lemma hon_ex:
+ exists-trace
+ "Ex key #i #j. KeyC(key)@i & KeyS(key)@j"
+
+
+lemma dis_ex: // attacker can communicate with server
+ exists-trace
+ "Ex key #i #j. K(key)@i & KeyS(key)@j"
+
+
+
+lemma secBoth[reuse]: //share key is secret
+ "not(
+ Ex key #i #j #l.
+   KeyC(key)@i &
+   KeyS(key)@j &
+   K(key)@l
+)"
+
+
+lemma t_auth: // C can only communicate with server
+"All key #i. KeyC(key)@i ==> Ex #j. KeyS(key)@j"
+
+
+
+lemma t_secC: //share key is secret
+ "not(
+ Ex key #i #l.
+   KeyC(key)@i &
+   K(key)@l
+)"
+
+
+
+end

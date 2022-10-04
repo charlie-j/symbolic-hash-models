@@ -1,0 +1,56 @@
+Compressed Results
+{
+    "authenticate": {
+        "ACT_Adv_AllCol_Clo_i": "true"
+    },
+    "authenticatePermissions": {
+        "ACN": "false",
+        "Adv_RO": "false",
+        "AllCol_RO": "false",
+        "RO_i": "false",
+        "CP_PI1_RO": "true",
+        "Clo_PI1_RO": "false",
+        "CP_Clo_PI2_RO": "true"
+    }
+}
+TOTAL Tamarin calls: 104
+TOTAL execution time forFlickr/Flickr.spthy: 42.548617124557495
+Timed Results
+{
+    "authenticate": {
+        "ACT_Adv_AllCol_Clo_i": [
+            "true",
+            0.14867067337036133
+        ]
+    },
+    "authenticatePermissions": {
+        "ACN": [
+            "false",
+            0.24849343299865723
+        ],
+        "Adv_RO": [
+            "false",
+            0.7293331623077393
+        ],
+        "AllCol_RO": [
+            "false",
+            0.28800415992736816
+        ],
+        "RO_i": [
+            "false",
+            1.6631872653961182
+        ],
+        "CP_PI1_RO": [
+            "true",
+            1.4315025806427002
+        ],
+        "Clo_PI1_RO": [
+            "false",
+            1.6817436218261719
+        ],
+        "CP_Clo_PI2_RO": [
+            "true",
+            2.1920759677886963
+        ]
+    }
+}

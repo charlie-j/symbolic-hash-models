@@ -1,0 +1,132 @@
+(* Sigma' case study with the MDH construct using computation function
+   This file consider unbounded concatenation under the hash.
+
+   Using the librairie Hash-collision.pvl and hash_no_collision.pvl requires that
+   the protocol does not use the native = symbol to compare to hash. Hence the
+   function for signature signCheck only verifies the signing key but not the
+   content. We added a function getmsg to do the equality test of the message using
+   our predicate on hash.
+*)
+
+channel c.
+
+(** Types *)
+type G.
+type t_exponent.
+type t_sk.
+type t_pk.
+type t_key.
+fun G2key(G): t_key [typeConverter].
+fun G2bs(G): bitstring [typeConverter].
+fun pk2bs(t_pk): bitstring [typeConverter].
+
+(** DH exponentiation (fixed base element 'g') *)
+const g: G.
+fun exp(G, t_exponent): G.
+equation forall y: t_exponent, z: t_exponent; exp(exp(g,y),z) = exp(exp(g,z),y).
+
+(** Signature *)
+fun sign(bitstring,t_sk):bitstring.
+fun pk(t_sk):t_pk.
+
+fun getmsg(bitstring):bitstring
+reduc forall m:bitstring, sk:t_sk; getmsg(sign(m,sk)) = m.
+
+fun signCheck(bitstring, t_pk): bool
+reduc forall m:bitstring, sk:t_sk; signCheck(sign(m,sk), pk(sk)) = true
+      otherwise forall s:bitstring, pkS:t_pk; signCheck(s, pkS) = false.
+
+(** MAC *)
+fun mac(bitstring, t_key):bitstring.
+
+(** Security goals *)
+(* Events *)
+event Dishonest(t_pk).
+event acceptA(t_pk,t_pk,bitstring).
+event sessionKeyA(t_pk,t_pk,t_key).
+event initA(t_pk,t_pk,bitstring).
+event acceptB(t_pk,t_pk,bitstring).
+event sessionKeyB(t_pk,t_pk,t_key).
+event initB(t_pk,t_pk,bitstring).
+
+(* Sanity check: executability (holds) *)
+query A:t_pk,B:t_pk,x:bitstring; event(acceptB(B,A,x)).
+(* Agreement on (A,B,m1,m2) from A to B. (violated as there is no agreement on B yet) *)
+query A:t_pk,B:t_pk,x:bitstring; event(acceptB(B,A,x)) ==> (event(initA(A,B,x)) || event(Dishonest(B)) || event(Dishonest(A))).
+(* Agreement on (A,B,m1,m2) from B to A. (holds) *)
+query A:t_pk,B:t_pk,x:bitstring; event(acceptA(A,B,x)) ==> (event(initB(B,A,x)) || event(Dishonest(A)) || event(Dishonest(B))).
+(* Agreement on (A,m1,m2) and authentication of B from A to B. (holds) *)
+query A:t_pk,B:t_pk,x:bitstring,B':t_pk; event(acceptB(B,A,x)) ==> (event(initA(A,B',x)) || event(Dishonest(B)) || event(Dishonest(A))).
+(* Session key secrecy (between honest agents). *)
+query A:t_pk,B:t_pk,x:t_key; (event(sessionKeyA(B,A,x)) && attacker(x)) ==> (event(Dishonest(B)) || event(Dishonest(A))).
+query A:t_pk,B:t_pk,x:t_key; (event(sessionKeyB(B,A,x)) && attacker(x)) ==> (event(Dishonest(B)) || event(Dishonest(A))).
+
+
+(** Role models *)
+const initTag:bitstring.
+const respTag:bitstring.
+letfun init = initTag.
+letfun resp = respTag.
+
+def macro_SIGMA(eq_hash_pred,System) {
+
+  let A(skA:t_sk, pkB:t_pk) =
+     if pk(skA) <> pkB then (* To avoid a reflection attack that violates agreement A --> B without a weak hash function *)
+     new x: t_exponent;
+     new infoA:bitstring;
+     let m1:bitstring = (exp(g,x),infoA) in
+     out(c, m1);
+     in(c, m2:bitstring) [precise];
+     let (gy:G, infoB:bitstring) = m2 in
+     if gy <> g  && not(isCol(G2bs(gy))) then
+     event initA(pk(skA),pkB,(m1,m2) );
+     let k:t_key = G2key(exp(gy,x)) in
+     let transcript:bitstring = (exp(g,x),(infoA,(gy,infoB))) in
+     let ht:bitstring = buildH(transcript) in
+     out(c, (sign( (ht,init), skA) , mac( pk2bs(pk(skA)), k ) ));
+     in(c, (s:bitstring,m:bitstring));
+     if signCheck(s, pkB) && m = mac( pk2bs(pkB), k ) then
+     let (ht':bitstring,=resp) = getmsg(s) in
+     if eq_hash_pred(ht,ht')
+     then
+        event acceptA(pk(skA),pkB,(m1,m2));
+        event sessionKeyA(pk(skA),pkB,k ).
+
+  let B (skB:t_sk, pkA:t_pk) =
+     if pk(skB) <> pkA then (* To avoid a reflection attack *)
+     in(c, m1:bitstring) [precise];
+     let (gx:G, infoA:bitstring) = m1 in
+     if gx <> g && not(isCol(G2bs(gx))) then
+     new y: t_exponent;
+     new infoB:bitstring;
+     let m2:bitstring = ( exp(g,y), infoB ) in
+     event initB(pk(skB),pkA, (m1,m2));
+     out(c, m2);
+     in(c, (s:bitstring,m:bitstring));
+     let k:t_key = G2key(exp(gx,y)) in
+     let transcript:bitstring = (gx,(infoA,(exp(g,y),infoB))) in
+     let ht:bitstring = buildH(transcript) in
+     if signCheck(s, pkA) && m = mac( pk2bs(pkA), k ) then
+     let (ht':bitstring,=init) = getmsg(s) in
+     if eq_hash_pred(ht',ht) then
+     out(c, (sign( (ht,resp), skB), mac( pk2bs(pk(skB)), k ) ));
+     event acceptB(pk(skB),pkA, (m1,m2) );
+     event sessionKeyB(pk(skB),pkA, k ).
+
+  table Keys(t_sk).
+
+  let System =
+    ! (new sk:t_sk;
+        out(c, pk(sk));
+        insert Keys(sk))
+    | ! (get Keys(skA:t_sk) in
+        get Keys(skB:t_sk) in
+        (  A(skA, pk(skB))
+         | B(skB, pk(skA))))
+    | ! (get Keys(skA:t_sk) in
+        event Dishonest(pk(skA));
+        out(c,skA)).
+}
+
+
+(* [1] Transcript Collision Attacks: Breaking Authentication in TLS, IKE, and SSH. Bhargavan and Leurent. NDSS'16. *)

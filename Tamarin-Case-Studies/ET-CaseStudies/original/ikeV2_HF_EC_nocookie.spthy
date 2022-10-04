@@ -1,0 +1,359 @@
+/*
+time tamarin-prover --prove ikeV2_HF_EC_nocookie.spthy
+==============================================================================
+summary of summaries:
+
+analyzed: ikeV2_HF_EC_nocookie.spthy
+
+  agree_from_A_to_B_nonces_A_B (all-traces): falsified - found trace (10 steps)
+  agree_from_B_to_A_nonces_A_B (all-traces): verified (15 steps)
+  agree_from_A_to_B_nonces_A (all-traces): verified (8 steps)
+  agree_from_A_to_B_all (all-traces): falsified - found trace (10 steps)
+  agree_from_B_to_A_all (all-traces): verified (15 steps)
+  agree_from_A_to_B_nonces_A_messages (all-traces): falsified - found trace (10 steps)
+
+==============================================================================
+tamarin-prover --prove ikeV2_HF_EC_nocookie.spthy  10.75s user 1.63s system 815% cpu 1.518 total
+
+
+
+
+
+
+time tamarin-prover --prove -D=single ikeV2_HF_EC_nocookie.spthy
+==============================================================================
+summary of summaries:
+
+analyzed: ikeV2_HF_EC_nocookie.spthy
+
+  agree_from_A_to_B_nonces_A_B (all-traces): verified (8 steps)
+  agree_from_B_to_A_nonces_A_B (all-traces): verified (7 steps)
+  agree_from_A_to_B_nonces_A (all-traces): verified (8 steps)
+  agree_from_A_to_B_all (all-traces): falsified - found trace (10 steps)
+  agree_from_B_to_A_all (all-traces): verified (15 steps)
+  agree_from_A_to_B_nonces_A_messages (all-traces): falsified - found trace (10 steps)
+
+==============================================================================
+tamarin-prover --prove -D=single ikeV2_HF_EC_nocookie.spthy  7.89s user 1.44s system 758% cpu 1.231 total
+
+
+
+
+time tamarin-prover --prove -D=Collapse ikeV2_HF_EC_nocookie.spthy
+==============================================================================
+summary of summaries:
+
+analyzed: ikeV2_HF_EC_nocookie.spthy
+
+  agree_from_A_to_B_nonces_A_B (all-traces): falsified - found trace (8 steps)
+  agree_from_B_to_A_nonces_A_B (all-traces): falsified - found trace (6 steps)
+  agree_from_A_to_B_nonces_A (all-traces): falsified - found trace (15 steps)
+  agree_from_A_to_B_all (all-traces): falsified - found trace (8 steps)
+  agree_from_B_to_A_all (all-traces): falsified - found trace (6 steps)
+  agree_from_A_to_B_nonces_A_messages (all-traces): falsified - found trace (8 steps)
+
+==============================================================================
+tamarin-prover --prove -D=Collapse ikeV2_HF_EC_nocookie.spthy  15.56s user 2.27s system 922% cpu 1.933 total
+
+
+
+
+
+time tamarin-prover --prove -D=single -D=Collapse ikeV2_HF_EC_nocookie.spthy
+==============================================================================
+summary of summaries:
+
+analyzed: ikeV2_HF_EC_nocookie.spthy
+
+  agree_from_A_to_B_nonces_A_B (all-traces): falsified - found trace (14 steps)
+  agree_from_B_to_A_nonces_A_B (all-traces): falsified - found trace (15 steps)
+  agree_from_A_to_B_nonces_A (all-traces): falsified - found trace (14 steps)
+  agree_from_A_to_B_all (all-traces): falsified - found trace (8 steps)
+  agree_from_B_to_A_all (all-traces): falsified - found trace (9 steps)
+  agree_from_A_to_B_nonces_A_messages (all-traces): falsified - found trace (8 steps)
+
+==============================================================================
+tamarin-prover --prove -D=single -D=Collapse ikeV2_HF_EC_nocookie.spthy  51.81s user 8.17s system 984% cpu 6.094 total
+*/
+
+/*
+ *  Author: ~
+ *  Model Name: ikeV2_HF_EC_nocookie.spthy
+ *  Status: DEVELOPMENTAL
+ *
+ *  Comments:
+
+
+
+ */
+
+theory IKE_nocookie
+begin
+
+builtins: signing, diffie-hellman, symmetric-encryption
+functions: mac/2, h/1, kdf/3
+
+#ifdef Collapse
+
+functions: con/0
+equations: h(m)=con()
+
+#endif
+
+#ifdef neutral
+functions: NE/0
+equations: (NE()^x) = NE()
+#endif
+
+
+#ifdef single
+restriction SingleSession:
+"
+All #i #j. Start()@i & Start()@j ==> #i = #j
+"
+#endif
+
+// rule InitKeys:
+// 	[Fr(~skA),Fr(~skB)]
+//   --[HKey(~skA),
+//   	 HKey(~skB),
+//   	 Start()]->
+// 	[!A0(~skA,pk(~skB)),
+// 	 !B0(pk(~skA),~skB),
+// 	 Out(pk(~skA)),
+// 	 Out(pk(~skB))]
+
+
+
+
+rule InitKeys:
+	[Fr(~sk)]
+  --[HKey(~sk)]->
+	[!Key(~sk),
+	 Out(pk(~sk))]
+
+
+
+rule InitKeysBis:
+	[!Key(~skA),!Key(~skB)]
+  --[
+  	 Start()]->
+	[A0(~skA,pk(~skB)),
+	 B0(pk(~skA),~skB)]
+
+
+
+rule A_0:
+  let
+    m1 = <'INIT',<~SA_A,<'g'^~x,<~nA,~infoA>>>>
+  in
+    [A0(~skA,pkB),
+     Fr(~SA_A),
+     Fr(~x),
+     Fr(~nA),
+     Fr(~infoA)]
+  --[_restrict(not( pk(~skA) = pkB)), //* To avoid a reflection attack that violates agreement A --> B without a weak hash function *)
+  	 Share(~x)]->
+    [A2(~skA,pkB,~SA_A,~x,~nA,~infoA),
+     Out(m1)]
+
+
+rule A_2:
+  let
+    //gY = 'g'^~y // careful with this, the In() pattern magically checks that we have a valid DH share
+    m2 = <'INIT',<SA_B,<gY,<nB,infoB>>>>
+    m1 = <'INIT',<~SA_A,<'g'^~x,<~nA,~infoA>>>>
+  in
+    [A2(~skA,pkB,~SA_A,~x,~nA,~infoA),
+     In(<'INIT',<SA_B,<gY,<nB,infoB>>>>)]
+  --[InitA(pk(~skA),pkB, ~nA, nB, m1, m2)]->
+    [A3(~skA,pkB,~SA_A,~x,~nA,~infoA,SA_B,gY,nB,infoB)]
+
+rule A_3:
+  let
+  	k = gY^~x
+    k1 = kdf(k,<~nA,nB>,'1')
+    k2 = kdf(k,<~nA,nB>,'2')
+    kA = kdf(k,<~nA,nB>,'3')
+    kB = kdf(k,<~nA,nB>,'4')
+    macA = mac(pk(~skA),kA)
+    macB = mac(pkB,kB)
+    transcriptA = <~SA_A,<'g'^~x,<~nA,<~infoA,<nB,macA>>>>>
+    sigA = sign(h(transcriptA),~skA)
+    encinput = <'AUTH',<pk(~skA),sigA>>
+    m3 = senc(encinput,k1)
+  in
+    [A3(~skA,pkB,~SA_A,~x,~nA,~infoA,SA_B,gY,nB,infoB)]
+  --[SendEnc(m3),
+     InitATrans(pk(~skA),pkB, transcriptA),
+  	 TranscriptA(transcriptA)]->
+    [A4(~skA,pkB,~SA_A,~x,~nA,~infoA,SA_B,gY,nB,infoB),
+     Out(m3)]
+
+rule A_4:
+  let
+    k = gY^~x
+    k1 = kdf(k,<~nA,nB>,'1')
+    m2 = <'INIT',<SA_B,<gY,<nB,infoB>>>>
+    m1 = <'INIT',<~SA_A,<'g'^~x,<~nA,~infoA>>>>
+    kB = kdf(k,<~nA,nB>,'4')
+    macB = mac(pkB,kB)
+    transcriptB = <SA_B,<gY,<nB,<infoB,<~nA,macB>>>>>
+  in
+    [A4(~skA,pkB,~SA_A,~x,~nA,~infoA,SA_B,gY,nB,infoB),
+     In(senc(<'AUTH',<pkbTest,sigBTest>>,k2))]
+  --[_restrict(verify(sigBTest,h(transcriptB),pkbTest)=true),
+     _restrict(pkbTest=pkB),
+     AcceptA(pk(~skA),pkB,~nA,nB,m1,m2),
+     SessionKeyA(pk(~skA),pkB,k1)]->
+    [  ]
+
+
+
+rule B_0:
+    [B0(pkA,~skB),
+     In(<'INIT',<SA_A,<gX,<nA,infoA>>>>)]
+  --[_restrict(not( pk(~skB) = pkA))]->
+    [B2(pkA,~skB,SA_A,gX,nA,infoA)]
+
+rule B_2:
+  let
+    m1 = <'INIT',<SA_A,<gX,<nA,infoA>>>>
+    m2 = <'INIT',<~SA_B,<'g'^~y,<~nB,~infoB>>>>
+  in
+    [B2(pkA,~skB,SA_A,gX,nA,infoA),
+     Fr(~SA_B),
+     Fr(~y),
+     Fr(~nB),
+     Fr(~infoB)]
+  --[InitB(pk(~skB),pkA, nA, ~nB, m1, m2),
+     Share(~y)]->
+    [B3(pkA,~skB,SA_A,gX,nA,infoA,~SA_B,~y,~nB,~infoB),
+     Out(m2)]
+
+rule B_3:
+  let
+    m1 = <'INIT',<SA_A,<gX,<nA,infoA>>>>
+    m2 = <'INIT',<~SA_B,<'g'^~y,<~nB,~infoB>>>>
+    k = gX^~y
+    k1 = kdf(k,<nA,~nB>,'1')
+    k2 = kdf(k,<nA,~nB>,'2')
+    kA = kdf(k,<nA,~nB>,'3')
+    kB = kdf(k,<nA,~nB>,'4')
+    macA = mac(pkA,kA)
+    macB = mac(pk(~skB),kB)
+    transcriptA = <SA_A,<gX,<nA,<infoA,<~nB,macA>>>>>
+    transcriptB = <~SA_B,<'g'^~y,<~nB,<~infoB,<nA,macB>>>>>
+    sigB = sign(h(transcriptB),~skB)
+    encinput = <'AUTH',<pk(~skB),sigB>>
+    m4 = senc(encinput,k2)
+  in
+    [B3(pkA,~skB,SA_A,gX,nA,infoA,~SA_B,~y,~nB,~infoB),
+     In(senc(<'AUTH',<pkaTest,sigATest>>,k1))]
+  --[_restrict(verify(sigATest,h(transcriptA),pkaTest)=true),
+     _restrict(pkaTest=pkA),
+     AcceptB(pk(~skB),pkA,nA,~nB,m1,m2),
+     AcceptBTrans(pk(~skB),pkA,transcriptA),
+     SessionKeyB(pk(~skB),pkA,k1)]-> //weird that it is k1?
+    [Out(m4)]
+
+/*
+rule Dishonest_A:
+    [!A0(~skA,pk(~skB))]
+  --[DishonestA(~skA,pk(~skB))]->
+    [Out(~ska)]
+
+rule Dishonest_B:
+    [!B0(~skB,pk(~skA))]
+  --[DishonestB(~skB,pk(~skA))]->
+    [Out(~skB)]
+*/
+/*
+lemma helper1[reuse]:
+ "not(Ex x #i #j. Share(x)@i & KU(x)@j)"
+
+lemma helper2[reuse]:
+ "not(Ex x #i #j. HKey(x)@i & KU(x)@j)"
+*/
+
+//(* Agreement on (A,B,nA,nB) from A to B. (violated as there is no agreement on B yet) *)
+lemma agree_from_A_to_B_nonces_A_B:
+"
+ All pkB pkA nB nA m1 m2 #i. AcceptB(pkB,pkA,nA,nB,m1,m2)@i ==>
+    Ex m3 m4 #j. InitA(pkA,pkB,nA,nB,m3,m4)@j
+"
+
+//(* Agreement on (A,B,nA,nB) from B to A. (holds) *)
+lemma agree_from_B_to_A_nonces_A_B:
+"
+ All pkB pkA nB nA m1 m2 #i. AcceptA(pkA,pkB,nA,nB,m1,m2)@i ==>
+    Ex m3 m4 #j. InitB(pkB,pkA,nA,nB,m3,m4)@j
+"
+
+//(* Agreement on (A,nA,nB) and authentication of B from A to B. (holds) *)
+lemma agree_from_A_to_B_nonces_A:
+"
+ All pkB pkA nB nA m1 m2 #i. AcceptB(pkB,pkA,nA,nB,m1,m2)@i ==>
+    Ex pkB2 m3 m4 #j. InitA(pkA,pkB2,nA,nB,m3,m4)@j
+"
+
+//(* Agreement on (A,B,m1,m2) from A to B. (violated as there is no agreement on B yet) *)
+lemma agree_from_A_to_B_all:
+"
+ All pkB pkA nB nA m1 m2 #i. AcceptB(pkB,pkA,nA,nB,m1,m2)@i ==>
+    Ex #j. InitA(pkA,pkB,nA,nB,m1,m2)@j
+"
+
+//(* Agreement on (A,B,m1,m2) from B to A. (holds) *)
+lemma agree_from_B_to_A_all:
+"
+ All pkB pkA nB nA m1 m2 #i. AcceptA(pkA,pkB,nA,nB,m1,m2)@i ==>
+    Ex #j. InitB(pkB,pkA,nA,nB,m1,m2)@j
+"
+
+//(* Agreement on (A,m1,m2) and authentication of B from A to B. (holds) *)
+lemma agree_from_A_to_B_nonces_A_messages:
+"
+ All pkB pkA nB nA m1 m2 #i. AcceptB(pkB,pkA,nA,nB,m1,m2)@i ==>
+    Ex pkB2 #j. InitA(pkA,pkB2,nA,nB,m1,m2)@j
+"
+
+lemma trans_auth:
+"
+ All pkB pkA t #i. AcceptBTrans(pkB,pkA,t)@i ==>
+    Ex pkB2 #j. InitATrans(pkA,pkB2,t)@j
+"
+
+
+
+lemma trans_auth_and_secrecy:
+"
+ All pkB pkA t k #i #l. AcceptBTrans(pkB,pkA,t)@i & SessionKeyB(pkB,pkA,k)@#i  & KU(k)@l  ==>
+    Ex pkB2 #j. InitATrans(pkA,pkB2,t)@j
+"
+
+lemma secrecy_key_A:
+  "All pkA pkB k #i. 
+    SessionKeyA(pkA,pkB,k)@#i  ==> not (Ex #j. K(k)@j)"
+
+lemma secrecy_key_B:
+  "All pkA pkB k #i. 
+    SessionKeyB(pkA,pkB,k)@#i  ==> not (Ex #j. K(k)@j)"
+
+/* Sanity check: executability (?) */
+/*
+lemma execB:
+ exists-trace
+ "
+ Ex pkB pkA nB nA m1 m2 #i. AcceptB(pkB,pkA,nA,nB,m1,m2)@i
+ "
+
+
+lemma execA:
+ exists-trace
+ "
+ Ex pkB pkA nB nA m1 m2 #i. AcceptA(pkA,pkB,nA,nB,m1,m2)@i
+ "
+*/
+
+end

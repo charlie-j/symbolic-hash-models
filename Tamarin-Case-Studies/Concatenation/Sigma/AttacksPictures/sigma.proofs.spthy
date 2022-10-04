@@ -1,0 +1,814 @@
+theory Sigma begin
+
+// Function signature and definition of the equational theory E
+
+builtins: diffie-hellman, concatenation
+functions: col1/2, col2/2, fst/1, init/0, mac/2, pair/2, pk/1, pre/1,
+           resp/0, sign/2, snd/1, sndpre/1, true/0, verify/3
+equations:
+    fst(<x.1, x.2>) = x.1,
+    snd(<x.1, x.2>) = x.2,
+    verify(sign(x.1, x.2), x.1, pk(x.2)) = true
+
+
+
+rule (modulo E) forceHash:
+   [ In( x ) ] --[ HashE( y, x ) ]-> [ ]
+
+  /* has exactly the trivial AC variant */
+
+restriction originHash:
+  "∀ x hs #i.
+    (HashC( x, hs ) @ #i) ⇒ (∃ #j. (HashE( x, hs ) @ #j) ∧ (#j < #i))"
+
+lemma orig [sources]:
+  all-traces
+  "∀ x hs #i. (HashC( x, hs ) @ #i) ⇒ (∃ #j. (!KU( hs ) @ #j) ∧ (#j < #i))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ x hs #i. (HashC( x, hs ) @ #i) ∧ ∀ #j. (!KU( hs ) @ #j) ⇒ ¬(#j < #i)"
+*/
+by sorry
+
+restriction deterministic:
+  "∀ x1 x2 h1 h2 #i #j.
+    (((HashE( x1, h1 ) @ #i) ∧ (HashE( x2, h2 ) @ #j)) ∧ (x1 = x2)) ⇒
+    (#i = #j)"
+  // safety formula
+
+rule (modulo E) attHash:
+   [ In( x ), !HashVals( ~hs ) ] --[ HashC( x, ~hs ) ]-> [ Out( ~hs ) ]
+
+  /* has exactly the trivial AC variant */
+
+restriction noCollS:
+  "∀ x1 x2 h1 h2 #i #j.
+    ((((HashC( x1, h1 ) @ #i) ∧ (HashC( x2, h2 ) @ #j)) ∧ (h1 = h2)) ∧
+     (#i < #j)) ⇒
+    ((x1 = x2) ∨
+     (∃ p1 p2 l #k.
+       ((x1 = (p1||col1(p1, p2)||l)) ∧ (x2 = (p2||col2(p1, p2)||l))) ∧
+       (Token( p1, p2 )[+] @ #k)))"
+
+rule (modulo E) Tok:
+   [ In( <p1, p2> ) ] --[ Token( p1, p2 ) ]-> [ ]
+
+  /* has exactly the trivial AC variant */
+
+restriction singToken:
+  "∀ p1 p2 p3 p4 #i #j.
+    ((Token( p1, p2 ) @ #i) ∧ (Token( p3, p4 ) @ #j)) ⇒ (#i = #j)"
+  // safety formula
+
+rule (modulo E) InitKeys:
+   [ Fr( ~skA ), Fr( ~skB ) ]
+  --[ HKey( ~skA ), HKey( ~skB ), Start( ) ]->
+   [
+   !A0( ~skA, pk(~skB) ), !B0( pk(~skA), ~skB ), Out( pk(~skA) ),
+   Out( pk(~skB) )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+restriction Restr_A_0_1:
+  "∀ x #NOW x.1. (Restr_A_0_1( x, x.1 ) @ #NOW) ⇒ (¬(x = x.1))"
+  // safety formula
+
+rule (modulo E) A_0:
+   [ !A0( ~skA, pkB ), Fr( ~x ), Fr( ~infoA ) ]
+  --[ Share( ~x ), Restr_A_0_1( pk(~skA), pkB ) ]->
+   [ Out( <'g'^~x, ~infoA> ), A1( ~skA, pkB, ~x, ~infoA ) ]
+
+  /* has exactly the trivial AC variant */
+
+restriction Restr_A_1_1:
+  "∀ x #NOW. (Restr_A_1_1( x ) @ #NOW) ⇒ (¬(x = 'g'))"
+  // safety formula
+
+rule (modulo E) A_1:
+   [ A1( ~skA, pkB, ~x, ~infoA ), In( 'g'^~y ), In( infoB ) ]
+  --[
+  InitA( pk(~skA), pkB, 'g'^~x, 'g'^~y ),
+  HashC( ('g'^~x||~infoA||'g'^~y||infoB), htrans ), MagicShare( ~y ),
+  Restr_A_1_1( 'g'^~y )
+  ]->
+   [
+   Out( <sign(<htrans, init>, ~skA), mac(pk(~skA), 'g'^~y^~x)> ),
+   A2( ~skA, pkB, ~x, ~infoA, 'g'^~y, infoB, htrans )
+   ]
+
+  /*
+  rule (modulo AC) A_1:
+     [ A1( ~skA, pkB, ~x, ~infoA ), In( 'g'^~y ), In( infoB ) ]
+    --[
+    InitA( pk(~skA), pkB, 'g'^~x, 'g'^~y ),
+    HashC( ('g'^~x||~infoA||'g'^~y||infoB), htrans ), MagicShare( ~y ),
+    Restr_A_1_1( 'g'^~y )
+    ]->
+     [
+     Out( <sign(<htrans, init>, ~skA), mac(pk(~skA), 'g'^(~x*~y))> ),
+     A2( ~skA, pkB, ~x, ~infoA, 'g'^~y, infoB, htrans )
+     ]
+  */
+
+restriction Restr_A_2_1:
+  "∀ x #NOW x.1 x.2.
+    (Restr_A_2_1( x, x.1, x.2 ) @ #NOW) ⇒ ((x = true) ∧ (x.1 = x.2))"
+  // safety formula
+
+rule (modulo E) A_2:
+   [ A2( ~skA, pkB, ~x, ~infoA, gY, infoB, htrans ), In( s ), In( m ) ]
+  --[
+  AcceptA( pk(~skA), pkB, 'g'^~x, gY ),
+  SessionKeyA( pk(~skA), pkB, gY^~x ),
+  Restr_A_2_1( verify(s, <htrans, resp>, pkB), m, mac(pkB, gY^~x) )
+  ]->
+   [ ]
+
+  /*
+  rule (modulo AC) A_2:
+     [ A2( ~skA, pkB, ~x, ~infoA, gY, infoB, htrans ), In( s ), In( m ) ]
+    --[
+    AcceptA( pk(~skA), pkB, 'g'^~x, gY ), SessionKeyA( pk(~skA), pkB, z ),
+    Restr_A_2_1( z.1, m, mac(pkB, z) )
+    ]->
+     [ ]
+    variants (modulo AC)
+     1. ~x    = ~x.23
+        gY    = gY.24
+        htrans
+              = htrans.25
+        pkB   = pkB.28
+        s     = s.29
+        z     = gY.24^~x.23
+        z.1   = verify(s.29, <htrans.25, resp>, pkB.28)
+
+     2. ~x    = ~x.25
+        gY    = z.33^inv(~x.25)
+        htrans
+              = htrans.27
+        pkB   = pkB.30
+        s     = s.31
+        z     = z.33
+        z.1   = verify(s.31, <htrans.27, resp>, pkB.30)
+
+     3. ~x    = ~x.55
+        gY    = x.105^x.106
+        htrans
+              = htrans.57
+        pkB   = pkB.60
+        s     = s.61
+        z     = x.105^(~x.55*x.106)
+        z.1   = verify(s.61, <htrans.57, resp>, pkB.60)
+
+     4. ~x    = ~x.56
+        gY    = x.107^inv((~x.56*x.108))
+        htrans
+              = htrans.58
+        pkB   = pkB.61
+        s     = s.62
+        z     = x.107^inv(x.108)
+        z.1   = verify(s.62, <htrans.58, resp>, pkB.61)
+
+     5. ~x    = ~x.56
+        gY    = x.107^(x.108*inv(~x.56))
+        htrans
+              = htrans.58
+        pkB   = pkB.61
+        s     = s.62
+        z     = x.107^x.108
+        z.1   = verify(s.62, <htrans.58, resp>, pkB.61)
+
+     6. ~x    = ~x.57
+        gY    = gY.58
+        htrans
+              = htrans.59
+        pkB   = pk(x.110)
+        s     = sign(<htrans.59, resp>, x.110)
+        z     = gY.58^~x.57
+        z.1   = true
+
+     7. ~x    = ~x.57
+        gY    = x.108^(x.109*inv((~x.57*x.110)))
+        htrans
+              = htrans.59
+        pkB   = pkB.62
+        s     = s.63
+        z     = x.108^(x.109*inv(x.110))
+        z.1   = verify(s.63, <htrans.59, resp>, pkB.62)
+
+     8. ~x    = ~x.59
+        gY    = z.67^inv(~x.59)
+        htrans
+              = htrans.61
+        pkB   = pk(x.114)
+        s     = sign(<htrans.61, resp>, x.114)
+        z     = z.67
+        z.1   = true
+
+     9. ~x    = ~x.59
+        gY    = x.109^x.110
+        htrans
+              = htrans.61
+        pkB   = pk(x.114)
+        s     = sign(<htrans.61, resp>, x.114)
+        z     = x.109^(~x.59*x.110)
+        z.1   = true
+
+    10. ~x    = ~x.60
+        gY    = x.111^inv((~x.60*x.112))
+        htrans
+              = htrans.62
+        pkB   = pk(x.116)
+        s     = sign(<htrans.62, resp>, x.116)
+        z     = x.111^inv(x.112)
+        z.1   = true
+
+    11. ~x    = ~x.60
+        gY    = x.111^(x.112*inv(~x.60))
+        htrans
+              = htrans.62
+        pkB   = pk(x.116)
+        s     = sign(<htrans.62, resp>, x.116)
+        z     = x.111^x.112
+        z.1   = true
+
+    12. ~x    = ~x.61
+        gY    = x.112^(x.113*inv((~x.61*x.114)))
+        htrans
+              = htrans.63
+        pkB   = pk(x.118)
+        s     = sign(<htrans.63, resp>, x.118)
+        z     = x.112^(x.113*inv(x.114))
+        z.1   = true
+  */
+
+restriction Restr_B_0_1:
+  "∀ x #NOW. (Restr_B_0_1( x ) @ #NOW) ⇒ (¬(x = 'g'))"
+  // safety formula
+
+rule (modulo E) B_0:
+   [ !B0( pkA, ~skB ), In( 'g'^~x ), In( infoA ), Fr( ~y ), Fr( ~infoB ) ]
+  --[
+  InitB( pk(~skB), pkA, 'g'^~x, 'g'^~y ), MagicShare( ~x ), Share( ~y ),
+  Restr_B_0_1( 'g'^~x )
+  ]->
+   [ Out( <'g'^~y, ~infoB> ), B1( pkA, ~skB, ~y, ~infoB, 'g'^~x, infoA ) ]
+
+  /* has exactly the trivial AC variant */
+
+restriction Restr_B_1_1:
+  "∀ x #NOW x.1 x.2.
+    (Restr_B_1_1( x, x.1, x.2 ) @ #NOW) ⇒ ((x = true) ∧ (x.1 = x.2))"
+  // safety formula
+
+rule (modulo E) B_1:
+   [ B1( pkA, ~skB, ~y, ~infoB, gX, infoA ), In( s ), In( m ) ]
+  --[
+  HashC( (gX||infoA||'g'^~y||~infoB), htrans ),
+  Restr_B_1_1( verify(s, <htrans, init>, pkA), m, mac(pkA, gX^~y) )
+  ]->
+   [
+   Out( <sign(<htrans, resp>, ~skB), mac(pk(~skB), gX^~y)> ),
+   B2( pkA, ~skB, ~y, ~infoB, gX, infoA )
+   ]
+
+  /*
+  rule (modulo AC) B_1:
+     [ B1( pkA, ~skB, ~y, ~infoB, gX, infoA ), In( s ), In( m ) ]
+    --[
+    HashC( (gX||infoA||'g'^~y||~infoB), htrans ),
+    Restr_B_1_1( z.1, m, mac(pkA, z) )
+    ]->
+     [
+     Out( <sign(<htrans, resp>, ~skB), mac(pk(~skB), z)> ),
+     B2( pkA, ~skB, ~y, ~infoB, gX, infoA )
+     ]
+    variants (modulo AC)
+     1. ~y    = ~y.23
+        gX    = gX.24
+        htrans
+              = htrans.25
+        pkA   = pkA.28
+        s     = s.29
+        z     = gX.24^~y.23
+        z.1   = verify(s.29, <htrans.25, init>, pkA.28)
+
+     2. ~y    = ~y.24
+        gX    = z.31^inv(~y.24)
+        htrans
+              = htrans.26
+        pkA   = pkA.29
+        s     = s.30
+        z     = z.31
+        z.1   = verify(s.30, <htrans.26, init>, pkA.29)
+
+     3. ~y    = ~y.55
+        gX    = x.105^x.106
+        htrans
+              = htrans.57
+        pkA   = pkA.60
+        s     = s.61
+        z     = x.105^(~y.55*x.106)
+        z.1   = verify(s.61, <htrans.57, init>, pkA.60)
+
+     4. ~y    = ~y.56
+        gX    = x.107^inv((~y.56*x.108))
+        htrans
+              = htrans.58
+        pkA   = pkA.61
+        s     = s.62
+        z     = x.107^inv(x.108)
+        z.1   = verify(s.62, <htrans.58, init>, pkA.61)
+
+     5. ~y    = ~y.56
+        gX    = x.107^(x.108*inv(~y.56))
+        htrans
+              = htrans.58
+        pkA   = pkA.61
+        s     = s.62
+        z     = x.107^x.108
+        z.1   = verify(s.62, <htrans.58, init>, pkA.61)
+
+     6. ~y    = ~y.57
+        gX    = gX.58
+        htrans
+              = htrans.59
+        pkA   = pk(x.110)
+        s     = sign(<htrans.59, init>, x.110)
+        z     = gX.58^~y.57
+        z.1   = true
+
+     7. ~y    = ~y.57
+        gX    = x.108^(x.109*inv((~y.57*x.110)))
+        htrans
+              = htrans.59
+        pkA   = pkA.62
+        s     = s.63
+        z     = x.108^(x.109*inv(x.110))
+        z.1   = verify(s.63, <htrans.59, init>, pkA.62)
+
+     8. ~y    = ~y.59
+        gX    = z.66^inv(~y.59)
+        htrans
+              = htrans.61
+        pkA   = pk(x.114)
+        s     = sign(<htrans.61, init>, x.114)
+        z     = z.66
+        z.1   = true
+
+     9. ~y    = ~y.59
+        gX    = x.109^x.110
+        htrans
+              = htrans.61
+        pkA   = pk(x.114)
+        s     = sign(<htrans.61, init>, x.114)
+        z     = x.109^(~y.59*x.110)
+        z.1   = true
+
+    10. ~y    = ~y.60
+        gX    = x.111^inv((~y.60*x.112))
+        htrans
+              = htrans.62
+        pkA   = pk(x.116)
+        s     = sign(<htrans.62, init>, x.116)
+        z     = x.111^inv(x.112)
+        z.1   = true
+
+    11. ~y    = ~y.60
+        gX    = x.111^(x.112*inv(~y.60))
+        htrans
+              = htrans.62
+        pkA   = pk(x.116)
+        s     = sign(<htrans.62, init>, x.116)
+        z     = x.111^x.112
+        z.1   = true
+
+    12. ~y    = ~y.61
+        gX    = x.112^(x.113*inv((~y.61*x.114)))
+        htrans
+              = htrans.63
+        pkA   = pk(x.118)
+        s     = sign(<htrans.63, init>, x.118)
+        z     = x.112^(x.113*inv(x.114))
+        z.1   = true
+  */
+
+rule (modulo E) B_2:
+   [ B2( pkA, ~skB, ~y, ~infoB, gX, infoA ) ]
+  --[
+  AcceptB( pk(~skB), pkA, gX, 'g'^~y ), SessionKeyB( pk(~skB), pkA, gX^~y )
+  ]->
+   [ ]
+
+  /*
+  rule (modulo AC) B_2:
+     [ B2( pkA, ~skB, ~y, ~infoB, gX, infoA ) ]
+    --[ AcceptB( pk(~skB), pkA, gX, 'g'^~y ), SessionKeyB( pk(~skB), pkA, z )
+    ]->
+     [ ]
+    variants (modulo AC)
+    1. ~y    = ~y.14
+       gX    = gX.15
+       z     = gX.15^~y.14
+
+    2. ~y    = ~y.18
+       gX    = z.23^inv(~y.18)
+       z     = z.23
+
+    3. ~y    = ~y.39
+       gX    = x.73^x.74
+       z     = x.73^(~y.39*x.74)
+
+    4. ~y    = ~y.40
+       gX    = x.75^inv((~y.40*x.76))
+       z     = x.75^inv(x.76)
+
+    5. ~y    = ~y.40
+       gX    = x.75^(x.76*inv(~y.40))
+       z     = x.75^x.76
+
+    6. ~y    = ~y.41
+       gX    = x.76^(x.77*inv((~y.41*x.78)))
+       z     = x.76^(x.77*inv(x.78))
+  */
+
+lemma helper1 [reuse]:
+  all-traces "¬(∃ x #i #j. (Share( x ) @ #i) ∧ (!KU( x ) @ #j))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ x #i #j. (Share( x ) @ #i) ∧ (!KU( x ) @ #j)"
+*/
+by sorry
+
+lemma helper2 [reuse]:
+  all-traces "¬(∃ x #i #j. (HKey( x ) @ #i) ∧ (!KU( x ) @ #j))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ x #i #j. (HKey( x ) @ #i) ∧ (!KU( x ) @ #j)"
+*/
+by sorry
+
+lemma agree_A_to_B_false:
+  all-traces
+  "∀ pkA pkB gX gY #i.
+    (AcceptB( pkB, pkA, gX, gY ) @ #i) ⇒
+    (∃ #j. InitA( pkA, pkB, gX, gY ) @ #j)"
+/*
+guarded formula characterizing all counter-examples:
+"∃ pkA pkB gX gY #i.
+  (AcceptB( pkB, pkA, gX, gY ) @ #i)
+ ∧
+  ∀ #j. (InitA( pkA, pkB, gX, gY ) @ #j) ⇒ ⊥"
+*/
+by sorry
+
+lemma target_secA:
+  all-traces
+  "¬(∃ pkA pkB k #i #j. (SessionKeyA( pkB, pkA, k ) @ #i) ∧ (K( k ) @ #j))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ pkA pkB k #i #j. (SessionKeyA( pkB, pkA, k ) @ #i) ∧ (K( k ) @ #j)"
+*/
+simplify
+solve( A2( ~skA, pk(x), ~x.1, ~infoA, gY, infoB, htrans ) ▶₀ #i )
+  case A_1
+  solve( !KU( sign(<htrans, resp>, ~skB) ) @ #vk )
+    case B_1
+    solve( (¬(#vr < #vr.3))  ∥
+           (('g'^~x||~infoA||'g'^~y||infoB) =
+            ('g'^~x.1||infoA.1||'g'^~y.1||~infoB.1))  ∥
+           (∃ p1 p2 l #k.
+             (('g'^~x||~infoA||'g'^~y||infoB) = (p1||col1(p1, p2)||l)) ∧
+             (('g'^~x.1||infoA.1||'g'^~y.1||~infoB.1) = (p2||col2(p1, p2)||l)) ∧
+             (Token( p1, p2 )[+] @ #k)) )
+      case case_3_case_1
+      solve( (¬(#vr.3 < #vr))  ∥
+             (∃ p1 p2 l #k.
+               (('g'^~x.2||col2(('g'^~x||~infoA||'g'^~y||x.1), 'g'^~x.2)||'g'^~y.1||
+                 ~infoB) =
+                (p1||col1(p1, p2)||l)) ∧
+               (('g'^~x||~infoA||'g'^~y||x.1||
+                 col1(('g'^~x||~infoA||'g'^~y||x.1), 'g'^~x.2)||'g'^~y.1||~infoB) =
+                (p2||col2(p1, p2)||l)) ∧
+               (Token( p1, p2 )[+] @ #k)) )
+        case case_1
+        solve( !KU( col1(('g'^~x||~infoA||'g'^~y||x.1), 'g'^~x.2) ) @ #vk.12 )
+          case c_col1
+          solve( !KU( col2(('g'^~x||~infoA||'g'^~y||x.1), 'g'^~x.2) ) @ #vk.11 )
+            case c_col2
+            solve( !KU( 'g'^(~x*~y) ) @ #vk.5 )
+              case A_0_case_2
+              solve( !KU( ~y ) @ #vk.17 )
+                case A_0
+                solve( !KU( mac(pk(~skB), 'g'^(~x*~y)) ) @ #vk.6 )
+                  case c_mac
+                  solve( !KU( 'g'^~y ) @ #vk.8 )
+                    case c_exp
+                    solve( !KU( mac(pk(~skA), 'g'^(~y.1*~x.2)) ) @ #vk.12 )
+                      case A_1
+                      solve( !KU( ~infoB ) @ #vk.16 )
+                        case B_0
+                        solve( !KU( ~infoA ) @ #vk.17 )
+                          case A_0
+                          solve( !KU( sign(<htrans, init>, ~skA) ) @ #vk.14 )
+                            case A_1
+                            solve( !KU( 'g'^~x.2 ) @ #vk.15 )
+                              case A_0
+                              solve( !KU( 'g'^~y.1 ) @ #vk.17 )
+                                case B_0
+                                solve( !KU( 'g'^~x ) @ #vk.15 )
+                                  case A_0
+                                  solve( !KU( pk(~skB) ) @ #vk.18 )
+                                    case InitKeys
+                                    SOLVED // trace found
+                                  qed
+                                qed
+                              qed
+                            qed
+                          qed
+                        qed
+                      qed
+                    qed
+                  qed
+                qed
+              qed
+            qed
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma target_secB:
+  all-traces
+  "¬(∃ pkA pkB k #i #j. (SessionKeyB( pkB, pkA, k ) @ #i) ∧ (K( k ) @ #j))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ pkA pkB k #i #j. (SessionKeyB( pkB, pkA, k ) @ #i) ∧ (K( k ) @ #j)"
+*/
+simplify
+solve( B2( pkA, ~skB, ~y, ~infoB, gX, infoA ) ▶₀ #i )
+  case B_1
+  solve( !KU( sign(<htrans, init>, ~skA) ) @ #vk.1 )
+    case A_1
+    solve( (('g'^~x.1||~infoA.1||'g'^~y.1||infoB.1) =
+            ('g'^~x||infoA||'g'^~y||~infoB))  ∥
+           (∃ p1 p2 l #k.
+             (('g'^~x.1||~infoA.1||'g'^~y.1||infoB.1) = (p1||col1(p1, p2)||l)) ∧
+             (('g'^~x||infoA||'g'^~y||~infoB) = (p2||col2(p1, p2)||l)) ∧
+             (Token( p1, p2 )[+] @ #k)) )
+      case case_2_case_1
+      solve( !KU( col2(('g'^~x.1||~infoA||'g'^~y.1||x.2), 'g'^~x) ) @ #vk.5 )
+        case c_col2
+        solve( !KU( col1(('g'^~x.1||~infoA||'g'^~y.1||x.2), 'g'^~x) ) @ #vk.10 )
+          case c_col1
+          solve( !KU( 'g'^(~x*~y) ) @ #vk.3 )
+            case B_0_case_1
+            solve( !KU( ~x ) @ #vk.15 )
+              case A_0
+              solve( !KU( mac(pk(~skA), 'g'^(~x*~y)) ) @ #vk.6 )
+                case c_mac
+                solve( !KU( 'g'^~x ) @ #vk.8 )
+                  case c_exp
+                  solve( !KU( 'g'^~y.1 ) @ #vk.10 )
+                    case A_0
+                    solve( !KU( ~infoB ) @ #vk.13 )
+                      case B_0
+                      solve( !KU( ~infoA ) @ #vk.15 )
+                        case A_0
+                        solve( !KU( 'g'^~y ) @ #vk.12 )
+                          case B_0
+                          solve( !KU( 'g'^~x.1 ) @ #vk.15 )
+                            case A_0
+                            solve( !KU( pk(~skA) ) @ #vk.16 )
+                              case InitKeys
+                              SOLVED // trace found
+                            qed
+                          qed
+                        qed
+                      qed
+                    qed
+                  qed
+                qed
+              qed
+            qed
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma target_agree_B_to_A:
+  all-traces
+  "∀ pkA pkB gX gY #i.
+    (AcceptA( pkA, pkB, gX, gY ) @ #i) ⇒
+    (∃ #j. InitB( pkB, pkA, gX, gY ) @ #j)"
+/*
+guarded formula characterizing all counter-examples:
+"∃ pkA pkB gX gY #i.
+  (AcceptA( pkA, pkB, gX, gY ) @ #i)
+ ∧
+  ∀ #j. (InitB( pkB, pkA, gX, gY ) @ #j) ⇒ ⊥"
+*/
+simplify
+solve( A2( ~skA, pk(x), ~x.1, ~infoA, gY, infoB, htrans ) ▶₀ #i )
+  case A_1
+  solve( !KU( sign(<htrans, resp>, ~skB) ) @ #vk )
+    case B_1
+    solve( (¬(#vr < #vr.3))  ∥
+           (('g'^~x||~infoA||'g'^~y||infoB) =
+            ('g'^~x.1||infoA.1||'g'^~y.1||~infoB.1))  ∥
+           (∃ p1 p2 l #k.
+             (('g'^~x||~infoA||'g'^~y||infoB) = (p1||col1(p1, p2)||l)) ∧
+             (('g'^~x.1||infoA.1||'g'^~y.1||~infoB.1) = (p2||col2(p1, p2)||l)) ∧
+             (Token( p1, p2 )[+] @ #k)) )
+      case case_3_case_1
+      solve( (¬(#vr.3 < #vr))  ∥
+             (∃ p1 p2 l #k.
+               (('g'^~x.2||col2(('g'^~x||~infoA||'g'^~y||x.1), 'g'^~x.2)||'g'^~y.1||
+                 ~infoB) =
+                (p1||col1(p1, p2)||l)) ∧
+               (('g'^~x||~infoA||'g'^~y||x.1||
+                 col1(('g'^~x||~infoA||'g'^~y||x.1), 'g'^~x.2)||'g'^~y.1||~infoB) =
+                (p2||col2(p1, p2)||l)) ∧
+               (Token( p1, p2 )[+] @ #k)) )
+        case case_1
+        solve( !KU( col1(('g'^~x||~infoA||'g'^~y||x.1), 'g'^~x.2) ) @ #vk.11 )
+          case c_col1
+          solve( !KU( col2(('g'^~x||~infoA||'g'^~y||x.1), 'g'^~x.2) ) @ #vk.10 )
+            case c_col2
+            solve( !KU( mac(pk(~skB), 'g'^(~x*~y)) ) @ #vk.4 )
+              case c_mac
+              solve( !KU( 'g'^(~x*~y) ) @ #vk.17 )
+                case A_0_case_2
+                solve( !KU( ~y ) @ #vk.18 )
+                  case A_0
+                  solve( !KU( 'g'^~y ) @ #vk.7 )
+                    case c_exp
+                    solve( !KU( mac(pk(~skA), 'g'^(~y.1*~x.2)) ) @ #vk.12 )
+                      case A_1
+                      solve( !KU( ~infoB ) @ #vk.16 )
+                        case B_0
+                        solve( !KU( ~infoA ) @ #vk.17 )
+                          case A_0
+                          solve( !KU( sign(<htrans, init>, ~skA) ) @ #vk.14 )
+                            case A_1
+                            solve( !KU( 'g'^~x.2 ) @ #vk.15 )
+                              case A_0
+                              solve( !KU( 'g'^~y.1 ) @ #vk.17 )
+                                case B_0
+                                solve( !KU( 'g'^~x ) @ #vk.15 )
+                                  case A_0
+                                  solve( !KU( pk(~skB) ) @ #vk.18 )
+                                    case InitKeys
+                                    SOLVED // trace found
+                                  qed
+                                qed
+                              qed
+                            qed
+                          qed
+                        qed
+                      qed
+                    qed
+                  qed
+                qed
+              qed
+            qed
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma target_agree_A_to_B_or_Bbis:
+  all-traces
+  "∀ pkA pkB gX gY #i.
+    (AcceptB( pkB, pkA, gX, gY ) @ #i) ⇒
+    (∃ pkB2 #j. InitA( pkA, pkB2, gX, gY ) @ #j)"
+/*
+guarded formula characterizing all counter-examples:
+"∃ pkA pkB gX gY #i.
+  (AcceptB( pkB, pkA, gX, gY ) @ #i)
+ ∧
+  ∀ pkB2 #j. (InitA( pkA, pkB2, gX, gY ) @ #j) ⇒ ⊥"
+*/
+simplify
+solve( B2( pkA, ~skB, ~y, ~infoB, gX, infoA ) ▶₀ #i )
+  case B_1
+  solve( !KU( sign(<htrans, init>, ~skA) ) @ #vk )
+    case A_1
+    solve( (('g'^~x.1||~infoA.1||'g'^~y.1||infoB.1) =
+            ('g'^~x||infoA||'g'^~y||~infoB))  ∥
+           (∃ p1 p2 l #k.
+             (('g'^~x.1||~infoA.1||'g'^~y.1||infoB.1) = (p1||col1(p1, p2)||l)) ∧
+             (('g'^~x||infoA||'g'^~y||~infoB) = (p2||col2(p1, p2)||l)) ∧
+             (Token( p1, p2 )[+] @ #k)) )
+      case case_2_case_1
+      solve( !KU( col2(('g'^~x.1||~infoA||'g'^~y.1||x.2), 'g'^~x) ) @ #vk.4 )
+        case c_col2
+        solve( !KU( col1(('g'^~x.1||~infoA||'g'^~y.1||x.2), 'g'^~x) ) @ #vk.9 )
+          case c_col1
+          solve( !KU( mac(pk(~skA), 'g'^(~x*~y)) ) @ #vk.3 )
+            case c_mac
+            solve( !KU( 'g'^(~x*~y) ) @ #vk.15 )
+              case B_0_case_1
+              solve( !KU( ~x ) @ #vk.16 )
+                case A_0
+                solve( !KU( 'g'^~x ) @ #vk.7 )
+                  case c_exp
+                  solve( !KU( 'g'^~y.1 ) @ #vk.10 )
+                    case A_0
+                    solve( !KU( ~infoB ) @ #vk.13 )
+                      case B_0
+                      solve( !KU( ~infoA ) @ #vk.15 )
+                        case A_0
+                        solve( !KU( 'g'^~y ) @ #vk.12 )
+                          case B_0
+                          solve( !KU( 'g'^~x.1 ) @ #vk.15 )
+                            case A_0
+                            solve( !KU( pk(~skA) ) @ #vk.16 )
+                              case InitKeys
+                              SOLVED // trace found
+                            qed
+                          qed
+                        qed
+                      qed
+                    qed
+                  qed
+                qed
+              qed
+            qed
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma execB:
+  exists-trace "∃ pkB pkA gX gY #i. AcceptB( pkB, pkA, gX, gY ) @ #i"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ pkB pkA gX gY #i. (AcceptB( pkB, pkA, gX, gY ) @ #i)"
+*/
+by sorry
+
+lemma execB2:
+  exists-trace
+  "∃ pkB pkA gX gY #i pkB2 pkA2 gX2 gY2 #i2.
+    ((AcceptB( pkA, pkB, gX, gY ) @ #i) ∧
+     (AcceptB( pkA2, pkB2, gX2, gY2 ) @ #i2)) ∧
+    (¬(#i = #i2))"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ pkB pkA gX gY #i pkB2 pkA2 gX2 gY2 #i2.
+  (AcceptB( pkA, pkB, gX, gY ) @ #i) ∧
+  (AcceptB( pkA2, pkB2, gX2, gY2 ) @ #i2)
+ ∧
+  ¬(#i = #i2)"
+*/
+by sorry
+
+lemma execA:
+  exists-trace "∃ pkB pkA gX gY #i. AcceptA( pkA, pkB, gX, gY ) @ #i"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ pkB pkA gX gY #i. (AcceptA( pkA, pkB, gX, gY ) @ #i)"
+*/
+by sorry
+
+lemma execA2:
+  exists-trace
+  "∃ pkB pkA gX gY #i pkB2 pkA2 gX2 gY2 #i2.
+    ((AcceptA( pkA, pkB, gX, gY ) @ #i) ∧
+     (AcceptA( pkA2, pkB2, gX2, gY2 ) @ #i2)) ∧
+    (¬(#i = #i2))"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ pkB pkA gX gY #i pkB2 pkA2 gX2 gY2 #i2.
+  (AcceptA( pkA, pkB, gX, gY ) @ #i) ∧
+  (AcceptA( pkA2, pkB2, gX2, gY2 ) @ #i2)
+ ∧
+  ¬(#i = #i2)"
+*/
+by sorry
+
+/*
+WARNING: the following wellformedness checks failed!
+
+unbound:
+  rule `forceHash' has unbound variables:
+    y
+
+  rule `A_1' has unbound variables:
+    htrans
+
+  rule `B_1' has unbound variables:
+    htrans
+*/
+
+end

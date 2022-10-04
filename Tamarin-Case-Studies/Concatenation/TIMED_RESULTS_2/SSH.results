@@ -1,0 +1,74 @@
+Compressed Results
+{
+    "secrecy_key_A": {
+        "AllCol_RO": "false",
+        "ACT_Adv_CP_Clo_PI1_i": "truesimpl"
+    },
+    "secrecy_key_B": {
+        "AllCol_RO": "false",
+        "ACT_Adv_CP_Clo_PI1_i": "truesimpl"
+    },
+    "trans_auth": {
+        "AllCol_RO": "false",
+        "Clo_IP_RO": "false",
+        "ACT_Adv_CP_PI1_i": "true",
+        "ACT_Adv_Clo_Ex_i": "true",
+        "Clo_PI2_RO": "false"
+    },
+    "agree_keys_all": {
+        "RO": "false"
+    }
+}
+TOTAL Tamarin calls: 58
+TOTAL execution time forSSH/sshV2_HEB_A.spthy: 3866.411919116974
+Timed Results
+{
+    "secrecy_key_A": {
+        "AllCol_RO": [
+            "false",
+            1.6326723098754883
+        ],
+        "ACT_Adv_CP_Clo_PI1_i": [
+            "truesimpl",
+            175.56496381759644
+        ]
+    },
+    "secrecy_key_B": {
+        "AllCol_RO": [
+            "false",
+            6.954862356185913
+        ],
+        "ACT_Adv_CP_Clo_PI1_i": [
+            "truesimpl",
+            106.61975073814392
+        ]
+    },
+    "trans_auth": {
+        "AllCol_RO": [
+            "false",
+            1.9035210609436035
+        ],
+        "Clo_IP_RO": [
+            "false",
+            "DOES NOT RUN, ONLY IMPLIED"
+        ],
+        "ACT_Adv_CP_PI1_i": [
+            "true",
+            2.3347012996673584
+        ],
+        "ACT_Adv_Clo_Ex_i": [
+            "true",
+            1.6794636249542236
+        ],
+        "Clo_PI2_RO": [
+            "false",
+            219.27848434448242
+        ]
+    },
+    "agree_keys_all": {
+        "RO": [
+            "false",
+            5.47989559173584
+        ]
+    }
+}

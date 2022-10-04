@@ -1,0 +1,27 @@
+fun isCol(bitstring):bool
+reduc forall L1:bitstring, L2:bitstring;
+ isCol(CPcol1(L1,L2)) = true
+otherwise forall L1:bitstring, L2:bitstring, y:bitstring;
+ isCol((CPcol1(L1,L2),y)) = true
+otherwise forall L1:bitstring, L2:bitstring, y:bitstring;
+ isCol((y,(CPcol1(L1,L2)))) = true
+otherwise forall L1:bitstring, L2:bitstring, y:bitstring,z:bitstring;
+ isCol((CPcol1(L1,L2),(y,z))) = true
+otherwise forall L1:bitstring, L2:bitstring, y:bitstring,z:bitstring;
+ isCol((y,(CPcol1(L1,L2),z))) = true
+otherwise forall L1:bitstring, L2:bitstring, y:bitstring,z:bitstring;
+ isCol((y,(z,(CPcol1(L1,L2))))) = true
+otherwise forall L1:bitstring, L2:bitstring;
+ isCol(CPcol2(L1,L2)) = true
+otherwise forall L1:bitstring, L2:bitstring, y:bitstring;
+ isCol((CPcol2(L1,L2),y)) = true
+otherwise forall L1:bitstring, L2:bitstring, y:bitstring;
+ isCol((y,(CPcol2(L1,L2)))) = true
+otherwise forall L1:bitstring, L2:bitstring, y:bitstring,z:bitstring;
+ isCol((CPcol2(L1,L2),(y,z))) = true
+otherwise forall L1:bitstring, L2:bitstring, y:bitstring,z:bitstring;
+ isCol((y,(CPcol2(L1,L2),z))) = true
+otherwise forall L1:bitstring, L2:bitstring, y:bitstring,z:bitstring;
+ isCol((y,(z,(CPcol2(L1,L2))))) = true
+otherwise forall x:bitstring;
+ isCol(x) = false.

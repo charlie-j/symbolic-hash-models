@@ -1,0 +1,5 @@
+include(`MDH_lib.m4')dnl
+include(`per_protocol_config.m4')dnl
+dnl
+dnl
+otherwise forall x:bitstring; MDH( x ) = NIL.

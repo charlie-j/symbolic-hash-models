@@ -1,0 +1,288 @@
+(* Library to encode the Merkle–Damgård hash with Chosen Prefix collision:
+    Given h1, h2, there exists m1, m2 such that H(h1 || m1) = H(h2 || m2)
+ *)
+
+ (** Collision function *)
+
+ (* In an equation theory format, it would correspond to the following:
+     equation H(CPcol1(h1,h2),h1) = H(CPcol2(h1,h2),h2)
+ *)
+
+(** Main predicate representing the equality of hash *)
+
+compfun intern_ground_eq_hash_col(bitstring,bitstring):bool =
+  intern_ground_eq_hash_col(Nil,Nil) -> true
+  otherwise forall x,h1,h2:bitstring; intern_ground_eq_hash_col(H(x,h1),H(x,h2)) -> intern_ground_eq_hash_col(h1,h2)
+  otherwise forall h1,h2,h1',h2',h3,h4:bitstring; intern_ground_eq_hash_col(H(CPcol1(h1,h2),h3),H(CPcol2(h1',h2'),h4)) ->
+    intern_ground_eq_hash_col(h1,h1') && intern_ground_eq_hash_col(h2,h2') &&
+    intern_ground_eq_hash_col(h1,h3) && intern_ground_eq_hash_col(h2,h4)
+  otherwise forall h1,h2,h1',h2',h3,h4:bitstring; intern_ground_eq_hash_col(H(CPcol2(h1',h2'),h4),H(CPcol1(h1,h2),h3)) ->
+    intern_ground_eq_hash_col(h1,h1') && intern_ground_eq_hash_col(h2,h2') &&
+    intern_ground_eq_hash_col(h1,h3) && intern_ground_eq_hash_col(h2,h4)
+  [mayFail]
+.
+
+compfun ground_eq_hash_col(bitstring,bitstring):bool =
+  forall h1,h2:bitstring; ground_eq_hash_col(h1,h2) ->
+    let h1':bitstring = MDH(h1) in
+    let h2':bitstring = MDH(h2) in
+    intern_ground_eq_hash_col(h1',h2')
+  [display]
+.
+
+pred eq_hash_col(bitstring,bitstring) [block,evalGround=ground_eq_hash_col].
+
+(* The process should call buildH(x) to generate a hash from x.
+  Ideally, we would model Merkle-Damgard hash with the following equational theory:
+    H((x1,x2),h) = H(x2,H(x1,h))
+  But this cannot be done directly by ProVerif. Instead we encode the equality
+  of hash through a uninterpreted predicate "eq_hash". This can be declared in
+  ProVerif by adding the option [block] to the declaration of eq_hash.
+*)
+
+letfun equal_hash_col(x:bitstring,y:bitstring) = eq_hash_col(x,y).
+
+(** Basic axioms *)
+
+axiom x1,x2,h1,h2,h1',h2':bitstring;
+  eq_hash_col(Nil,h2) ==> h2 = Nil;
+  eq_hash_col(h1,Nil) ==> h1 = Nil;
+  eq_hash_col(H(x1,h1'),h2) ==> h2 = H(x2,h2');
+  eq_hash_col(h1,H(x2,h2)) ==> h1 = H(x1,h1')
+.
+
+(** Axioms to transform the hash in the predicates in their normal form. *)
+
+(* We put the term inside the predicate in its normal form *)
+axiom h,h1,h2,h1',h2':bitstring;
+  eq_hash_col(h,h) ==> true;
+  eq_hash_col(h1,h2) && not(is_normal_MDH(h1)) && h1' <-- MDH(h1) ==> eq_hash_col(h1',h2);
+  eq_hash_col(h1,h2) && not(is_normal_MDH(h2)) && h2' <-- MDH(h2) ==> eq_hash_col(h1,h2')
+  [forcedRemove,fullSat]
+.
+
+(** Axiom that simlify the equality predicate when extremities of the hash are
+  syntactically equal *)
+
+(* if H( x | h1 ) = H( x | h2) or H( h1 | x) = H( h2 | x)
+  then H(h1) = H(h2)
+*)
+axiom x,h1',h2',h1,h2:bitstring;
+  eq_hash_col(H(x,h1),H(x,h2)) ==> eq_hash_col(h1,h2)
+  [forcedRemove,fullSat]
+.
+
+(** Axiom that detect when the equality predicate is false *)
+
+(*
+  if H( x1 || ..|| xk || h1 ) = H( u1 || ... || uk || h2 )
+  with
+    u1,...,uk not variables
+    x1,...,xk variables in uk
+  then the two hash cannot be equal
+
+  and its symmetrical (i.e, H( h1 || xk || ..|| x1 ) = H( h2 || uk || ... || u1 ))
+*)
+axiom h1,h2,h1',h2':bitstring;
+  eq_hash_col(h1,h2) && is_normal_MDH(h1) && is_normal_MDH(h2) && h1 <> h2 && false_hash_var(h1,h2,Nil) ==> false;
+  eq_hash_col(h2,h1) && is_normal_MDH(h1) && is_normal_MDH(h2) && h1 <> h2 && false_hash_var(h1,h2,Nil) ==> false
+.
+
+compfun is_Col(bitstring):bool =
+  forall h1,h2:bitstring; is_Col(CPcol1(h1,h2)) -> true
+  otherwise forall h1,h2:bitstring; is_Col(CPcol2(h1,h2)) -> true
+  otherwise forall t:bitstring; is_Col(t) -> false
+.
+
+compfun all_not_var_col(bitstring):bool =
+  forall x:bitstring; all_not_var_col(x) if is_var(x) -> false
+  otherwise all_not_var_col(Nil) -> true
+  otherwise forall x,h:bitstring; all_not_var_col(H(x,h)) if is_Col(x) -> false
+  otherwise forall x,h:bitstring; all_not_var_col(H(x,h)) ->
+    if not(is_var(x)) then all_not_var_col(h) else false
+.
+
+(*
+  if H( h1 ) = H( u1 || ... || uk )
+  with
+    u1,...,uk not variables and not CPcol1 nor CPcol2
+  then equality with colision is the same without.
+*)
+axiom h1,h2:bitstring;
+  eq_hash_col(h1,h2) && all_not_var_col(h2) ==> eq_hash(h1,h2);
+  eq_hash_col(h1,h2) && all_not_var_col(h1) ==> eq_hash(h1,h2)
+  [fullSat,forcedRemove]
+.
+
+
+(* Case where we can directly instantiate:
+    - H( h1 || u1 ) = H( h2 || u2 ) with u1,u2 not var nor col implies u1 = u2
+*)
+axiom u1,h1,h1',h1'',u2,h2,h2',h2'':bitstring;
+  eq_hash_col(H(u1,h1),H(u2,h2)) && not(is_var(u1)) && not(is_var(u2)) && not(is_Col(u1)) && not(is_Col(u2)) ==> u1 = u2
+.
+
+compfun corres_ground(bitstring):bitstring =
+  forall h1,h2:bitstring; corres_ground(H(CPcol1(h1,h2),h1)) -> H(CPcol2(h1,h2),h2)
+  otherwise forall h1,h2:bitstring; corres_ground(H(CPcol2(h1,h2),h2)) -> H(CPcol1(h1,h2),h1)
+  otherwise forall x,h:bitstring; corres_ground(H(x,h)) if not(is_var(x)) ->
+    let corres = corres_ground(h) in
+    H(x,corres)
+  [mayFail]
+.
+
+(* Case where:
+    - H( un | ... | u1 ) =col H( h | x )
+    with uk not variables and x a variable.
+    Then un | ... | u1 is of the form un | ... | ui | CPCol1(H(un|...|ui),h1) | u{i-2} | .. | u_1
+    and H(h) = H(h1 | CPCol2(H(un|...|ui),h1) | u{i-2} | ... | u1 )
+*)
+axiom x,h,h2,h2':bitstring;
+  eq_hash_col(H(x,h),h2) && is_var(x) && h2' <-- corres_ground(h2) ==> eq_hash(H(x,h),h2');
+  eq_hash_col(h2,H(x,h)) && is_var(x) && h2' <-- corres_ground(h2) ==> eq_hash(H(x,h),h2')
+  [forcedRemove,fullSat]
+.
+
+(* Case where we can directly instantiate:
+    - H( h1 || CPcol1(h1',h2') ) = H( h2 || u2 ) with u2 not var implies
+        either
+          u2 = CPcol1(h1'',h2'') && eq_hash(h1',h1'') && eq_hash(h2',h2'') && eq_hash_col(h1,h2)
+        or
+          u2 = CPcol2(h1'',h2'') &&
+          equal_hash(h1,h1') &&
+          equal_hash(h1',h1'') &&
+          equal_hash(h2,h2') &&
+          equal_hash(h2',h2'')
+*)
+axiom u1,h1,h1',h1'',u2,h2,h2',h2'':bitstring;
+  eq_hash_col(H(CPcol1(h1',h2'),h1),H(u2,h2)) && not(is_var(u2)) ==>
+    (u2 = CPcol1(h1'',h2'') && eq_hash(h1',h1'') && eq_hash(h2',h2'') && eq_hash_col(h1,h2)) ||
+    (u2 = CPcol2(h1'',h2'') && eq_hash(h1,h1') && eq_hash(h1',h1'') && eq_hash(h2,h2') && eq_hash(h2',h2''));
+
+  eq_hash_col(H(u2,h2),H(CPcol1(h1',h2'),h1)) && not(is_var(u2)) ==>
+    (u2 = CPcol1(h1'',h2'') && eq_hash(h1',h1'') && eq_hash(h2',h2'') && eq_hash_col(h1,h2)) ||
+    (u2 = CPcol2(h1'',h2'') && eq_hash(h1,h1') && eq_hash(h1',h1'') && eq_hash(h2,h2') && eq_hash(h2',h2''));
+
+  eq_hash_col(H(CPcol2(h1',h2'),h1),H(u2,h2)) && not(is_var(u2)) ==>
+    (u2 = CPcol2(h1'',h2'') && eq_hash(h1',h1'') && eq_hash(h2',h2'') && eq_hash_col(h1,h2)) ||
+    (u2 = CPcol1(h1'',h2'') && eq_hash(h1,h1') && eq_hash(h1',h1'') && eq_hash(h2,h2') && eq_hash(h2',h2''));
+
+  eq_hash_col(H(u2,h2),H(CPcol2(h1',h2'),h1)) && not(is_var(u2)) ==>
+    (u2 = CPcol2(h1'',h2'') && eq_hash(h1',h1'') && eq_hash(h2',h2'') && eq_hash_col(h1,h2)) ||
+    (u2 = CPcol1(h1'',h2'') && eq_hash(h1,h1') && eq_hash(h1',h1'') && eq_hash(h2,h2') && eq_hash(h2',h2''))
+  [forcedRemove].
+
+(*
+  Case where we can do a case analysis without looping (i.e. x1 = u1 || x1 = (x2,x3)):
+    - H( h1 || x1 ) = H (h2 || uk || ... || u1)
+      with x1 occuring in uk and u1 ... uk-1 not variables
+    - H( x1 || h1 ) = H (u1 || ... || uk)
+      with u1 ... uk not variables
+*)
+axiom x1,x1',x1'',x2,h1,h2,h3,h4,h3',h4':bitstring;
+  eq_hash_col(H(x1,h1),H(x2,h2)) && is_var(x1) && instantiate_allowed(x1,H(x2,h2)) ==> eq_hash_col(h1,h2) && (
+    x1 = x2 ||
+    (x1 = CPcol1(h3,h4) && x2 = CPcol1(h3',h4') && eq_hash(h3,h3') && eq_hash(h4,h4')) ||
+    (x1 = CPcol2(h3,h4) && x2 = CPcol2(h3',h4') && eq_hash(h3,h3') && eq_hash(h4,h4'))
+  ) ||
+    (x1 = (x1',x1'') && eq_hash_col(H(x1,h1),H(x2,h2)))
+  ;
+  eq_hash_col(H(x2,h2),H(x1,h1)) && is_var(x1) && instantiate_allowed(x1,H(x2,h2)) ==> eq_hash_col(h1,h2) && (
+    x1 = x2 ||
+    (x1 = CPcol1(h3,h4) && x2 = CPcol1(h3',h4') && eq_hash(h3,h3') && eq_hash(h4,h4')) ||
+    (x1 = CPcol2(h3,h4) && x2 = CPcol2(h3',h4') && eq_hash(h3,h3') && eq_hash(h4,h4'))
+  ) ||
+    (x1 = (x1',x1'') && eq_hash_col(H(x2,h2),H(x1,h1)))
+  [forcedRemove]
+.
+
+(* Axiom that not not sound w.r.t. equational theory but should be sound for trace property *)
+
+(*
+  If H( x1 ) = H ( x2 )
+  with x1 and x2 variables and attacker(x1) and attacker(x2) then
+    either x1 = x2
+    or x1 = h1 || CPcol1(h1,h2) and x2 = h2 || CPcol2(h1,h2).
+  This may lead to some non terminaison.
+*)
+
+axiom x1,x2,h1,h2:bitstring;
+  eq_hash_col(H(x1,Nil),H(x2,Nil)) && attacker(x1) && attacker(x2) ==>
+    x1 = x2 ||
+    (x1 = (h1,CPcol1(H(h1,Nil),H(h2,Nil))) && x2 = (h2,CPcol2(H(h1,Nil),H(h2,Nil))))
+  [forTraceReconstruction]
+.
+
+(*
+  If H( x1 || h1 ) = H( x2 || h2 )
+  with attacker(x1) and x2 is not a variable nor a colision
+  then
+    - the attacker must know x2 (cannot be expressed in the axiom (yet))
+    - x1 must contain x2. The issue is that x1 could be equal to ((..(x2,y1)..,yk),yk+1)
+*)
+axiom h1,h2,x1,x2,x1':bitstring;
+  eq_hash_col(H(x1,h1),H(x2,h2)) && attacker(x1) && not(is_var(x2)) && not(is_Col(x2)) ==> x1 = x2 || x1 = (x1',x2);
+  eq_hash_col(H(x2,h2),H(x1,h1)) && attacker(x1) && not(is_var(x2)) && not(is_Col(x2)) ==> x1 = x2 || x2 = (x1',x2)
+  [forTraceReconstruction]
+.
+
+(* Case where
+  H(h1 | x2 | x1) = H(h2 | y2 | y1) with attacker(x1,x2,y1,y2).
+*)
+axiom x1,x1',x2,y1,y1',y2,z,h1,h2:bitstring;
+  eq_hash_col(H(x1,H(x2,h1)),H(y1,H(y2,h2))) && attacker(x1) && attacker(x2) && attacker(y1) && attacker(y2) ==>
+    x1 = y1
+    ||
+    (x1 = (CPcol1(H(x2,h1),H(y2,h2)),z) && y1 = (CPcol2(H(x2,h1),H(y2,h2)),z)) ||
+    (x1 = (CPcol2(H(y2,h2),H(x2,h1)),z) && y1 = (CPcol1(H(y2,h2),H(x2,h1)),z))
+  [forTraceReconstruction]
+.
+
+(* axiom x1,x1',x2,y1,y1',y2,z,h1,h2:bitstring;
+  eq_hash_col(H(x1,h1),H(x2,h2)) && attacker(x1) && attacker(x2) ==>
+    x1 = x2
+    ||
+    (x1 = CPcol1(h1,h2) && x2 = CPcol2(h1,h2)) ||
+    (x1 = CPcol2(h1,h2) && x2 = CPcol1(h1,h2))
+  [forTraceReconstruction,forcedRemove]
+. *)
+
+(* Case where
+  H(h1 | x2 | x1) = H(h2 | u | y1) with attacker(x1,x2,y1) and u not a variable.
+*)
+axiom x1,x1',x2,y1,y1',y2,z,h1,h2:bitstring;
+  eq_hash_col(H(x1,H(x2,h1)),H(y1,H(y2,h2))) && attacker(x1) && attacker(x2) && attacker(y1) && not(is_var(y2)) ==>
+    x1 = y1 ||
+    y1 = (x1',x1) ||
+    (x1 = CPcol1(H(x2,h1),H(y2,h2)) && y1 = CPcol2(H(x2,h1),H(y2,h2))) ||
+    (x1 = CPcol2(H(y2,h2),H(x2,h1)) && y1 = CPcol1(H(y2,h2),H(x2,h1)));
+  eq_hash_col(H(y1,H(y2,h2)),H(x1,H(x2,h1))) && attacker(x1) && attacker(x2) && attacker(y1) && not(is_var(y2)) ==>
+    x1 = y1 ||
+    y1 = (x1',x1) ||
+    (x1 = (CPcol1(H(x2,h1),H(y2,h2)),z) && y1 = (CPcol2(H(x2,h1),H(y2,h2)),z)) ||
+    (x1 = (CPcol2(H(y2,h2),H(x2,h1)),z) && y1 = (CPcol1(H(y2,h2),H(x2,h1)),z))
+  [forTraceReconstruction]
+.
+
+(* Case where
+  H(h1 | x2 | x1) = H(h2 | u | y1) with attacker(x1,x2,y1) and u not a variable.
+*)
+axiom x1,x1',x2,y1,y1',y2,z,h1,h2:bitstring;
+  eq_hash_col(H(x1,H(x2,h1)),H(y1,H(y2,h2))) && attacker(x1) && not(is_var(x2)) && attacker(y1) && not(is_var(y2)) ==>
+    x1 = y1 ||
+    y1 = (x1',x1) ||
+    x1 = (y1',y1) ||
+    (x1 = (CPcol1(H(x2,h1),H(y2,h2)),z) && y1 = (CPcol2(H(x2,h1),H(y2,h2)),z)) ||
+    (x1 = (CPcol2(H(y2,h2),H(x2,h1)),z) && y1 = (CPcol1(H(y2,h2),H(x2,h1)),z))
+  [forTraceReconstruction]
+.
+
+axiom x1,x1',x2,y1,y1',y2,z,h,h1,h2:bitstring;
+  eq_hash_col(H(x1,h),h2) && attacker(x1) && attacker(h) ==>
+    h = Nil ||
+    h = H(x2,Nil);
+  eq_hash_col(h2,H(x1,h)) && attacker(x1) && attacker(h) ==>
+    h = Nil ||
+    h = H(x2,Nil)
+  [forTraceReconstruction]
+.

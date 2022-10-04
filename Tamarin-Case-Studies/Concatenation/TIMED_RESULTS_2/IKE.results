@@ -1,0 +1,213 @@
+Compressed Results
+{
+    "trans_auth": {
+        "AllCol_RO": "false",
+        "Clo_Ex_RO": "false",
+        "Clo_IP_RO": "false",
+        "ACT_Adv_CP_PI1_i": "true",
+        "ACT_Adv_Clo_i": "true"
+    },
+    "secrecy_key_A": {
+        "AllCol_RO": "false",
+        "ACT_Adv_CP_Clo_PI1_i": "true"
+    },
+    "secrecy_key_B": {
+        "AllCol_RO": "false",
+        "CP_Clo_PI1_RO": "AssociativeFailure",
+        "ACT_Clo_PI1_i": "AssociativeFailure",
+        "CP_Clo_PI1_RO_i": "AssociativeFailure",
+        "ACT_Clo_IP_PI1_i": "AssociativeFailure",
+        "ACT_Adv_CP_Clo_PI1_i": "AssociativeFailure",
+        "ACT_Adv_CP_Clo_PI1": "AssociativeFailure",
+        "ACT_Adv_CP_PI1_i": "truesimpl",
+        "ACT_CP_Clo_PI1_i": "AssociativeFailure",
+        "ACT_CP_Clo_PI1": "AssociativeFailure",
+        "ACT_Adv_Clo_IP_PI1_i": "AssociativeFailure",
+        "ACT_Adv_Clo_IP_PI1": "AssociativeFailure",
+        "ACT_Clo_IP_PI1": "AssociativeFailure",
+        "ACT_Adv_Clo_PI1_i": "AssociativeFailure",
+        "ACT_Adv_Clo_PI1": "AssociativeFailure",
+        "ACT_Clo_PI1": "AssociativeFailure",
+        "ACT_Adv_CP_Clo_PI2_i": "timeout",
+        "ACT_Adv_CP_Clo_PI2": "truesimpl",
+        "ACT_CP_Clo_PI2_i": "timeout",
+        "ACT_Adv_Clo_IP_PI2_i": "timeout",
+        "ACT_Clo_IP_PI2_i": "timeout",
+        "ACT_Adv_Clo_PI2_i": "truesimpl",
+        "ACT_Adv_CP_Clo_i": "truesimpl",
+        "ACN_Adv_CP_Clo_PI1_i": "AssociativeFailure",
+        "ACN_Adv_CP_Clo_PI1": "AssociativeFailure",
+        "ACN_CP_Clo_PI1_i": "AssociativeFailure",
+        "ACN_CP_Clo_PI1": "AssociativeFailure",
+        "ACN_Adv_Clo_IP_PI1_i": "AssociativeFailure",
+        "ACN_Adv_Clo_IP_PI1": "AssociativeFailure",
+        "ACN_Clo_IP_PI1_i": "AssociativeFailure",
+        "ACN_Clo_IP_PI1": "AssociativeFailure",
+        "ACN_Adv_Clo_PI1_i": "timeout",
+        "ACN_Adv_Clo_PI1": "AssociativeFailure",
+        "ACN_Clo_PI1_i": "timeout",
+        "ACN_Clo_PI1": "AssociativeFailure",
+        "ACN_Adv_CP_Clo_PI2_i": "timeout",
+        "ACN_CP_Clo_PI2_i": "timeout",
+        "ACN_Adv_Clo_IP_PI2_i": "timeout",
+        "ACN_Clo_IP_PI2_i": "truesimpl",
+        "Adv_CP_Clo_PI1_RO_i": "AssociativeFailure",
+        "Adv_CP_Clo_PI1_RO": "AssociativeFailure",
+        "Adv_Clo_IP_PI1_RO_i": "AssociativeFailure",
+        "Adv_Clo_IP_PI1_RO": "AssociativeFailure",
+        "Clo_IP_PI1_RO_i": "AssociativeFailure",
+        "Clo_IP_PI1_RO": "AssociativeFailure",
+        "Adv_Clo_PI1_RO_i": "AssociativeFailure",
+        "Adv_Clo_PI1_RO": "AssociativeFailure",
+        "Clo_PI1_RO_i": "AssociativeFailure",
+        "Clo_PI1_RO": "AssociativeFailure",
+        "Adv_CP_Clo_PI2_RO_i": "timeout",
+        "CP_Clo_PI2_RO_i": "truesimpl",
+        "Adv_Clo_IP_PI2_RO_i": "timeout"
+    }
+}
+TOTAL Tamarin calls: 71
+TOTAL execution time forIKE/IKE_Cookie/ikeV2_HEB_A.spthy: 5949.574612617493
+Timed Results
+{
+    "trans_auth": {
+        "AllCol_RO": [
+            "false",
+            3.0299041271209717
+        ],
+        "Clo_Ex_RO": [
+            "false",
+            9.752801895141602
+        ],
+        "Clo_IP_RO": [
+            "false",
+            17.69609260559082
+        ],
+        "ACT_Adv_CP_PI1_i": [
+            "true",
+            2.7356138229370117
+        ],
+        "ACT_Adv_Clo_i": [
+            "true",
+            2.520986795425415
+        ]
+    },
+    "secrecy_key_A": {
+        "AllCol_RO": [
+            "false",
+            132.845458984375
+        ],
+        "ACT_Adv_CP_Clo_PI1_i": [
+            "true",
+            6.707221031188965
+        ]
+    },
+    "secrecy_key_B": {
+        "AllCol_RO": [
+            "false",
+            5.650228977203369
+        ],
+        "CP_Clo_PI1_RO": "AssociativeFailure",
+        "ACT_Clo_PI1_i": "AssociativeFailure",
+        "CP_Clo_PI1_RO_i": "AssociativeFailure",
+        "ACT_Clo_IP_PI1_i": "AssociativeFailure",
+        "ACT_Adv_CP_Clo_PI1_i": "AssociativeFailure",
+        "ACT_Adv_CP_Clo_PI1": "AssociativeFailure",
+        "ACT_Adv_CP_PI1_i": [
+            "truesimpl",
+            34.77788805961609
+        ],
+        "ACT_CP_Clo_PI1_i": "AssociativeFailure",
+        "ACT_CP_Clo_PI1": "AssociativeFailure",
+        "ACT_Adv_Clo_IP_PI1_i": "AssociativeFailure",
+        "ACT_Adv_Clo_IP_PI1": "AssociativeFailure",
+        "ACT_Clo_IP_PI1": "AssociativeFailure",
+        "ACT_Adv_Clo_PI1_i": "AssociativeFailure",
+        "ACT_Adv_Clo_PI1": "AssociativeFailure",
+        "ACT_Clo_PI1": "AssociativeFailure",
+        "ACT_Adv_CP_Clo_PI2_i": [
+            "timeout",
+            1200
+        ],
+        "ACT_Adv_CP_Clo_PI2": [
+            "truesimpl",
+            361.9243314266205
+        ],
+        "ACT_CP_Clo_PI2_i": [
+            "timeout",
+            1200
+        ],
+        "ACT_Adv_Clo_IP_PI2_i": [
+            "timeout",
+            1200
+        ],
+        "ACT_Clo_IP_PI2_i": [
+            "timeout",
+            1200
+        ],
+        "ACT_Adv_Clo_PI2_i": [
+            "truesimpl",
+            459.5956492424011
+        ],
+        "ACT_Adv_CP_Clo_i": [
+            "truesimpl",
+            361.41490626335144
+        ],
+        "ACN_Adv_CP_Clo_PI1_i": "AssociativeFailure",
+        "ACN_Adv_CP_Clo_PI1": "AssociativeFailure",
+        "ACN_CP_Clo_PI1_i": "AssociativeFailure",
+        "ACN_CP_Clo_PI1": "AssociativeFailure",
+        "ACN_Adv_Clo_IP_PI1_i": "AssociativeFailure",
+        "ACN_Adv_Clo_IP_PI1": "AssociativeFailure",
+        "ACN_Clo_IP_PI1_i": "AssociativeFailure",
+        "ACN_Clo_IP_PI1": "AssociativeFailure",
+        "ACN_Adv_Clo_PI1_i": [
+            "timeout",
+            1200
+        ],
+        "ACN_Adv_Clo_PI1": "AssociativeFailure",
+        "ACN_Clo_PI1_i": [
+            "timeout",
+            1200
+        ],
+        "ACN_Clo_PI1": "AssociativeFailure",
+        "ACN_Adv_CP_Clo_PI2_i": [
+            "timeout",
+            1200
+        ],
+        "ACN_CP_Clo_PI2_i": [
+            "timeout",
+            1200
+        ],
+        "ACN_Adv_Clo_IP_PI2_i": [
+            "timeout",
+            1200
+        ],
+        "ACN_Clo_IP_PI2_i": [
+            "truesimpl",
+            943.7502388954163
+        ],
+        "Adv_CP_Clo_PI1_RO_i": "AssociativeFailure",
+        "Adv_CP_Clo_PI1_RO": "AssociativeFailure",
+        "Adv_Clo_IP_PI1_RO_i": "AssociativeFailure",
+        "Adv_Clo_IP_PI1_RO": "AssociativeFailure",
+        "Clo_IP_PI1_RO_i": "AssociativeFailure",
+        "Clo_IP_PI1_RO": "AssociativeFailure",
+        "Adv_Clo_PI1_RO_i": "AssociativeFailure",
+        "Adv_Clo_PI1_RO": "AssociativeFailure",
+        "Clo_PI1_RO_i": "AssociativeFailure",
+        "Clo_PI1_RO": "AssociativeFailure",
+        "Adv_CP_Clo_PI2_RO_i": [
+            "timeout",
+            1200
+        ],
+        "CP_Clo_PI2_RO_i": [
+            "truesimpl",
+            960.8379278182983
+        ],
+        "Adv_Clo_IP_PI2_RO_i": [
+            "timeout",
+            1200
+        ]
+    }
+}

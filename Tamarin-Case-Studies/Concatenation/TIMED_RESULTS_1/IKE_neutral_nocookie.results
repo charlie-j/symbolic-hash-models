@@ -1,0 +1,65 @@
+Compressed Results
+{
+    "trans_auth": {
+        "AllCol_RO": "false",
+        "ACT_Adv_CP_PI1_i": "true",
+        "ACT_Adv_CP_Clo_i": "true",
+        "ACT_Adv_Clo_Ex_i": "true",
+        "Clo_PI2_RO": "false"
+    },
+    "secrecy_key_A": {
+        "AllCol_RO": "false",
+        "ACT_Adv_CP_Clo_PI1_i": "true"
+    },
+    "secrecy_key_B": {
+        "AllCol_RO": "false",
+        "ACT_Adv_CP_Clo_PI1_i": "true"
+    }
+}
+TOTAL Tamarin calls: 199
+TOTAL execution time forIKE/IKE_NoCookie/ikeV2_HEB_A.spthy: 147.12014055252075
+Timed Results
+{
+    "trans_auth": {
+        "AllCol_RO": [
+            "false",
+            3.5985333919525146
+        ],
+        "ACT_Adv_CP_PI1_i": [
+            "true",
+            2.5169661045074463
+        ],
+        "ACT_Adv_CP_Clo_i": [
+            "true",
+            2.3333353996276855
+        ],
+        "ACT_Adv_Clo_Ex_i": [
+            "true",
+            2.1117734909057617
+        ],
+        "Clo_PI2_RO": [
+            "false",
+            2.8836803436279297
+        ]
+    },
+    "secrecy_key_A": {
+        "AllCol_RO": [
+            "false",
+            8.43248438835144
+        ],
+        "ACT_Adv_CP_Clo_PI1_i": [
+            "true",
+            10.645142078399658
+        ]
+    },
+    "secrecy_key_B": {
+        "AllCol_RO": [
+            "false",
+            7.0430028438568115
+        ],
+        "ACT_Adv_CP_Clo_PI1_i": [
+            "true",
+            6.792169809341431
+        ]
+    }
+}

@@ -1,0 +1,299 @@
+/*
+ *  Author: ~
+ *  Model Name: sshV2_HF_EC.spthy
+ *  Status: DEVELOPMENTAL
+ *
+ *  Comments:
+
+
+
+ */
+
+theory SSH2
+begin
+
+builtins: signing, diffie-hellman, symmetric-encryption
+functions: h/2, kdf/3, user/1, V/1
+
+functions: algo/0
+functions: h/2, pre/2, pre_conc/2
+equations: h(k,pre(k,x)) = x, pre_conc(k,h(k,y))=y
+
+rule InitKeys:
+	[Fr(~sk)]
+  --[HKey(~sk)]->
+	[!Key(~sk),
+	 Out(pk(~sk))]
+
+
+
+rule InitKeysBis:
+	[!Key(~skA),!Key(~skB)]
+  --[
+  	 Start()]->
+	[A0(user(~skA),V(pk(~skA)),~skA,pk(~skB)),
+	 B0(user(~skA),V(pk(~skB)),pk(~skA),~skB)]
+
+
+#ifdef single
+restriction SingleSession:
+"
+All #i #j. Start()@i & Start()@j ==> #i = #j
+"
+#endif
+
+
+rule A_0:
+  let
+    m0A = <'INIT',<VA,<~cookie,~algorithms>>>
+  in
+    [A0(user,VA,~skA,pkB),
+     Fr(~cookie),
+     Fr(~algorithms)]
+  --[_restrict(not( pk(~skA) = pkB)) //* To avoid a reflection attack that violates agreement A --> B without a weak hash function *)
+    ]->
+    [A1(user,VA,~skA,pkB,~cookie,~algorithms,m0A),
+     Out(m0A)]
+
+rule B_0:
+  let
+    m0A = <'INIT',<VA,<cA,aA>>>
+    m0B = <'INIT',<VB,<~cookie,~algorithms>>>
+  in
+    [B0(user,VB,pkA,~skB),
+     Fr(~cookie),
+     Fr(~algorithms),
+     In(<'INIT',<VA,<cA,aA>>>)]
+  --[_restrict(not( pk(~skB) = pkA))]->
+    [B1(user,VB,pkA,~skB,VA,cA,aA,~cookie,~algorithms,m0A,m0B),
+     Out(m0B)]
+
+
+
+rule A_1:
+  let
+    m0B = <'INIT',<VB,<cB,aB>>>
+    gX = 'g'^~x
+    m1A = <'KEX',gX>
+  in
+    [A1(user,VA,~skA,pkB,~cA,~aA,m0A),
+     Fr(~x),
+     In(<'INIT',<VB,<cB,aB>>>)]
+  --[]->
+    [Out(m1A),
+     A2(user,VA,~skA,pkB,~cA,~aA,VB,cB,aB,~x,m0A,m0B,m1A)]
+
+
+rule B_1_1:
+  let
+    gY = 'g'^~y
+    gX = 'g'^~x
+    m1A = <'KEX',gX>
+    m1B = <'KEX',gY>
+  in
+    [B1(user,VB,pkA,~skB,VA,cA,aA,~cB,~aB,m0A,m0B),
+     Fr(~y),
+     In(<'KEX',gX>)]
+  --[InitB(pkA,pk(~skB),m0A,m0B,m1A,m1B)]->
+    [Out(m1B),
+     B11(user,VB,pkA,~skB,VA,cA,aA,~cB,~aB,~y,gX,m0A,m0B,m1A,m1B)]
+
+
+rule A_2_1:
+  let
+    gY = 'g'^~y
+    pkA = pk(~skA)
+    m1B = <'KEX',gY>
+  in
+    [A2(user,VA,~skA,pkB,~cA,~aA,VB,cB,aB,~x,m0A,m0B,m1A),
+     In(<'KEX',gY>)]
+  --[InitA(pkA,pkB,m0A,m0B,m1A,m1B)]->
+    [A21(user,VA,~skA,pkB,~cA,~aA,VB,cB,aB,~x,gY,m0A,m0B,m1A,m1B)]
+
+
+rule B_1_2:
+  let
+    gY = 'g'^~y
+    pkB = pk(~skB)
+    k = gX^~y
+    hashtrans = <VA,<VB,<cA,<aA,<~cB,<~aB,<pkB,<gX,<gY,k>>>>>>>>>
+    sig = sign(h(algo(),hashtrans),~skB)
+    m2 = <'KEX',<pkB,sig>>
+    k1 = kdf(k,h(algo(),hashtrans),'1')
+  in
+    [B11(user,VB,pkA,~skB,VA,cA,aA,~cB,~aB,~y,gX,m0A,m0B,m1A,m1B)]
+  --[TransB(pkA,pk(~skB),hashtrans,k1),
+     TransHashB(pkA,pk(~skB),h(algo(),hashtrans),k1)]->
+    [Out(m2),
+     B2(user,VB,pkA,~skB,VA,cA,aA,~cB,~aB,~y,gX,k1,hashtrans,m0A,m0B,m1A,m1B)]
+
+
+rule A_2_2:
+  let
+    pkA = pk(~skA)
+    k = gY^~x
+    hashtrans = <VA,<VB,<~cA,<~aA,<cB,<aB,<pkB,<'g'^~x,<gY,k>>>>>>>>>
+    hashA = h(algo(),<user,<h(algo(),hashtrans),pkA>>)
+    k1 = kdf(k,h(algo(),hashtrans),'1')
+    //k2 = kdf(k,h(algo(),hashtrans),'2')
+    sigA = sign(hashA,~skA)
+    m2 = senc(<'AUTH',sigA>,k1)
+  in
+    [A21(user,VA,~skA,pkB,~cA,~aA,VB,cB,aB,~x,gY,m0A,m0B,m1A,m1B),
+     In(<'KEX',<pkBTest,sigBTest>>)]
+  --[_restrict(verify(sigBTest,h(algo(),hashtrans),pkBTest)=true),
+     _restrict(pkBTest=pkB),
+     TransA(pkA,pkB,hashtrans,k1),
+     TransHashA(pkA,pkB,h(algo(),hashtrans),k1),
+     SessionKeyA(pkA,pkB,k1),
+     AcceptA(pkA,pkB,m0A,m0B,m1A,m1B)]->
+    [ Out(m2)]
+ 
+rule B_2:
+  let
+    authhash = h(algo(),<user,<h(algo(),hashtrans),pkA>>)
+  in
+    [B2(user,VB,pkA,~skB,VA,cA,aA,~cB,~aB,~y,gX,k1,hashtrans,m0A,m0B,m1A,m1B),
+     In(senc(<'AUTH',sigATest>,k1))]
+  --[_restrict(verify(sigATest,authhash,pkA)=true),
+    Sanity(),
+    Finish(pkA,pk(~skB)),
+    SessionKeyB(pkA,pk(~skB),k1),
+    AcceptB(pkA,pk(~skB),m0A,m0B,m1A,m1B)]->
+    []
+
+
+
+lemma sanity:
+ exists-trace
+ "
+ Ex #i. Sanity()@#i
+ "
+
+
+lemma secrecy_key_A:
+  "All pkA pkB k #i.
+    SessionKeyA(pkA,pkB,k)@#i  ==> not (Ex #j. K(k)@j)"
+
+lemma secrecy_key_B:
+  "All pkA pkB k #i.
+    SessionKeyB(pkA,pkB,k)@#i  ==> not (Ex #j. K(k)@j)"
+
+
+
+lemma trans_auth:
+"
+All pkA pkB #i. Finish(pkA,pkB)@i ==>
+  Ex trans k #j #m. TransA(pkA,pkB,trans,k)@#j & TransB(pkA,pkB,trans,k)@#m & #m<#i & #j<#i
+"
+
+lemma trans_hash_auth:
+"
+All pkA pkB #i. Finish(pkA,pkB)@i ==>
+  Ex htrans k #j #m. TransHashA(pkA,pkB,htrans,k)@#j & TransHashB(pkA,pkB,htrans,k)@#m & #m<#i & #j<#i
+"
+
+
+
+// agree_from_A_to_B
+
+lemma agree_keys:
+"
+ All pkB pkA m1 m2 m3 m4 #i. AcceptB(pkA,pkB,m1,m2,m3,m4)@i ==>
+    Ex m5 m6 m7 m8 #j. InitA(pkA,pkB,m5,m6,m7,m8)@j
+"
+/*
+lemma agree_keys_m1:
+"
+ All pkB pkA m1 m2 m3 m4 #i. AcceptB(pkA,pkB,m1,m2,m3,m4)@i ==>
+    Ex m6 m7 m8 #j. InitA(pkA,pkB,m1,m6,m7,m8)@j
+"
+
+lemma agree_keys_m1_m2:
+"
+ All pkB pkA m1 m2 m3 m4 #i. AcceptB(pkA,pkB,m1,m2,m3,m4)@i ==>
+    Ex m7 m8 #j. InitA(pkA,pkB,m1,m2,m7,m8)@j
+"
+
+lemma agree_keys_m1_m2_m3:
+"
+ All pkB pkA m1 m2 m3 m4 #i. AcceptB(pkA,pkB,m1,m2,m3,m4)@i ==>
+    Ex m8 #j. InitA(pkA,pkB,m1,m2,m3,m8)@j
+"
+*/
+lemma agree_keys_all:
+"
+ All pkB pkA m1 m2 m3 m4 #i. AcceptB(pkA,pkB,m1,m2,m3,m4)@i ==>
+    Ex #j. InitA(pkA,pkB,m1,m2,m3,m4)@j
+"
+
+
+
+// agree_from_B_to_A
+
+/*
+lemma agree_keys_2:
+"
+ All pkB pkA m1 m2 m3 m4 #i. AcceptA(pkA,pkB,m1,m2,m3,m4)@i ==>
+    Ex m5 m6 m7 m8 #j. InitB(pkA,pkB,m5,m6,m7,m8)@j
+"
+
+lemma agree_keys_m1_2:
+"
+ All pkB pkA m1 m2 m3 m4 #i. AcceptA(pkA,pkB,m1,m2,m3,m4)@i ==>
+    Ex m6 m7 m8 #j. InitB(pkA,pkB,m1,m6,m7,m8)@j
+"
+
+lemma agree_keys_m1_m2_2:
+"
+ All pkB pkA m1 m2 m3 m4 #i. AcceptA(pkA,pkB,m1,m2,m3,m4)@i ==>
+    Ex m7 m8 #j. InitB(pkA,pkB,m1,m2,m7,m8)@j
+"
+
+lemma agree_keys_m1_m2_m3_2:
+"
+ All pkB pkA m1 m2 m3 m4 #i. AcceptA(pkA,pkB,m1,m2,m3,m4)@i ==>
+    Ex m8 #j. InitB(pkA,pkB,m1,m2,m3,m8)@j
+"
+
+lemma agree_keys_all_2:
+"
+ All pkB pkA m1 m2 m3 m4 #i. AcceptA(pkA,pkB,m1,m2,m3,m4)@i ==>
+    Ex #j. InitB(pkA,pkB,m1,m2,m3,m4)@j
+"
+*/
+
+
+
+
+lemma agree_Bkey_2:
+"
+ All pkB pkA m1 m2 m3 m4 #i. AcceptA(pkA,pkB,m1,m2,m3,m4)@i ==>
+    Ex pkA2 m5 m6 m7 m8 #j. InitB(pkA2,pkB,m5,m6,m7,m8)@j
+"
+/*
+lemma agree_Bkey_m1_2:
+"
+ All pkB pkA m1 m2 m3 m4 #i. AcceptA(pkA,pkB,m1,m2,m3,m4)@i ==>
+    Ex pkA2 m6 m7 m8 #j. InitB(pkA2,pkB,m1,m6,m7,m8)@j
+"
+
+lemma agree_Bkey_m1_m2_2:
+"
+ All pkB pkA m1 m2 m3 m4 #i. AcceptA(pkA,pkB,m1,m2,m3,m4)@i ==>
+    Ex pkA2 m7 m8 #j. InitB(pkA2,pkB,m1,m2,m7,m8)@j
+"
+
+lemma agree_Bkey_m1_m2_m3_2:
+"
+ All pkB pkA m1 m2 m3 m4 #i. AcceptA(pkA,pkB,m1,m2,m3,m4)@i ==>
+    Ex pkA2 m8 #j. InitB(pkA2,pkB,m1,m2,m3,m8)@j
+"
+*/
+lemma agree_Bkey_all_2:
+"
+ All pkB pkA m1 m2 m3 m4 #i. AcceptA(pkA,pkB,m1,m2,m3,m4)@i ==>
+    Ex pkA2 #j. InitB(pkA2,pkB,m1,m2,m3,m4)@j
+"
+
+end

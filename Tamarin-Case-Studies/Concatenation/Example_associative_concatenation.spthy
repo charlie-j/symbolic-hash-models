@@ -1,0 +1,85 @@
+theory concat
+begin
+
+builtins: concatenation, hashing
+
+// Concat (||) is an associative operator that has no neutral element and that is not commutative. The attacker can apply the two projections to obtain the arguments of a concat operator.
+
+// We test those properties with the following lemmas.
+// Lemmas suffixed with _Y should hold, the others should be violated.
+
+rule Test_assoc:
+    [] --[ A( ('1' || ('2' || '3')) ) ]->  [] 
+
+lemma Assoc_Y:
+"( All x #i.
+  A(x) @ #i ==> x = (('1' || '2') || '3')
+ )"
+
+// ----
+
+rule Test_assoc2:
+    [ ] --[ B( (('1' || '2') || ('3' || '4')) ) ]-> [] 
+
+lemma Assoc2_Y:
+"( All x #i.
+  B(x) @ #i ==>  x = ('1' || ('2' || ('3' || '4')))
+ )"
+
+// ----
+
+rule Test_extract:
+    [ Fr( ~n ) ] --[ FR( ~n ) ]-> [ Out( ('1' || ~n) ) ]
+
+lemma Extract_Y: exists-trace
+"( Ex n #i #j.
+  FR(n) @ #i &
+  K(n) @ #j
+ )"
+
+// ----
+
+rule Test_extract2:
+    [ Fr( ~n ), Fr(~k1), Fr(~k2), Fr(~k3) ]
+  --[ FR2( ~n ) ]->
+    [ Out( (h(~k1) || (~k2 || (~n || h(~k3)))) ) ]
+
+lemma Extract2_Y: exists-trace
+"( Ex n #i #j.
+  FR2(n) @ #i &
+  K(n) @ #j
+ )"
+
+// ----
+
+rule Test_comm:
+    [ ] --[ C( ('2' || ('1' || '3')) ) ]-> [] 
+
+lemma Comm_N: exists-trace
+"( Ex #i.
+  C( (('1' || '2') || '3') ) @ #i
+ )"
+
+// ----
+
+rule Test_comm2:
+    [ ] --[ D( ('2' || ('1' || '3')) ) ]-> [] 
+
+lemma Comm2_N: exists-trace
+"( Ex #i.
+  D(('1' || '2') || '3') @ #i
+ )"
+
+// ----
+
+rule Test_neutral:
+    [ In(x) ] --[ Ne( ('1' || x) ) ]-> []
+
+lemma Neutral_N: exists-trace
+"( Ex #i.
+  Ne( ('1') ) @ #i
+ )"
+
+// ----
+
+end

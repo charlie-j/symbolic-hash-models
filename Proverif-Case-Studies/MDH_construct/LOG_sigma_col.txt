@@ -1,0 +1,3 @@
+proverif -lib hash_no_collision.pvl -lib hash_collision.pvl -lib isCol.pvl -lib "sigma_HF_EC"/"sigma_HF_EC"_declaration.pvl "sigma_HF_EC"/"sigma_HF_EC"_collision.pv
+File "hash_no_collision.pvl", line 18, characters 1-7:
+Error: Syntax error.

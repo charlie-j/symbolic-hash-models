@@ -1,0 +1,1091 @@
+theory KA begin
+
+// Function signature and definition of the equational theory E
+
+functions: adec/2, aenc/2, f/2, fst/1, g/3, h1/3, h2/3, h3/3, h4/3,
+           pair/2, pk/1, snd/1
+equations:
+    adec(aenc(x.1, pk(x.2)), x.2) = x.1,
+    fst(<x.1, x.2>) = x.1,
+    snd(<x.1, x.2>) = x.2
+
+
+
+rule (modulo E) Reader1:
+   [ Fr( ~n ) ] --[ Start( ~n ) ]-> [ Out( ~n ), RState1( $Reader, ~n ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Tag1:
+   [ Fr( ~m ), In( n ), !Shk( $Reader, $Tag, k ) ]
+  --[ Start( ~m ) ]->
+   [
+   Send( $Tag, ~m ),
+   TState1( $Reader, $Tag, ~m, h1(k, n, ~m), h2(k, n, ~m), h3(k, n, ~m),
+            h4(k, n, ~m)
+   ),
+   MayLeak( $Tag, <h1(k, n, ~m), h2(k, n, ~m), h3(k, n, ~m), h4(k, n, ~m)> )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Reader2:
+   [ RState1( Reader, n ), Fr( ~s ), In( m ), !Shk( Reader, $Tag, k ) ]
+  --[ Send( Reader, g(h1(k, n, m), h2(k, n, m), ~s) ) ]->
+   [
+   RState2( Reader, $Tag, n, m, h1(k, n, m), h2(k, n, m), h3(k, n, m),
+            h4(k, n, m), ~s
+   ),
+   Out( g(h1(k, n, m), h2(k, n, m), ~s) )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Tag2:
+   [ TState1( Reader, Tag, m, t, d, v0, v1 ), In( c ) ]
+  --[ End( m ) ]->
+   [ Send( Tag, f(c, <t, d, v0, v1>) ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Reader3:
+   [
+   RState2( Reader, Tag, n, m, t, d, v0, v1, s ),
+   Recv( Reader, f(g(t, d, s), <t, d, v0, v1>) ), !Shk( Reader, Tag, k )
+   ]
+  --[
+  DBSec( Reader, Tag, g(t, d, s), f(g(t, d, s), <t, d, v0, v1>) ), End( n )
+  ]->
+   [ ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) LtkGen:
+   [ Fr( ~k ) ]
+  --[ Once( $X ) ]->
+   [ !Ltk( $X, ~k ), !Pk( $X, pk(~k) ), Out( pk(~k) ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) ShkGen:
+   [ Fr( ~k ) ] --[ Once( <$X, $Y> ) ]-> [ !Shk( $X, $Y, ~k ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) LtkReveal:
+   [ !Ltk( $X, k ) ]
+  --[ !Compromise( $X ) ]->
+   [ Out( k ), !Compromise( $X ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) ShkRevealX:
+   [ !Shk( $X, $Y, k ) ]
+  --[ !Compromise( $X ) ]->
+   [ Out( k ), !Compromise( $X ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) ShkRevealY:
+   [ !Shk( $X, $Y, k ) ]
+  --[ !Compromise( $Y ) ]->
+   [ Out( k ), !Compromise( $Y ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) DBInject:
+   [ In( m ), !Compromise( $X ) ] --> [ Send( $X, m ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) DBSend:
+   [ Send( $X, m ) ]
+  --[ Send( $X, m ), Action( $X ) ]->
+   [ Net( m ), Out( m ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) DBRecv:
+   [ Net( m ) ] --[ Action( $Y ), Recv( $Y, m ) ]-> [ Recv( $Y, m ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Leak:
+   [ MayLeak( $X, m ) ] --[ Action( $X ), Collusion( ) ]-> [ Out( m ) ]
+
+  /* has exactly the trivial AC variant */
+
+lemma reachability:
+  exists-trace
+  "∃ V P chal resp #i #j #k #l.
+    ((((((((Send( V, chal ) @ #i) ∧ (Send( P, resp ) @ #j)) ∧
+          (Recv( V, resp ) @ #k)) ∧
+         (DBSec( V, P, chal, resp ) @ #l)) ∧
+        (#i < #j)) ∧
+       (#j < #k)) ∧
+      (#k < #l)) ∧
+     (¬(∃ C #r. !Compromise( C ) @ #r))) ∧
+    (¬(∃ #c. Collusion( ) @ #c))"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ V P chal resp #i #j #k #l.
+  (Send( V, chal ) @ #i) ∧
+  (Send( P, resp ) @ #j) ∧
+  (Recv( V, resp ) @ #k) ∧
+  (DBSec( V, P, chal, resp ) @ #l)
+ ∧
+  (#i < #j) ∧
+  (#j < #k) ∧
+  (#k < #l) ∧
+  (∀ C #r. (!Compromise( C ) @ #r) ⇒ ⊥) ∧
+  (∀ #c. (Collusion( ) @ #c) ⇒ ⊥)"
+*/
+simplify
+solve( Net( f(g(t, d, s), <t, d, v0, v1>) ) ▶₀ #k )
+  case DBSend_case_1
+  solve( RState2( $Y, P, n.1, m.1, h1(~k.1, n, ~m), h2(~k.1, n, ~m),
+                  h3(~k.1, n, ~m), h4(~k.1, n, ~m), s
+         ) ▶₀ #l )
+    case Reader2
+    solve( Recv( $Reader,
+                 f(g(h1(~k.1, ~n, ~m), h2(~k.1, ~n, ~m), ~s),
+                   <h1(~k.1, ~n, ~m), h2(~k.1, ~n, ~m), h3(~k.1, ~n, ~m), h4(~k.1, ~n, ~m)>)
+           ) ▶₁ #l )
+      case DBRecv_case_1
+      solve( !Shk( $Reader, $X, k.2 ) ▶₂ #l )
+        case ShkGen
+        solve( Send( $Reader, g(h1(~k.1, ~n, ~m), h2(~k.1, ~n, ~m), ~s) ) @ #i )
+          case Reader2
+          solve( Send( $X,
+                       f(g(h1(~k, ~n, ~m), h2(~k, ~n, ~m), ~s),
+                         <h1(~k, ~n, ~m), h2(~k, ~n, ~m), h3(~k, ~n, ~m), h4(~k, ~n, ~m)>)
+                 ) @ #j )
+            case DBSend
+            solve( Send( $X,
+                         f(g(h1(~k, ~n, ~m), h2(~k, ~n, ~m), ~s),
+                           <h1(~k, ~n, ~m), h2(~k, ~n, ~m), h3(~k, ~n, ~m), h4(~k, ~n, ~m)>)
+                   ) ▶₀ #j )
+              case Tag2
+              solve( !KU( ~m ) @ #vk.2 )
+                case DBSend
+                solve( !KU( ~n ) @ #vk.2 )
+                  case Reader1
+                  solve( !KU( g(h1(~k, ~n, ~m), h2(~k, ~n, ~m), ~s) ) @ #vk.2 )
+                    case Reader2
+                    SOLVED // trace found
+                  qed
+                qed
+              qed
+            qed
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma unique_runid:
+  all-traces
+  "∀ x #i #j. ((Start( x ) @ #i) ∧ (Start( x ) @ #j)) ⇒ (#i = #j)"
+/*
+guarded formula characterizing all counter-examples:
+"∃ x #i #j. (Start( x ) @ #i) ∧ (Start( x ) @ #j) ∧ ¬(#i = #j)"
+*/
+simplify
+solve( (#i < #j)  ∥ (#j < #i) )
+  case case_1
+  solve( Start( x ) @ #i )
+    case Reader1
+    solve( Start( ~n ) @ #j )
+      case Reader1
+      by contradiction /* cyclic */
+    qed
+  next
+    case Tag1
+    solve( !Shk( $Reader, $Tag, k ) ▶₂ #i )
+      case ShkGen
+      solve( Start( ~m ) @ #j )
+        case Tag1
+        by contradiction /* cyclic */
+      qed
+    qed
+  qed
+next
+  case case_2
+  solve( Start( x ) @ #i )
+    case Reader1
+    solve( Start( ~n ) @ #j )
+      case Reader1
+      by contradiction /* cyclic */
+    qed
+  next
+    case Tag1
+    solve( !Shk( $Reader, $Tag, k ) ▶₂ #i )
+      case ShkGen
+      solve( Start( ~m ) @ #j )
+        case Tag1
+        by contradiction /* cyclic */
+      qed
+    qed
+  qed
+qed
+
+lemma end_after_start:
+  all-traces
+  "∀ x #j.
+    (End( x ) @ #j) ⇒ (∃ #i. (Start( x ) @ #i) ∧ ((#i = #j) ∨ (#i < #j)))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ x #j.
+  (End( x ) @ #j) ∧ ∀ #i. (Start( x ) @ #i) ⇒ (¬(#i = #j)) ∧ (¬(#i < #j))"
+*/
+simplify
+solve( End( x ) @ #j )
+  case Reader3
+  solve( RState2( Reader, Tag, x, m, t, d, v0, v1, s ) ▶₀ #j )
+    case Reader2
+    by contradiction /* from formulas */
+  qed
+next
+  case Tag2
+  solve( TState1( Reader, Tag, x, t, d, v0, v1 ) ▶₀ #j )
+    case Tag1
+    by contradiction /* from formulas */
+  qed
+qed
+
+lemma fast_before_claim:
+  all-traces
+  "∀ V P chal resp #l.
+    (DBSec( V, P, chal, resp ) @ #l) ⇒
+    ((∃ #i #j.
+       (((Send( V, chal ) @ #i) ∧ (Recv( V, resp ) @ #j)) ∧ (#i < #l)) ∧
+       (#j < #l)) ∨
+     (∃ #j. !Compromise( V ) @ #j))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ V P chal resp #l.
+  (DBSec( V, P, chal, resp ) @ #l)
+ ∧
+  (∀ #i #j.
+    (Send( V, chal ) @ #i) ∧ (Recv( V, resp ) @ #j)
+   ⇒
+    ((¬(#i < #l)) ∨ (¬(#j < #l)))) ∧
+  (∀ #j. (!Compromise( V ) @ #j) ⇒ ⊥)"
+*/
+simplify
+solve( RState2( V, P, n, m, t, d, v0, v1, s ) ▶₀ #l )
+  case Reader2
+  solve( Recv( $Reader,
+               f(g(h1(~k, ~n, m), h2(~k, ~n, m), ~s),
+                 <h1(~k, ~n, m), h2(~k, ~n, m), h3(~k, ~n, m), h4(~k, ~n, m)>)
+         ) ▶₁ #l )
+    case DBRecv_case_1
+    by contradiction /* from formulas */
+  next
+    case DBRecv_case_2
+    by contradiction /* from formulas */
+  next
+    case DBRecv_case_3
+    by contradiction /* from formulas */
+  next
+    case DBRecv_case_4
+    by contradiction /* from formulas */
+  qed
+qed
+
+restriction once:
+  "∀ x #i #j. ((Once( x ) @ #i) ∧ (Once( x ) @ #j)) ⇒ (#i = #j)"
+  // safety formula
+
+rule (modulo E) SetExpiry:
+   [ ] --[ Expiry( ), Once( 'expiry' ) ]-> [ ]
+
+  /* has exactly the trivial AC variant */
+
+restriction no_collusion_after_expiry:
+  "∀ #i #j. ((Expiry( ) @ #i) ∧ (Collusion( ) @ #j)) ⇒ (#j < #i)"
+  // safety formula
+
+restriction sessions_complete_before_expiry:
+  "∀ x #i #e.
+    (((Start( x ) @ #i) ∧ (Expiry( ) @ #e)) ∧ (#i < #e)) ⇒
+    (∃ #j. (End( x ) @ #j) ∧ (#j < #e))"
+
+lemma dbsec:
+  all-traces
+  "∀ V P chal resp #l.
+    (DBSec( V, P, chal, resp ) @ #l) ⇒
+    ((((∃ #i #j #k.
+         ((((Send( V, chal ) @ #i) ∧ (Action( P ) @ #j)) ∧
+           (Recv( V, resp ) @ #k)) ∧
+          (#i < #j)) ∧
+         (#j < #k)) ∨
+       (∃ P2 #p #p2 #i #j #k.
+         ((((((!Compromise( P ) @ #p) ∧ (!Compromise( P2 ) @ #p2)) ∧
+             (Send( V, chal ) @ #i)) ∧
+            (Action( P2 ) @ #j)) ∧
+           (Recv( V, resp ) @ #k)) ∧
+          (#i < #j)) ∧
+         (#j < #k))) ∨
+      (∃ #j. !Compromise( V ) @ #j)) ∨
+     (∃ #j. Collusion( ) @ #j))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ V P chal resp #l.
+  (DBSec( V, P, chal, resp ) @ #l)
+ ∧
+  (∀ #i #j #k.
+    (Send( V, chal ) @ #i) ∧ (Action( P ) @ #j) ∧ (Recv( V, resp ) @ #k)
+   ⇒
+    ((¬(#i < #j)) ∨ (¬(#j < #k)))) ∧
+  (∀ P2 #p #p2 #i #j #k.
+    (!Compromise( P ) @ #p) ∧
+    (!Compromise( P2 ) @ #p2) ∧
+    (Send( V, chal ) @ #i) ∧
+    (Action( P2 ) @ #j) ∧
+    (Recv( V, resp ) @ #k)
+   ⇒
+    ((¬(#i < #j)) ∨ (¬(#j < #k)))) ∧
+  (∀ #j. (!Compromise( V ) @ #j) ⇒ ⊥) ∧
+  (∀ #j. (Collusion( ) @ #j) ⇒ ⊥)"
+*/
+simplify
+solve( RState2( V, P, n, m, t, d, v0, v1, s ) ▶₀ #l )
+  case Reader2
+  solve( Recv( $Reader,
+               f(g(h1(~k, ~n, m), h2(~k, ~n, m), ~s),
+                 <h1(~k, ~n, m), h2(~k, ~n, m), h3(~k, ~n, m), h4(~k, ~n, m)>)
+         ) ▶₁ #l )
+    case DBRecv_case_1
+    solve( !Shk( $Reader, $Tag, k.1 ) ▶₂ #l )
+      case ShkGen
+      solve( !KU( ~m ) @ #vk )
+        case DBSend
+        solve( !KU( g(h1(~k, ~n, ~m), h2(~k, ~n, ~m), ~s) ) @ #vk.1 )
+          case Reader2
+          by contradiction /* cyclic */
+        next
+          case c_g
+          by solve( !KU( ~s ) @ #vk.5 )
+        qed
+      qed
+    qed
+  next
+    case DBRecv_case_2
+    solve( !Shk( $Reader, $Tag, k.1 ) ▶₂ #l )
+      case ShkGen
+      solve( !KU( f(g(h1(~k, ~n, m), h2(~k, ~n, m), ~s),
+                    <h1(~k, ~n, m), h2(~k, ~n, m), h3(~k, ~n, m), h4(~k, ~n, m)>)
+             ) @ #vk.1 )
+        case DBSend
+        solve( !KU( ~m ) @ #vk.1 )
+          case DBSend
+          solve( !KU( g(h1(~k, ~n, ~m), h2(~k, ~n, ~m), ~s) ) @ #vk.2 )
+            case Reader2
+            by contradiction /* cyclic */
+          next
+            case c_g
+            by solve( !KU( ~s ) @ #vk.6 )
+          qed
+        qed
+      next
+        case c_f
+        solve( !KU( h1(~k, ~n, m) ) @ #vk.4 )
+          case Leak
+          by contradiction /* from formulas */
+        next
+          case c_h1
+          solve( !KU( ~k ) @ #vk.10 )
+            case ShkRevealX
+            by contradiction /* from formulas */
+          next
+            case ShkRevealY
+            solve( !KU( g(h1(~k, ~n, m), h2(~k, ~n, m), ~s) ) @ #vk.5 )
+              case Reader2
+              by contradiction /* cyclic */
+            next
+              case c_g
+              by solve( !KU( ~s ) @ #vk.12 )
+            qed
+          qed
+        qed
+      qed
+    qed
+  next
+    case DBRecv_case_3
+    solve( !Shk( $Reader, $Tag, k.1 ) ▶₂ #l )
+      case ShkGen
+      solve( !KU( f(g(h1(~k, ~n, m), h2(~k, ~n, m), ~s),
+                    <h1(~k, ~n, m), h2(~k, ~n, m), h3(~k, ~n, m), h4(~k, ~n, m)>)
+             ) @ #vk.1 )
+        case DBSend
+        solve( !KU( ~m ) @ #vk.1 )
+          case DBSend
+          solve( !KU( g(h1(~k, ~n, ~m), h2(~k, ~n, ~m), ~s) ) @ #vk.2 )
+            case Reader2
+            by contradiction /* cyclic */
+          next
+            case c_g
+            by solve( !KU( ~s ) @ #vk.6 )
+          qed
+        qed
+      next
+        case c_f
+        solve( !KU( h1(~k, ~n, m) ) @ #vk.4 )
+          case Leak
+          by contradiction /* from formulas */
+        next
+          case c_h1
+          solve( !KU( ~k ) @ #vk.10 )
+            case ShkRevealX
+            by contradiction /* from formulas */
+          next
+            case ShkRevealY
+            solve( !KU( g(h1(~k, ~n, m), h2(~k, ~n, m), ~s) ) @ #vk.5 )
+              case Reader2
+              by contradiction /* cyclic */
+            next
+              case c_g
+              by solve( !KU( ~s ) @ #vk.12 )
+            qed
+          qed
+        qed
+      qed
+    qed
+  next
+    case DBRecv_case_4
+    solve( !Shk( $Reader, $Tag, k.1 ) ▶₂ #l )
+      case ShkGen
+      solve( !KU( f(g(h1(~k, ~n, m), h2(~k, ~n, m), ~s),
+                    <h1(~k, ~n, m), h2(~k, ~n, m), h3(~k, ~n, m), h4(~k, ~n, m)>)
+             ) @ #vk.1 )
+        case DBSend
+        solve( !KU( ~m ) @ #vk.1 )
+          case DBSend
+          solve( !KU( g(h1(~k, ~n, ~m), h2(~k, ~n, ~m), ~s) ) @ #vk.2 )
+            case Reader2
+            by contradiction /* cyclic */
+          next
+            case c_g
+            by solve( !KU( ~s ) @ #vk.6 )
+          qed
+        qed
+      next
+        case c_f
+        solve( !KU( h1(~k, ~n, m) ) @ #vk.4 )
+          case Leak
+          by contradiction /* from formulas */
+        next
+          case c_h1
+          solve( !KU( ~k ) @ #vk.10 )
+            case ShkRevealX
+            by contradiction /* from formulas */
+          next
+            case ShkRevealY
+            solve( !KU( g(h1(~k, ~n, m), h2(~k, ~n, m), ~s) ) @ #vk.5 )
+              case Reader2
+              by contradiction /* cyclic */
+            next
+              case c_g
+              by solve( !KU( ~s ) @ #vk.12 )
+            qed
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma dbsec_hnst:
+  all-traces
+  "∀ V P chal resp #l.
+    (DBSec( V, P, chal, resp ) @ #l) ⇒
+    ((((∃ #i #j #k.
+         ((((Send( V, chal ) @ #i) ∧ (Action( P ) @ #j)) ∧
+           (Recv( V, resp ) @ #k)) ∧
+          (#i < #j)) ∧
+         (#j < #k)) ∨
+       (∃ #j. !Compromise( V ) @ #j)) ∨
+      (∃ #j. !Compromise( P ) @ #j)) ∨
+     (∃ #j. Collusion( ) @ #j))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ V P chal resp #l.
+  (DBSec( V, P, chal, resp ) @ #l)
+ ∧
+  (∀ #i #j #k.
+    (Send( V, chal ) @ #i) ∧ (Action( P ) @ #j) ∧ (Recv( V, resp ) @ #k)
+   ⇒
+    ((¬(#i < #j)) ∨ (¬(#j < #k)))) ∧
+  (∀ #j. (!Compromise( V ) @ #j) ⇒ ⊥) ∧
+  (∀ #j. (!Compromise( P ) @ #j) ⇒ ⊥) ∧
+  (∀ #j. (Collusion( ) @ #j) ⇒ ⊥)"
+*/
+simplify
+solve( RState2( V, P, n, m, t, d, v0, v1, s ) ▶₀ #l )
+  case Reader2
+  solve( Recv( $Reader,
+               f(g(h1(~k, ~n, m), h2(~k, ~n, m), ~s),
+                 <h1(~k, ~n, m), h2(~k, ~n, m), h3(~k, ~n, m), h4(~k, ~n, m)>)
+         ) ▶₁ #l )
+    case DBRecv_case_1
+    solve( !Shk( $Reader, $Tag, k.1 ) ▶₂ #l )
+      case ShkGen
+      solve( !KU( ~m ) @ #vk )
+        case DBSend
+        solve( !KU( g(h1(~k, ~n, ~m), h2(~k, ~n, ~m), ~s) ) @ #vk.1 )
+          case Reader2
+          by contradiction /* cyclic */
+        next
+          case c_g
+          by solve( !KU( ~s ) @ #vk.5 )
+        qed
+      qed
+    qed
+  next
+    case DBRecv_case_2
+    solve( !Shk( $Reader, $Tag, k.1 ) ▶₂ #l )
+      case ShkGen
+      solve( !KU( f(g(h1(~k, ~n, m), h2(~k, ~n, m), ~s),
+                    <h1(~k, ~n, m), h2(~k, ~n, m), h3(~k, ~n, m), h4(~k, ~n, m)>)
+             ) @ #vk.1 )
+        case DBSend
+        solve( !KU( ~m ) @ #vk.1 )
+          case DBSend
+          solve( !KU( g(h1(~k, ~n, ~m), h2(~k, ~n, ~m), ~s) ) @ #vk.2 )
+            case Reader2
+            by contradiction /* cyclic */
+          next
+            case c_g
+            by solve( !KU( ~s ) @ #vk.6 )
+          qed
+        qed
+      next
+        case c_f
+        solve( !KU( h1(~k, ~n, m) ) @ #vk.4 )
+          case Leak
+          by contradiction /* from formulas */
+        next
+          case c_h1
+          solve( !KU( ~k ) @ #vk.10 )
+            case ShkRevealX
+            by contradiction /* from formulas */
+          next
+            case ShkRevealY
+            by contradiction /* from formulas */
+          qed
+        qed
+      qed
+    qed
+  next
+    case DBRecv_case_3
+    solve( !Shk( $Reader, $Tag, k.1 ) ▶₂ #l )
+      case ShkGen
+      solve( !KU( f(g(h1(~k, ~n, m), h2(~k, ~n, m), ~s),
+                    <h1(~k, ~n, m), h2(~k, ~n, m), h3(~k, ~n, m), h4(~k, ~n, m)>)
+             ) @ #vk.1 )
+        case DBSend
+        solve( !KU( ~m ) @ #vk.1 )
+          case DBSend
+          solve( !KU( g(h1(~k, ~n, ~m), h2(~k, ~n, ~m), ~s) ) @ #vk.2 )
+            case Reader2
+            by contradiction /* cyclic */
+          next
+            case c_g
+            by solve( !KU( ~s ) @ #vk.6 )
+          qed
+        qed
+      next
+        case c_f
+        solve( !KU( h1(~k, ~n, m) ) @ #vk.4 )
+          case Leak
+          by contradiction /* from formulas */
+        next
+          case c_h1
+          solve( !KU( ~k ) @ #vk.10 )
+            case ShkRevealX
+            by contradiction /* from formulas */
+          next
+            case ShkRevealY
+            by contradiction /* from formulas */
+          qed
+        qed
+      qed
+    qed
+  next
+    case DBRecv_case_4
+    solve( !Shk( $Reader, $Tag, k.1 ) ▶₂ #l )
+      case ShkGen
+      solve( !KU( f(g(h1(~k, ~n, m), h2(~k, ~n, m), ~s),
+                    <h1(~k, ~n, m), h2(~k, ~n, m), h3(~k, ~n, m), h4(~k, ~n, m)>)
+             ) @ #vk.1 )
+        case DBSend
+        solve( !KU( ~m ) @ #vk.1 )
+          case DBSend
+          solve( !KU( g(h1(~k, ~n, ~m), h2(~k, ~n, ~m), ~s) ) @ #vk.2 )
+            case Reader2
+            by contradiction /* cyclic */
+          next
+            case c_g
+            by solve( !KU( ~s ) @ #vk.6 )
+          qed
+        qed
+      next
+        case c_f
+        solve( !KU( h1(~k, ~n, m) ) @ #vk.4 )
+          case Leak
+          by contradiction /* from formulas */
+        next
+          case c_h1
+          solve( !KU( ~k ) @ #vk.10 )
+            case ShkRevealX
+            by contradiction /* from formulas */
+          next
+            case ShkRevealY
+            by contradiction /* from formulas */
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma dbsec_hnst_collusion:
+  all-traces
+  "∀ V P chal resp #l.
+    (DBSec( V, P, chal, resp ) @ #l) ⇒
+    (((∃ #i #j #k.
+        ((((Send( V, chal ) @ #i) ∧ (Action( P ) @ #j)) ∧
+          (Recv( V, resp ) @ #k)) ∧
+         (#i < #j)) ∧
+        (#j < #k)) ∨
+      (∃ #j. !Compromise( V ) @ #j)) ∨
+     (∃ #j. !Compromise( P ) @ #j))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ V P chal resp #l.
+  (DBSec( V, P, chal, resp ) @ #l)
+ ∧
+  (∀ #i #j #k.
+    (Send( V, chal ) @ #i) ∧ (Action( P ) @ #j) ∧ (Recv( V, resp ) @ #k)
+   ⇒
+    ((¬(#i < #j)) ∨ (¬(#j < #k)))) ∧
+  (∀ #j. (!Compromise( V ) @ #j) ⇒ ⊥) ∧
+  (∀ #j. (!Compromise( P ) @ #j) ⇒ ⊥)"
+*/
+simplify
+solve( RState2( V, P, n, m, t, d, v0, v1, s ) ▶₀ #l )
+  case Reader2
+  solve( Recv( $Reader,
+               f(g(h1(~k, ~n, m), h2(~k, ~n, m), ~s),
+                 <h1(~k, ~n, m), h2(~k, ~n, m), h3(~k, ~n, m), h4(~k, ~n, m)>)
+         ) ▶₁ #l )
+    case DBRecv_case_2
+    solve( !Shk( $Reader, $Tag, k.1 ) ▶₂ #l )
+      case ShkGen
+      solve( !KU( f(g(h1(~k, ~n, m), h2(~k, ~n, m), ~s),
+                    <h1(~k, ~n, m), h2(~k, ~n, m), h3(~k, ~n, m), h4(~k, ~n, m)>)
+             ) @ #vk.1 )
+        case c_f
+        solve( !KU( h1(~k, ~n, m) ) @ #vk.4 )
+          case Leak
+          solve( !KU( ~m ) @ #vk.2 )
+            case DBSend
+            solve( !KU( ~n ) @ #vk.10 )
+              case Reader1
+              solve( !KU( g(h1(~k, ~n, ~m), h2(~k, ~n, ~m), ~s) ) @ #vk.5 )
+                case Reader2
+                solve( !KU( h2(~k, ~n, ~m) ) @ #vk.7 )
+                  case Leak
+                  solve( !KU( h3(~k, ~n, ~m) ) @ #vk.9 )
+                    case Leak
+                    solve( !KU( h4(~k, ~n, ~m) ) @ #vk.10 )
+                      case Leak
+                      SOLVED // trace found
+                    qed
+                  qed
+                qed
+              qed
+            qed
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma dbsec_hnst_star:
+  all-traces
+  "∀ V P chal resp #e #l.
+    (((DBSec( V, P, chal, resp ) @ #l) ∧ (Expiry( ) @ #e)) ∧ (#e < #l)) ⇒
+    (((∃ #i #j #k.
+        ((((Send( V, chal ) @ #i) ∧ (Action( P ) @ #j)) ∧
+          (Recv( V, resp ) @ #k)) ∧
+         (#i < #j)) ∧
+        (#j < #k)) ∨
+      (∃ #j. !Compromise( V ) @ #j)) ∨
+     (∃ #j. !Compromise( P ) @ #j))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ V P chal resp #e #l.
+  (DBSec( V, P, chal, resp ) @ #l) ∧ (Expiry( ) @ #e)
+ ∧
+  (#e < #l) ∧
+  (∀ #i #j #k.
+    (Send( V, chal ) @ #i) ∧ (Action( P ) @ #j) ∧ (Recv( V, resp ) @ #k)
+   ⇒
+    ((¬(#i < #j)) ∨ (¬(#j < #k)))) ∧
+  (∀ #j. (!Compromise( V ) @ #j) ⇒ ⊥) ∧
+  (∀ #j. (!Compromise( P ) @ #j) ⇒ ⊥)"
+*/
+simplify
+solve( RState2( V, P, n, m, t, d, v0, v1, s ) ▶₀ #l )
+  case Reader2
+  solve( (¬(#vr.1 < #e))  ∥ (∃ #j. (End( ~n ) @ #j) ∧ #j < #e) )
+    case case_1
+    solve( Recv( $Reader,
+                 f(g(h1(~k, ~n, m), h2(~k, ~n, m), ~s),
+                   <h1(~k, ~n, m), h2(~k, ~n, m), h3(~k, ~n, m), h4(~k, ~n, m)>)
+           ) ▶₁ #l )
+      case DBRecv_case_1
+      solve( (¬(#vr.6 < #e))  ∥ (∃ #j. (End( ~m ) @ #j) ∧ #j < #e) )
+        case case_1
+        solve( !Shk( $Reader, $Tag, k.1 ) ▶₂ #l )
+          case ShkGen
+          solve( !KU( ~m ) @ #vk )
+            case DBSend
+            solve( !KU( g(h1(~k, ~n, ~m), h2(~k, ~n, ~m), ~s) ) @ #vk.1 )
+              case Reader2
+              by contradiction /* cyclic */
+            next
+              case c_g
+              by solve( !KU( ~s ) @ #vk.5 )
+            qed
+          qed
+        qed
+      next
+        case case_2
+        solve( !Shk( $Reader, $Tag, k.1 ) ▶₂ #l )
+          case ShkGen
+          solve( End( ~m ) @ #j )
+            case Reader3
+            by solve( RState2( Reader, Tag, ~m, m.1, t, d, v0, v1, s ) ▶₀ #j )
+          next
+            case Tag2
+            solve( TState1( Reader, Tag, ~m, t, d, v0, v1 ) ▶₀ #j )
+              case Tag1
+              solve( !KU( ~n ) @ #vk.2 )
+                case Reader1
+                by contradiction /* cyclic */
+              qed
+            qed
+          qed
+        qed
+      qed
+    next
+      case DBRecv_case_2
+      solve( !Shk( $Reader, $Tag, k.1 ) ▶₂ #l )
+        case ShkGen
+        solve( !KU( f(g(h1(~k, ~n, m), h2(~k, ~n, m), ~s),
+                      <h1(~k, ~n, m), h2(~k, ~n, m), h3(~k, ~n, m), h4(~k, ~n, m)>)
+               ) @ #vk.1 )
+          case DBSend
+          solve( (¬(#vr.10 < #e))  ∥ (∃ #j. (End( ~m ) @ #j) ∧ #j < #e) )
+            case case_1
+            solve( !KU( ~m ) @ #vk.1 )
+              case DBSend
+              solve( !KU( g(h1(~k, ~n, ~m), h2(~k, ~n, ~m), ~s) ) @ #vk.2 )
+                case Reader2
+                by contradiction /* cyclic */
+              next
+                case c_g
+                by solve( !KU( ~s ) @ #vk.6 )
+              qed
+            qed
+          next
+            case case_2
+            solve( End( ~m ) @ #j )
+              case Reader3
+              by solve( RState2( Reader, Tag, ~m, m.1, t, d, v0, v1, s ) ▶₀ #j )
+            next
+              case Tag2
+              solve( TState1( Reader, Tag, ~m, t, d, v0, v1 ) ▶₀ #j )
+                case Tag1
+                solve( !KU( ~n ) @ #vk.3 )
+                  case Reader1
+                  by contradiction /* cyclic */
+                qed
+              qed
+            qed
+          qed
+        next
+          case c_f
+          solve( !KU( h1(~k, ~n, m) ) @ #vk.4 )
+            case Leak
+            solve( End( ~m ) @ #j )
+              case Reader3
+              by solve( RState2( Reader, Tag, ~m, m.1, t, d, v0, v1, s ) ▶₀ #j )
+            next
+              case Tag2
+              solve( TState1( Reader, Tag, ~m, t, d, v0, v1 ) ▶₀ #j )
+                case Tag1
+                solve( !KU( ~n ) @ #vk.10 )
+                  case Reader1
+                  by contradiction /* cyclic */
+                qed
+              qed
+            qed
+          next
+            case c_h1
+            solve( !KU( ~k ) @ #vk.10 )
+              case ShkRevealX
+              by contradiction /* from formulas */
+            next
+              case ShkRevealY
+              by contradiction /* from formulas */
+            qed
+          qed
+        qed
+      qed
+    next
+      case DBRecv_case_3
+      solve( !Shk( $Reader, $Tag, k.1 ) ▶₂ #l )
+        case ShkGen
+        solve( !KU( f(g(h1(~k, ~n, m), h2(~k, ~n, m), ~s),
+                      <h1(~k, ~n, m), h2(~k, ~n, m), h3(~k, ~n, m), h4(~k, ~n, m)>)
+               ) @ #vk.1 )
+          case DBSend
+          solve( (¬(#vr.10 < #e))  ∥ (∃ #j. (End( ~m ) @ #j) ∧ #j < #e) )
+            case case_1
+            solve( !KU( ~m ) @ #vk.1 )
+              case DBSend
+              solve( !KU( g(h1(~k, ~n, ~m), h2(~k, ~n, ~m), ~s) ) @ #vk.2 )
+                case Reader2
+                by contradiction /* cyclic */
+              next
+                case c_g
+                by solve( !KU( ~s ) @ #vk.6 )
+              qed
+            qed
+          next
+            case case_2
+            solve( End( ~m ) @ #j )
+              case Reader3
+              by solve( RState2( Reader, Tag, ~m, m.1, t, d, v0, v1, s ) ▶₀ #j )
+            next
+              case Tag2
+              solve( TState1( Reader, Tag, ~m, t, d, v0, v1 ) ▶₀ #j )
+                case Tag1
+                solve( !KU( ~n ) @ #vk.3 )
+                  case Reader1
+                  by contradiction /* cyclic */
+                qed
+              qed
+            qed
+          qed
+        next
+          case c_f
+          solve( !KU( h1(~k, ~n, m) ) @ #vk.4 )
+            case Leak
+            solve( End( ~m ) @ #j )
+              case Reader3
+              by solve( RState2( Reader, Tag, ~m, m.1, t, d, v0, v1, s ) ▶₀ #j )
+            next
+              case Tag2
+              solve( TState1( Reader, Tag, ~m, t, d, v0, v1 ) ▶₀ #j )
+                case Tag1
+                solve( !KU( ~n ) @ #vk.10 )
+                  case Reader1
+                  by contradiction /* cyclic */
+                qed
+              qed
+            qed
+          next
+            case c_h1
+            solve( !KU( ~k ) @ #vk.10 )
+              case ShkRevealX
+              by contradiction /* from formulas */
+            next
+              case ShkRevealY
+              by contradiction /* from formulas */
+            qed
+          qed
+        qed
+      qed
+    next
+      case DBRecv_case_4
+      solve( !Shk( $Reader, $Tag, k.1 ) ▶₂ #l )
+        case ShkGen
+        solve( !KU( f(g(h1(~k, ~n, m), h2(~k, ~n, m), ~s),
+                      <h1(~k, ~n, m), h2(~k, ~n, m), h3(~k, ~n, m), h4(~k, ~n, m)>)
+               ) @ #vk.1 )
+          case DBSend
+          solve( (¬(#vr.10 < #e))  ∥ (∃ #j. (End( ~m ) @ #j) ∧ #j < #e) )
+            case case_1
+            solve( !KU( ~m ) @ #vk.1 )
+              case DBSend
+              solve( !KU( g(h1(~k, ~n, ~m), h2(~k, ~n, ~m), ~s) ) @ #vk.2 )
+                case Reader2
+                by contradiction /* cyclic */
+              next
+                case c_g
+                by solve( !KU( ~s ) @ #vk.6 )
+              qed
+            qed
+          next
+            case case_2
+            solve( End( ~m ) @ #j )
+              case Reader3
+              by solve( RState2( Reader, Tag, ~m, m.1, t, d, v0, v1, s ) ▶₀ #j )
+            next
+              case Tag2
+              solve( TState1( Reader, Tag, ~m, t, d, v0, v1 ) ▶₀ #j )
+                case Tag1
+                solve( !KU( ~n ) @ #vk.3 )
+                  case Reader1
+                  by contradiction /* cyclic */
+                qed
+              qed
+            qed
+          qed
+        next
+          case c_f
+          solve( !KU( h1(~k, ~n, m) ) @ #vk.4 )
+            case Leak
+            solve( End( ~m ) @ #j )
+              case Reader3
+              by solve( RState2( Reader, Tag, ~m, m.1, t, d, v0, v1, s ) ▶₀ #j )
+            next
+              case Tag2
+              solve( TState1( Reader, Tag, ~m, t, d, v0, v1 ) ▶₀ #j )
+                case Tag1
+                solve( !KU( ~n ) @ #vk.10 )
+                  case Reader1
+                  by contradiction /* cyclic */
+                qed
+              qed
+            qed
+          next
+            case c_h1
+            solve( !KU( ~k ) @ #vk.10 )
+              case ShkRevealX
+              by contradiction /* from formulas */
+            next
+              case ShkRevealY
+              by contradiction /* from formulas */
+            qed
+          qed
+        qed
+      qed
+    qed
+  next
+    case case_2
+    solve( Recv( $Reader,
+                 f(g(h1(~k, ~n, m), h2(~k, ~n, m), ~s),
+                   <h1(~k, ~n, m), h2(~k, ~n, m), h3(~k, ~n, m), h4(~k, ~n, m)>)
+           ) ▶₁ #l )
+      case DBRecv_case_1
+      solve( (¬(#vr.6 < #e))  ∥ (∃ #j. (End( ~m ) @ #j) ∧ #j < #e) )
+        case case_1
+        solve( !Shk( $Reader, $Tag, k.1 ) ▶₂ #l )
+          case ShkGen
+          solve( End( ~n ) @ #j )
+            case Reader3
+            solve( RState2( Reader, Tag, ~n, m, t, d, v0, v1, s ) ▶₀ #j )
+              case Reader2
+              by contradiction /* cyclic */
+            qed
+          next
+            case Tag2
+            by solve( TState1( Reader, Tag, ~n, t, d, v0, v1 ) ▶₀ #j )
+          qed
+        qed
+      next
+        case case_2
+        solve( !Shk( $Reader, $Tag, k.1 ) ▶₂ #l )
+          case ShkGen
+          solve( End( ~n ) @ #j )
+            case Reader3
+            solve( RState2( Reader, Tag, ~n, m, t, d, v0, v1, s ) ▶₀ #j )
+              case Reader2
+              by contradiction /* cyclic */
+            qed
+          next
+            case Tag2
+            by solve( TState1( Reader, Tag, ~n, t, d, v0, v1 ) ▶₀ #j )
+          qed
+        qed
+      qed
+    next
+      case DBRecv_case_2
+      solve( !Shk( $Reader, $Tag, k.1 ) ▶₂ #l )
+        case ShkGen
+        solve( End( ~n ) @ #j )
+          case Reader3
+          solve( RState2( Reader, Tag, ~n, m, t, d, v0, v1, s ) ▶₀ #j )
+            case Reader2
+            by contradiction /* cyclic */
+          qed
+        next
+          case Tag2
+          by solve( TState1( Reader, Tag, ~n, t, d, v0, v1 ) ▶₀ #j )
+        qed
+      qed
+    next
+      case DBRecv_case_3
+      solve( !Shk( $Reader, $Tag, k.1 ) ▶₂ #l )
+        case ShkGen
+        solve( End( ~n ) @ #j )
+          case Reader3
+          solve( RState2( Reader, Tag, ~n, m, t, d, v0, v1, s ) ▶₀ #j )
+            case Reader2
+            by contradiction /* cyclic */
+          qed
+        next
+          case Tag2
+          by solve( TState1( Reader, Tag, ~n, t, d, v0, v1 ) ▶₀ #j )
+        qed
+      qed
+    next
+      case DBRecv_case_4
+      solve( !Shk( $Reader, $Tag, k.1 ) ▶₂ #l )
+        case ShkGen
+        solve( End( ~n ) @ #j )
+          case Reader3
+          solve( RState2( Reader, Tag, ~n, m, t, d, v0, v1, s ) ▶₀ #j )
+            case Reader2
+            by contradiction /* cyclic */
+          qed
+        next
+          case Tag2
+          by solve( TState1( Reader, Tag, ~n, t, d, v0, v1 ) ▶₀ #j )
+        qed
+      qed
+    qed
+  qed
+qed
+
+/* All well-formedness checks were successful. */
+
+end
+
+==============================================================================
+summary of summaries:
+
+analyzed: KA.spthy
+
+  reachability (exists-trace): verified (12 steps)
+  unique_runid (all-traces): verified (14 steps)
+  end_after_start (all-traces): verified (6 steps)
+  fast_before_claim (all-traces): verified (7 steps)
+  dbsec (all-traces): verified (47 steps)
+  dbsec_hnst (all-traces): verified (41 steps)
+  dbsec_hnst_collusion (all-traces): falsified - found trace (13 steps)
+  dbsec_hnst_star (all-traces): verified (106 steps)
+
+==============================================================================
+
+real	0m1.744s
+user	0m9.826s
+sys	0m1.004s

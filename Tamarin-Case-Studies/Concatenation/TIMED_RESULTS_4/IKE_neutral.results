@@ -1,0 +1,145 @@
+Compressed Results
+{
+    "trans_auth": {
+        "AllCol_RO": "false",
+        "Clo_Ex_RO": "false",
+        "Clo_IP_RO": "timeout",
+        "ACT_CP_Clo_i": "timeout",
+        "ACT_Adv_CP_PI1_i": "true",
+        "ACT_Adv_CP_Clo_i": "missing",
+        "ACT_Adv_CP_Clo": "missing",
+        "ACT_CP_Clo": "timeout",
+        "ACT_Adv_Clo_IP_i": "missing",
+        "ACT_Adv_Clo_IP": "missing",
+        "ACT_Clo_IP_i": "timeout",
+        "ACT_Clo_IP": "timeout",
+        "ACT_Adv_Clo_i": "true",
+        "ACN_Adv_CP_Clo_i": "missing",
+        "ACN_Adv_CP_Clo": "missing",
+        "ACN_CP_Clo_i": "timeout",
+        "ACN_CP_Clo": "timeout",
+        "ACN_Adv_Clo_IP_i": "missing",
+        "ACN_Adv_Clo_IP": "missing",
+        "ACN_Clo_IP_i": "timeout",
+        "ACN_Clo_IP": "timeout",
+        "Adv_CP_Clo_RO_i": "missing",
+        "Adv_CP_Clo_RO": "timeout",
+        "CP_Clo_RO_i": "timeout",
+        "CP_Clo_RO": "timeout",
+        "Adv_Clo_IP_RO_i": "missing",
+        "Adv_Clo_IP_RO": "timeout",
+        "Clo_IP_RO_i": "timeout"
+    },
+    "secrecy_key_A": {
+        "AllCol_RO": "false",
+        "ACT_Adv_CP_Clo_PI1_i": "true"
+    },
+    "secrecy_key_B": {
+        "RO": "false"
+    }
+}
+TOTAL Tamarin calls: 167
+TOTAL execution time forIKE/IKE_Cookie/ikeV2_HEB_A.spthy: 116.3486819267273
+Timed Results
+{
+    "trans_auth": {
+        "AllCol_RO": [
+            "false",
+            3.1975739002227783
+        ],
+        "Clo_Ex_RO": [
+            "false",
+            9.987842559814453
+        ],
+        "Clo_IP_RO": [
+            "timeout",
+            30
+        ],
+        "ACT_CP_Clo_i": [
+            "timeout",
+            30
+        ],
+        "ACT_Adv_CP_PI1_i": [
+            "true",
+            3.42162823677063
+        ],
+        "ACT_Adv_CP_Clo_i": "missing",
+        "ACT_Adv_CP_Clo": "missing",
+        "ACT_CP_Clo": [
+            "timeout",
+            30
+        ],
+        "ACT_Adv_Clo_IP_i": "missing",
+        "ACT_Adv_Clo_IP": "missing",
+        "ACT_Clo_IP_i": [
+            "timeout",
+            30
+        ],
+        "ACT_Clo_IP": [
+            "timeout",
+            30
+        ],
+        "ACT_Adv_Clo_i": [
+            "true",
+            3.0342586040496826
+        ],
+        "ACN_Adv_CP_Clo_i": "missing",
+        "ACN_Adv_CP_Clo": "missing",
+        "ACN_CP_Clo_i": [
+            "timeout",
+            30
+        ],
+        "ACN_CP_Clo": [
+            "timeout",
+            30
+        ],
+        "ACN_Adv_Clo_IP_i": "missing",
+        "ACN_Adv_Clo_IP": "missing",
+        "ACN_Clo_IP_i": [
+            "timeout",
+            30
+        ],
+        "ACN_Clo_IP": [
+            "timeout",
+            30
+        ],
+        "Adv_CP_Clo_RO_i": "missing",
+        "Adv_CP_Clo_RO": [
+            "timeout",
+            30
+        ],
+        "CP_Clo_RO_i": [
+            "timeout",
+            30
+        ],
+        "CP_Clo_RO": [
+            "timeout",
+            30
+        ],
+        "Adv_Clo_IP_RO_i": "missing",
+        "Adv_Clo_IP_RO": [
+            "timeout",
+            30
+        ],
+        "Clo_IP_RO_i": [
+            "timeout",
+            30
+        ]
+    },
+    "secrecy_key_A": {
+        "AllCol_RO": [
+            "false",
+            8.425965070724487
+        ],
+        "ACT_Adv_CP_Clo_PI1_i": [
+            "true",
+            6.055596590042114
+        ]
+    },
+    "secrecy_key_B": {
+        "RO": [
+            "false",
+            7.899287700653076
+        ]
+    }
+}

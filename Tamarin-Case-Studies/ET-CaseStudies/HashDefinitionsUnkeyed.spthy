@@ -1,0 +1,123 @@
+/*
+ *  Author: 
+ *  Model Name: UnkeyedHashes.spthy
+ *  Status: DEVELOPMENTAL
+ *
+ *  Comments:
+ */
+
+theory UnkeyedHashes
+begin
+
+
+// RO
+#ifdef RO
+functions: h/1
+#endif
+
+// not pre
+#ifdef pre
+functions: h/1
+functions: pre/1
+equations: h(pre(y)) = y
+#endif
+
+// not sec
+#ifdef sec
+functions: h/1
+functions: sec/2
+equations: h(sec(h(m),m)) = h(m)
+#endif
+
+// not coll
+#ifdef coll
+functions: h/1
+functions: coll_1/0
+functions: coll_2/0
+equations: h(coll_1()) = h(coll_2())
+#endif
+
+
+rule Pre_TestInput1:
+    [ Fr(~m) ]
+  --[ PreHonestHash(h(~m))]->
+    [ Out(h(~m)) ]
+
+rule Pre_TestInput2:
+    [ In(h(~m)), In(m2) ]
+  --[ TestPreimage(h(~m),h(m2)) ]->
+    [ ]
+
+
+
+rule Sec_TestInput1:
+    [ Fr(~m) ]
+  --[ SecHonestHash(h(~m))]->
+    [ Out(h(~m)), Out(~m)]
+
+rule Sec_TestInput2:
+    [ In(h(m)), In(m2) ]
+  --[ Compare(m,m2), TestSecPreimage(h(m),h(m2)) ]->
+    [ ]
+
+
+
+rule Collisions_TestInput:
+    [ In(m1), In(m2) ]
+  --[ Compare(m1,m2), TestCollisions(h(m1),h(m2))]->
+    [ ]
+
+
+
+
+restriction Unequal:
+"
+All m1 m2 #i. Compare(m1,m2)@i ==> not m1=m2
+"
+
+
+restriction PreImage:
+"
+All h1 h2 #i. TestPreimage(h1,h2)@i ==> Ex #j. PreHonestHash(h1) @ #j & j<i
+"
+
+restriction SecPreimage:
+"
+All h1 h2 #i. TestSecPreimage(h1,h2)@i ==> Ex #j. SecHonestHash(h1) @ #j & j<i
+"
+
+
+
+
+
+
+// preimage resistance
+lemma Test_Pre: exists-trace
+"
+( Ex h1 h2 #i.
+  TestPreimage(h1,h2) @ #i
+  & h1=h2
+  )
+"
+
+
+// second preimage resistance
+lemma Test_Sec: exists-trace
+"
+( Ex h1 h2 #i.
+  TestSecPreimage(h1,h2) @ #i
+  & h1=h2
+  )
+"
+
+
+// collision resistance
+lemma Test_Collision: exists-trace
+"
+( Ex h1 h2 #i.
+  TestCollisions(h1,h2) @ #i
+  & h1=h2
+  )
+"
+
+end

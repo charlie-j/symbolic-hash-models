@@ -1,0 +1,27 @@
+
+theory Sigma
+begin
+
+builtins: concatenation, multiset
+
+functions: nill/0
+
+equations: nill ||x = x, x||nill  =x
+
+
+
+rule Dum1:
+ [In(<x,y,~z1,~z2,~z3>)]--[_restrict( x|| y = ~z1 ), Dum1(x,y,~z1,~z2,~z3)]->[]
+
+
+lemma test_nil_false:
+exists-trace
+ "Ex x y z1 z2 z3 #i. Dum1(x,y,z1,z2,z3)@i"
+
+
+
+
+
+
+
+end

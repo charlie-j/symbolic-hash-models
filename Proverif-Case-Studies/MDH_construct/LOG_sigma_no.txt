@@ -1,0 +1,1033 @@
+proverif -lib hash_no_collision.pvl -lib isCol.pvl -lib "sigma_HF_EC"/"sigma_HF_EC"_declaration.pvl "sigma_HF_EC"/"sigma_HF_EC"_no_collision.pv
+Linear part:
+exp(exp(g,y),z) = exp(exp(g,z),y)
+Completing equations...
+Completed equations:
+exp(exp(g,y),z) = exp(exp(g,z),y)
+Convergent part: No equation.
+Process 0 (that is, the initial process):
+(
+    {1}!
+    {2}new @1_sk: t_sk;
+    {3}out(c, pk(@1_sk));
+    {4}insert @1_Keys(@1_sk)
+) | (
+    {5}!
+    {47}get @1_Keys(@1_skA: t_sk) in
+    {46}get @1_Keys(@1_skB: t_sk) in
+    (
+        {6}let @1_pkB: t_pk = pk(@1_skB) in
+        {7}if (pk(@1_skA) ≠ @1_pkB) then
+        {8}new @1_x: t_exponent;
+        {9}new @1_infoA: bitstring;
+        {10}let @1_m1: bitstring = (exp(g,@1_x),@1_infoA) in
+        {11}out(c, @1_m1);
+        {12}in(c, @1_m2: bitstring);
+        {13}let (@1_gy: G,@1_infoB: bitstring) = @1_m2 in
+        {14}if ((@1_gy ≠ g) && not(isCol(@1_gy))) then
+        {15}event initA(pk(@1_skA),@1_pkB,(@1_m1,@1_m2));
+        {16}let @1_k: t_key = exp(@1_gy,@1_x) in
+        {17}let @1_transcript: bitstring = (exp(g,@1_x),(@1_infoA,(@1_gy,@1_infoB))) in
+        {18}let @1_ht: bitstring = H(@1_transcript,Nil) in
+        {19}out(c, (sign((@1_ht,initTag),@1_skA),mac(pk(@1_skA),@1_k)));
+        {20}in(c, (@1_s: bitstring,@1_m: bitstring));
+        {21}if (signCheck(@1_s,@1_pkB) && (@1_m = mac(@1_pkB,@1_k))) then
+        {22}let (@1_ht': bitstring,=respTag) = getmsg(@1_s) in
+        {23}if eq_hash(@1_ht,@1_ht') then
+        {24}event acceptA(pk(@1_skA),@1_pkB,(@1_m1,@1_m2));
+        {25}event sessionKeyA(pk(@1_skA),@1_pkB,@1_k)
+    ) | (
+        {26}let @1_pkA: t_pk = pk(@1_skA) in
+        {27}if (pk(@1_skB) ≠ @1_pkA) then
+        {28}in(c, @1_m1_1: bitstring);
+        {29}let (@1_gx: G,@1_infoA_1: bitstring) = @1_m1_1 in
+        {30}if ((@1_gx ≠ g) && not(isCol(@1_gx))) then
+        {31}new @1_y: t_exponent;
+        {32}new @1_infoB_1: bitstring;
+        {33}let @1_m2_1: bitstring = (exp(g,@1_y),@1_infoB_1) in
+        {34}event initB(pk(@1_skB),@1_pkA,(@1_m1_1,@1_m2_1));
+        {35}out(c, @1_m2_1);
+        {36}in(c, (@1_s_1: bitstring,@1_m_1: bitstring));
+        {37}let @1_k_1: t_key = exp(@1_gx,@1_y) in
+        {38}let @1_transcript_1: bitstring = (@1_gx,(@1_infoA_1,(exp(g,@1_y),@1_infoB_1))) in
+        {39}let @1_ht_1: bitstring = H(@1_transcript_1,Nil) in
+        {40}if (signCheck(@1_s_1,@1_pkA) && (@1_m_1 = mac(@1_pkA,@1_k_1))) then
+        {41}let (@1_ht'_1: bitstring,=initTag) = getmsg(@1_s_1) in
+        {42}if eq_hash(@1_ht'_1,@1_ht_1) then
+        {43}out(c, (sign((@1_ht_1,respTag),@1_skB),mac(pk(@1_skB),@1_k_1)));
+        {44}event acceptB(pk(@1_skB),@1_pkA,(@1_m1_1,@1_m2_1));
+        {45}event sessionKeyB(pk(@1_skB),@1_pkA,@1_k_1)
+    )
+) | (
+    {48}!
+    {51}get @1_Keys(@1_skA_1: t_sk) in
+    {49}event Dishonest(pk(@1_skA_1));
+    {50}out(c, @1_skA_1)
+)
+
+--  Process 1 (that is, process 0, with let moved downwards):
+(
+    {1}!
+    {2}new @1_sk: t_sk;
+    {3}out(c, pk(@1_sk));
+    {4}insert @1_Keys(@1_sk)
+) | (
+    {5}!
+    {47}get @1_Keys(@1_skA: t_sk) in
+    {46}get @1_Keys(@1_skB: t_sk) in
+    (
+        {6}let @1_pkB: t_pk = pk(@1_skB) in
+        {7}if (pk(@1_skA) ≠ @1_pkB) then
+        {8}new @1_x: t_exponent;
+        {9}new @1_infoA: bitstring;
+        {10}let @1_m1: bitstring = (exp(g,@1_x),@1_infoA) in
+        {11}out(c, @1_m1);
+        {12}in(c, @1_m2: bitstring);
+        {13}let (@1_gy: G,@1_infoB: bitstring) = @1_m2 in
+        {14}if ((@1_gy ≠ g) && not(isCol(@1_gy))) then
+        {15}event initA(pk(@1_skA),@1_pkB,(@1_m1,@1_m2));
+        {17}let @1_transcript: bitstring = (exp(g,@1_x),(@1_infoA,(@1_gy,@1_infoB))) in
+        {18}let @1_ht: bitstring = H(@1_transcript,Nil) in
+        {16}let @1_k: t_key = exp(@1_gy,@1_x) in
+        {19}out(c, (sign((@1_ht,initTag),@1_skA),mac(pk(@1_skA),@1_k)));
+        {20}in(c, (@1_s: bitstring,@1_m: bitstring));
+        {21}if (signCheck(@1_s,@1_pkB) && (@1_m = mac(@1_pkB,@1_k))) then
+        {22}let (@1_ht': bitstring,=respTag) = getmsg(@1_s) in
+        {23}if eq_hash(@1_ht,@1_ht') then
+        {24}event acceptA(pk(@1_skA),@1_pkB,(@1_m1,@1_m2));
+        {25}event sessionKeyA(pk(@1_skA),@1_pkB,@1_k)
+    ) | (
+        {26}let @1_pkA: t_pk = pk(@1_skA) in
+        {27}if (pk(@1_skB) ≠ @1_pkA) then
+        {28}in(c, @1_m1_1: bitstring);
+        {29}let (@1_gx: G,@1_infoA_1: bitstring) = @1_m1_1 in
+        {30}if ((@1_gx ≠ g) && not(isCol(@1_gx))) then
+        {31}new @1_y: t_exponent;
+        {32}new @1_infoB_1: bitstring;
+        {33}let @1_m2_1: bitstring = (exp(g,@1_y),@1_infoB_1) in
+        {34}event initB(pk(@1_skB),@1_pkA,(@1_m1_1,@1_m2_1));
+        {35}out(c, @1_m2_1);
+        {36}in(c, (@1_s_1: bitstring,@1_m_1: bitstring));
+        {37}let @1_k_1: t_key = exp(@1_gx,@1_y) in
+        {40}if (signCheck(@1_s_1,@1_pkA) && (@1_m_1 = mac(@1_pkA,@1_k_1))) then
+        {41}let (@1_ht'_1: bitstring,=initTag) = getmsg(@1_s_1) in
+        {38}let @1_transcript_1: bitstring = (@1_gx,(@1_infoA_1,(exp(g,@1_y),@1_infoB_1))) in
+        {39}let @1_ht_1: bitstring = H(@1_transcript_1,Nil) in
+        {42}if eq_hash(@1_ht'_1,@1_ht_1) then
+        {43}out(c, (sign((@1_ht_1,respTag),@1_skB),mac(pk(@1_skB),@1_k_1)));
+        {44}event acceptB(pk(@1_skB),@1_pkA,(@1_m1_1,@1_m2_1));
+        {45}event sessionKeyB(pk(@1_skB),@1_pkA,@1_k_1)
+    )
+) | (
+    {48}!
+    {51}get @1_Keys(@1_skA_1: t_sk) in
+    {49}event Dishonest(pk(@1_skA_1));
+    {50}out(c, @1_skA_1)
+)
+
+-- Axiom eq_hash(Nil,h2) ==> h2 = Nil; eq_hash(h1,Nil) ==> h1 = Nil; eq_hash(H(x1,h1'),h2) ==> h2 = H(x2,h2'); eq_hash(h1,H(x2,h2)) ==> h1 = H(x1,h1') in process 1.
+-- Axiom eq_hash(h,h) ==> true; eq_hash(h1,h2) && not(is_normal_MDH(h1)) && h1' <-- MDH(h1) ==> eq_hash(h1',h2); eq_hash(h1,h2) && not(is_normal_MDH(h2)) && h2' <-- MDH(h2) ==> eq_hash(h1,h2') in process 1.
+-- Axiom eq_hash(H(x1,Nil),H(x2,Nil)) && attacker(x1) ==> x1 = x2; eq_hash(H(x1,Nil),H(x2,Nil)) && attacker(x2) ==> x1 = x2 in process 1.
+-- Axiom eq_hash(H(x,h1),H(x,h2)) ==> eq_hash(h1,h2); eq_hash(h1,h2) && is_normal_MDH(h1) && is_normal_MDH(h2) && (h1',h2') <-- last_term_equal(h1,h2) ==> eq_hash(h1',h2') in process 1.
+-- Axiom not (eq_hash(h1,h2) && is_normal_MDH(h1) && is_normal_MDH(h2) && h1 ≠ h2 && false_hash_var(h1,h2,Nil)); not (eq_hash(h2,h1) && is_normal_MDH(h1) && is_normal_MDH(h2) && h1 ≠ h2 && false_hash_var(h1,h2,Nil)); not (eq_hash(h1,h2) && is_normal_MDH(h1) && is_normal_MDH(h2) && h1' <-- rev_hash(h1,Nil) && h2' <-- rev_hash(h2,Nil) && false_hash_var(h1',h2',Nil)); not (eq_hash(h2,h1) && is_normal_MDH(h1) && is_normal_MDH(h2) && h1' <-- rev_hash(h1,Nil) && h2' <-- rev_hash(h2,Nil) && false_hash_var(h1',h2',Nil)) in process 1.
+-- Axiom not (eq_hash(h1,h2) && all_not_var(h2) && nb_element(h2) + 1 ≤ nb_element(h1)); not (eq_hash(h1,h2) && all_not_var(h1) && nb_element(h1) + 1 ≤ nb_element(h2)) in process 1.
+-- Axiom eq_hash(H(u1,h1),H(u2,h2)) && not(is_var(u1)) && not(is_var(u2)) ==> u1 = u2; eq_hash(h1,h2) && H(u1,h1') <-- rev_hash(h1,Nil) && H(u2,h2') <-- rev_hash(h2,Nil) && not(is_var(u1)) && not(is_var(u2)) ==> u1 = u2 in process 1.
+-- Axiom eq_hash(H(x1,h1),H(x2,h2)) && is_normal_MDH(H(x1,h1)) && is_normal_MDH(H(x2,h2)) && is_var(x1) && instantiate_allowed(x1,H(x2,h2)) ==> x1 = x2 || x1 = (x1',x1''); eq_hash(H(x2,h2),H(x1,h1)) && is_normal_MDH(H(x1,h1)) && is_normal_MDH(H(x2,h2)) && is_var(x1) && instantiate_allowed(x1,H(x2,h2)) ==> x1 = x2 || x1 = (x1',x1''); eq_hash(h1,h2) && is_normal_MDH(h1) && is_normal_MDH(h2) && H(x1,h1') <-- rev_hash(h1,Nil) && H(x2,h2') <-- rev_hash(h2,Nil) && is_var(x1) && instantiate_allowed(x1,H(x2,h2')) ==> x1 = x2 || x1 = (x1',x1''); eq_hash(h2,h1) && is_normal_MDH(h1) && is_normal_MDH(h2) && H(x1,h1') <-- rev_hash(h1,Nil) && H(x2,h2') <-- rev_hash(h2,Nil) && is_var(x1) && instantiate_allowed(x1,H(x2,h2')) ==> x1 = x2 || x1 = (x1',x1'') in process 1.
+-- Axiom eq_hash(H(x1,h1),H(x1',h1')) && cond_var(x1',h1') && cond_var(x1,h1) ==> x1 = x1' || x1 = (x2,x1') || x1' = (x2',x1); eq_hash(H(x1,h1),H(x1',h1')) && cond_var(x1',h1') && not(cond_var(x1,h1)) ==> x1 = x1' || x1 = (x2,x1'); eq_hash(H(x1,h1),H(x1',h1')) && not(cond_var(x1',h1')) && cond_var(x1,h1) ==> x1 = x1' || x1' = (x2',x1); eq_hash(H(x1,h1),H(x1',h1')) && not(cond_var(x1',h1')) && not(cond_var(x1,h1)) ==> x1 = x1' in process 1.
+-- Query not event(acceptB(B,A,x)) in process 1.
+Translating the process into Horn clauses...
+Completing...
+200 rules inserted. Base: 139 rules (39 with conclusion selected). Queue: 12 rules.
+Starting query not event(acceptB(B,A,x))
+goal reachable: @sid ≠ @sid_1 && @sid_2 ≠ @sid && attacker(x1) && attacker(h1') && attacker(@1_infoB_2) && begin(@p_act(@occ12_1,(exp(g,@1_y_1),@1_infoB_2))) && attacker(@1_infoA_2) && begin(@p_act(@occ28_1,(exp(g,@1_x_1),@1_infoA_2))) && eq_hash(H(x1,h1'),H(@1_infoB_3,H(exp(g,@1_y_1),H(@1_infoA_2,H(exp(g,@1_x_1),Nil))))) -> end(acceptB(pk(@1_sk_1),pk(@1_sk_2),((exp(g,@1_x_1),@1_infoA_2),(exp(g,@1_y_1),@1_infoB_3))))
+Abbreviations:
+@1_sk_1 = @1_sk[!1 = @sid_2]
+@1_sk_2 = @1_sk[!1 = @sid]
+@1_sk_3 = @1_sk[!1 = @sid_1]
+@1_x_1 = @1_x[@1_skB = @1_sk_3,@1_skA = @1_sk_2,!1 = @sid_3]
+@1_y_1 = @1_y[@1_m1_1 = (exp(g,@1_x_1),@1_infoA_2),@1_skB = @1_sk_1,@1_skA = @1_sk_2,!1 = @sid_4]
+@1_infoB_3 = @1_infoB_1[@1_m1_1 = (exp(g,@1_x_1),@1_infoA_2),@1_skB = @1_sk_1,@1_skA = @1_sk_2,!1 = @sid_4]
+@occ12_1 = @occ12[!1 = @sid_3]
+@occ28_1 = @occ28[!1 = @sid_4]
+
+Derivation:
+Abbreviations:
+@1_sk_1 = @1_sk[!1 = @sid]
+@1_sk_2 = @1_sk[!1 = @sid_1]
+@1_sk_3 = @1_sk[!1 = @sid_2]
+@1_x_1 = @1_x[@1_skB = @1_sk_3,@1_skA = @1_sk_2,!1 = @sid_3]
+@1_y_1 = @1_y[@1_m1_1 = (exp(g,@1_x_1),@1_infoA_2),@1_skB = @1_sk_1,@1_skA = @1_sk_2,!1 = @sid_4]
+@1_infoB_2 = @1_infoB_1[@1_m1_1 = (exp(g,@1_x_1),@1_infoA_2),@1_skB = @1_sk_1,@1_skA = @1_sk_2,!1 = @sid_4]
+@1_infoA_3 = @1_infoA[@1_skB = @1_sk_3,@1_skA = @1_sk_2,!1 = @sid_3]
+@occ28_1 = @occ28[!1 = @sid_4]
+@occ12_1 = @occ12[!1 = @sid_3]
+
+1. The entry @1_Keys(@1_sk_2) may be inserted in a table at insert {4}.
+table(@1_Keys(@1_sk_2)).
+
+2. The entry @1_Keys(@1_sk_1) may be inserted in a table at insert {4}.
+table(@1_Keys(@1_sk_1)).
+
+3. We assume as hypothesis that
+attacker(@1_infoA_2).
+
+4. The entry @1_Keys(@1_sk_3) may be inserted in a table at insert {4}.
+table(@1_Keys(@1_sk_3)).
+
+5. The entry @1_Keys(@1_sk_2) that may be in a table by 1 may be read at get {47}.
+The entry @1_Keys(@1_sk_3) that may be in a table by 4 may be read at get {46}.
+We have @1_sk_2 ≠ @1_sk_3.
+So the message (exp(g,@1_x_1),@1_infoA_3) may be sent to the attacker at output {11}.
+attacker((exp(g,@1_x_1),@1_infoA_3)).
+
+6. By 5, the attacker may know (exp(g,@1_x_1),@1_infoA_3).
+Using the function 1-proj-2-tuple the attacker may obtain exp(g,@1_x_1).
+attacker(exp(g,@1_x_1)).
+
+7. By 6, the attacker may know exp(g,@1_x_1).
+By 3, the attacker may know @1_infoA_2.
+Using the function 2-tuple the attacker may obtain (exp(g,@1_x_1),@1_infoA_2).
+attacker((exp(g,@1_x_1),@1_infoA_2)).
+
+8. We assume as hypothesis that
+attacker(@1_infoB_3).
+
+9. The entry @1_Keys(@1_sk_2) that may be in a table by 1 may be read at get {47}.
+The entry @1_Keys(@1_sk_1) that may be in a table by 2 may be read at get {46}.
+The event @p_act(@occ28_1,(exp(g,@1_x_1),@1_infoA_2)) records how variables are instantiated at {28}.
+The message (exp(g,@1_x_1),@1_infoA_2) that the attacker may have by 7 may be received at input {28}.
+We have (forall @gen,@gen_1, exp(g,@1_x_1) ≠ CPcol1(@gen_1,@gen)) && (forall @gen_2,@gen_3,@gen_4, exp(g,@1_x_1) ≠ (CPcol1(@gen_4,@gen_3),@gen_2)) && (forall @gen_5,@gen_6,@gen_7, exp(g,@1_x_1) ≠ (@gen_7,CPcol1(@gen_6,@gen_5))) && (forall @gen_8,@gen_9,@gen_10,@gen_11, exp(g,@1_x_1) ≠ (@gen_11,(CPcol1(@gen_10,@gen_9),@gen_8))) && (forall @gen_12,@gen_13,@gen_14,@gen_15, exp(g,@1_x_1) ≠ (@gen_15,(@gen_14,CPcol1(@gen_13,@gen_12)))) && (forall @gen_16,@gen_17, exp(g,@1_x_1) ≠ CPcol2(@gen_17,@gen_16)) && (forall @gen_18,@gen_19,@gen_20, exp(g,@1_x_1) ≠ (CPcol2(@gen_20,@gen_19),@gen_18)) && (forall @gen_21,@gen_22,@gen_23, exp(g,@1_x_1) ≠ (@gen_23,CPcol2(@gen_22,@gen_21))) && (forall @gen_24,@gen_25,@gen_26,@gen_27, exp(g,@1_x_1) ≠ (@gen_27,(CPcol2(@gen_26,@gen_25),@gen_24))) && (forall @gen_28,@gen_29,@gen_30,@gen_31, exp(g,@1_x_1) ≠ (@gen_31,(@gen_30,CPcol2(@gen_29,@gen_28)))) && exp(g,@1_x_1) ≠ g && @1_sk_1 ≠ @1_sk_2.
+So the message (exp(g,@1_y_1),@1_infoB_2) may be sent to the attacker at output {35}.
+attacker((exp(g,@1_y_1),@1_infoB_2)).
+
+10. By 9, the attacker may know (exp(g,@1_y_1),@1_infoB_2).
+Using the function 1-proj-2-tuple the attacker may obtain exp(g,@1_y_1).
+attacker(exp(g,@1_y_1)).
+
+11. By 10, the attacker may know exp(g,@1_y_1).
+By 8, the attacker may know @1_infoB_3.
+Using the function 2-tuple the attacker may obtain (exp(g,@1_y_1),@1_infoB_3).
+attacker((exp(g,@1_y_1),@1_infoB_3)).
+
+12. The entry @1_Keys(@1_sk_2) that may be in a table by 1 may be read at get {47}.
+The entry @1_Keys(@1_sk_3) that may be in a table by 4 may be read at get {46}.
+The event @p_act(@occ12_1,(exp(g,@1_y_1),@1_infoB_3)) records how variables are instantiated at {12}.
+The message (exp(g,@1_y_1),@1_infoB_3) that the attacker may have by 11 may be received at input {12}.
+We have (forall @gen,@gen_1, exp(g,@1_y_1) ≠ CPcol1(@gen_1,@gen)) && (forall @gen_2,@gen_3,@gen_4, exp(g,@1_y_1) ≠ (CPcol1(@gen_4,@gen_3),@gen_2)) && (forall @gen_5,@gen_6,@gen_7, exp(g,@1_y_1) ≠ (@gen_7,CPcol1(@gen_6,@gen_5))) && (forall @gen_8,@gen_9,@gen_10,@gen_11, exp(g,@1_y_1) ≠ (@gen_11,(CPcol1(@gen_10,@gen_9),@gen_8))) && (forall @gen_12,@gen_13,@gen_14,@gen_15, exp(g,@1_y_1) ≠ (@gen_15,(@gen_14,CPcol1(@gen_13,@gen_12)))) && (forall @gen_16,@gen_17, exp(g,@1_y_1) ≠ CPcol2(@gen_17,@gen_16)) && (forall @gen_18,@gen_19,@gen_20, exp(g,@1_y_1) ≠ (CPcol2(@gen_20,@gen_19),@gen_18)) && (forall @gen_21,@gen_22,@gen_23, exp(g,@1_y_1) ≠ (@gen_23,CPcol2(@gen_22,@gen_21))) && (forall @gen_24,@gen_25,@gen_26,@gen_27, exp(g,@1_y_1) ≠ (@gen_27,(CPcol2(@gen_26,@gen_25),@gen_24))) && (forall @gen_28,@gen_29,@gen_30,@gen_31, exp(g,@1_y_1) ≠ (@gen_31,(@gen_30,CPcol2(@gen_29,@gen_28)))) && exp(g,@1_y_1) ≠ g && @1_sk_2 ≠ @1_sk_3.
+So the message (sign((H((exp(g,@1_x_1),(@1_infoA_3,(exp(g,@1_y_1),@1_infoB_3))),Nil),initTag),@1_sk_2),mac(pk(@1_sk_2),exp(exp(g,@1_y_1),@1_x_1))) may be sent to the attacker at output {19}.
+attacker((sign((H((exp(g,@1_x_1),(@1_infoA_3,(exp(g,@1_y_1),@1_infoB_3))),Nil),initTag),@1_sk_2),mac(pk(@1_sk_2),exp(exp(g,@1_y_1),@1_x_1)))).
+
+13. By 12, the attacker may know (sign((H((exp(g,@1_x_1),(@1_infoA_3,(exp(g,@1_y_1),@1_infoB_3))),Nil),initTag),@1_sk_2),mac(pk(@1_sk_2),exp(exp(g,@1_y_1),@1_x_1))).
+Using the function 2-proj-2-tuple the attacker may obtain mac(pk(@1_sk_2),exp(exp(g,@1_y_1),@1_x_1)).
+attacker(mac(pk(@1_sk_2),exp(exp(g,@1_y_1),@1_x_1))).
+
+14. The entry @1_Keys(@1_sk_2) that may be in a table by 1 may be read at get {51}.
+So the message @1_sk_2 may be sent to the attacker at output {50}.
+attacker(@1_sk_2).
+
+15. Using the function initTag the attacker may obtain initTag.
+attacker(initTag).
+
+16. We assume as hypothesis that
+attacker(h1').
+
+17. We assume as hypothesis that
+attacker(x1).
+
+18. By 17, the attacker may know x1.
+By 16, the attacker may know h1'.
+Using the function H the attacker may obtain H(x1,h1').
+attacker(H(x1,h1')).
+
+19. By 18, the attacker may know H(x1,h1').
+By 15, the attacker may know initTag.
+Using the function 2-tuple the attacker may obtain (H(x1,h1'),initTag).
+attacker((H(x1,h1'),initTag)).
+
+20. By 19, the attacker may know (H(x1,h1'),initTag).
+By 14, the attacker may know @1_sk_2.
+Using the function sign the attacker may obtain sign((H(x1,h1'),initTag),@1_sk_2).
+attacker(sign((H(x1,h1'),initTag),@1_sk_2)).
+
+21. By 20, the attacker may know sign((H(x1,h1'),initTag),@1_sk_2).
+By 13, the attacker may know mac(pk(@1_sk_2),exp(exp(g,@1_y_1),@1_x_1)).
+Using the function 2-tuple the attacker may obtain (sign((H(x1,h1'),initTag),@1_sk_2),mac(pk(@1_sk_2),exp(exp(g,@1_y_1),@1_x_1))).
+attacker((sign((H(x1,h1'),initTag),@1_sk_2),mac(pk(@1_sk_2),exp(exp(g,@1_y_1),@1_x_1)))).
+
+22. We assume as hypothesis that
+eq_hash(H(x1,h1'),H((exp(g,@1_x_1),(@1_infoA_2,(exp(g,@1_y_1),@1_infoB_2))),Nil)).
+
+23. The entry @1_Keys(@1_sk_2) that may be in a table by 1 may be read at get {47}.
+The entry @1_Keys(@1_sk_1) that may be in a table by 2 may be read at get {46}.
+The event @p_act(@occ28_1,(exp(g,@1_x_1),@1_infoA_2)) records how variables are instantiated at {28}.
+The message (exp(g,@1_x_1),@1_infoA_2) that the attacker may have by 7 may be received at input {28}.
+The message (sign((H(x1,h1'),initTag),@1_sk_2),mac(pk(@1_sk_2),exp(exp(g,@1_y_1),@1_x_1))) that the attacker may have by 21 may be received at input {36}.
+By 22, eq_hash(H(x1,h1'),H((exp(g,@1_x_1),(@1_infoA_2,(exp(g,@1_y_1),@1_infoB_2))),Nil)) is true at {42}.
+We have @1_sk_1 ≠ @1_sk_2.
+So event acceptB(pk(@1_sk_1),pk(@1_sk_2),((exp(g,@1_x_1),@1_infoA_2),(exp(g,@1_y_1),@1_infoB_2))) may be executed at {44}.
+end(acceptB(pk(@1_sk_1),pk(@1_sk_2),((exp(g,@1_x_1),@1_infoA_2),(exp(g,@1_y_1),@1_infoB_2)))).
+
+24. By 23, end(acceptB(pk(@1_sk_1),pk(@1_sk_2),((exp(g,@1_x_1),@1_infoA_2),(exp(g,@1_y_1),@1_infoB_2)))).
+The goal is reached, represented in the following fact:
+end(acceptB(pk(@1_sk_1),pk(@1_sk_2),((exp(g,@1_x_1),@1_infoA_2),(exp(g,@1_y_1),@1_infoB_2)))).
+
+
+A more detailed output of the traces is available with
+  set traceDisplay = long.
+
+new @1_sk: t_sk creating @1_sk_1 at {2} in copy a
+
+out(c, ~M) with ~M = pk(@1_sk_1) at {3} in copy a
+
+insert @1_Keys(@1_sk_1) at {4} in copy a
+
+new @1_sk: t_sk creating @1_sk_2 at {2} in copy a_1
+
+out(c, ~M_1) with ~M_1 = pk(@1_sk_2) at {3} in copy a_1
+
+insert @1_Keys(@1_sk_2) at {4} in copy a_1
+
+new @1_sk: t_sk creating @1_sk_3 at {2} in copy a_2
+
+out(c, ~M_2) with ~M_2 = pk(@1_sk_3) at {3} in copy a_2
+
+insert @1_Keys(@1_sk_3) at {4} in copy a_2
+
+get @1_Keys(@1_sk_1) at {47} in copy a_3
+
+get @1_Keys(@1_sk_3) at {46} in copy a_3
+
+new @1_x: t_exponent creating @1_x_1 at {8} in copy a_3
+
+new @1_infoA: bitstring creating @1_infoA_2 at {9} in copy a_3
+
+out(c, (~M_3,~M_4)) with ~M_3 = exp(g,@1_x_1), ~M_4 = @1_infoA_2 at {11} in copy a_3
+
+get @1_Keys(@1_sk_1) at {47} in copy a_4
+
+get @1_Keys(@1_sk_2) at {46} in copy a_4
+
+new @1_x: t_exponent creating @1_x_2 at {8} in copy a_4
+
+new @1_infoA: bitstring creating @1_infoA_3 at {9} in copy a_4
+
+out(c, (~M_5,~M_6)) with ~M_5 = exp(g,@1_x_2), ~M_6 = @1_infoA_3 at {11} in copy a_4
+
+in(c, (~M_3,a_5)) with ~M_3 = exp(g,@1_x_1) at {28} in copy a_4
+
+new @1_y: t_exponent creating @1_y_1 at {31} in copy a_4
+
+new @1_infoB_1: bitstring creating @1_infoB_2 at {32} in copy a_4
+
+event initB(pk(@1_sk_2),pk(@1_sk_1),((exp(g,@1_x_1),a_5),(exp(g,@1_y_1),@1_infoB_2))) at {34} in copy a_4
+
+out(c, (~M_7,~M_8)) with ~M_7 = exp(g,@1_y_1), ~M_8 = @1_infoB_2 at {35} in copy a_4
+
+in(c, (~M_7,a_6)) with ~M_7 = exp(g,@1_y_1) at {12} in copy a_3
+
+event initA(pk(@1_sk_1),pk(@1_sk_3),((exp(g,@1_x_1),@1_infoA_2),(exp(g,@1_y_1),a_6))) at {15} in copy a_3
+
+out(c, (~M_9,~M_10)) with ~M_9 = sign((H((exp(g,@1_x_1),(@1_infoA_2,(exp(g,@1_y_1),a_6))),Nil),initTag),@1_sk_1), ~M_10 = mac(pk(@1_sk_1),exp(exp(g,@1_y_1),@1_x_1)) at {19} in copy a_3
+
+get @1_Keys(@1_sk_1) at {51} in copy a_7
+
+event Dishonest(pk(@1_sk_1)) at {49} in copy a_7
+
+out(c, ~M_11) with ~M_11 = @1_sk_1 at {50} in copy a_7
+
+in(c, (sign((H(a_8,a_9),initTag),~M_11),~M_10)) with sign((H(a_8,a_9),initTag),~M_11) = sign((H(a_8,a_9),initTag),@1_sk_1), ~M_10 = mac(pk(@1_sk_1),exp(exp(g,@1_y_1),@1_x_1)) at {36} in copy a_4
+
+out(c, (~M_12,~M_13)) with ~M_12 = sign((H((exp(g,@1_x_1),(a_5,(exp(g,@1_y_1),@1_infoB_2))),Nil),respTag),@1_sk_2), ~M_13 = mac(pk(@1_sk_2),exp(exp(g,@1_x_1),@1_y_1)) at {43} in copy a_4
+
+event acceptB(pk(@1_sk_2),pk(@1_sk_1),((exp(g,@1_x_1),a_5),(exp(g,@1_y_1),@1_infoB_2))) at {44} in copy a_4 (goal)
+
+The event acceptB(pk(@1_sk_2),pk(@1_sk_1),((exp(g,@1_x_1),a_5),(exp(g,@1_y_1),@1_infoB_2))) is executed at {44} in copy a_4.
+A trace has been found, assuming the following hypothesis:
+eq_hash(H(a_8[],a_9[]),H((exp(g,@1_x_1[]),(a_5[],(exp(g,@1_y_1[]),@1_infoB_2[]))),Nil))
+Trying to resolve more the clause by applying axioms for reconstruction
+Goal reachable :@sid ≠ @sid_1 && @sid_2 ≠ @sid && attacker(@1_infoB_2) && begin(@p_act(@occ12[!1 = @sid_3],(exp(g,@1_y[@1_m1_1 = (exp(g,@1_x[@1_skB = @1_sk[!1 = @sid_1],@1_skA = @1_sk[!1 = @sid],!1 = @sid_3]),@1_infoA_2),@1_skB = @1_sk[!1 = @sid_2],@1_skA = @1_sk[!1 = @sid],!1 = @sid_4]),@1_infoB_2))) && attacker(@1_infoA_2) && begin(@p_act(@occ28[!1 = @sid_4],(exp(g,@1_x[@1_skB = @1_sk[!1 = @sid_1],@1_skA = @1_sk[!1 = @sid],!1 = @sid_3]),@1_infoA_2))) -> end(acceptB(pk(@1_sk[!1 = @sid_2]),pk(@1_sk[!1 = @sid]),((exp(g,@1_x[@1_skB = @1_sk[!1 = @sid_1],@1_skA = @1_sk[!1 = @sid],!1 = @sid_3]),@1_infoA_2),(exp(g,@1_y[@1_m1_1 = (exp(g,@1_x[@1_skB = @1_sk[!1 = @sid_1],@1_skA = @1_sk[!1 = @sid],!1 = @sid_3]),@1_infoA_2),@1_skB = @1_sk[!1 = @sid_2],@1_skA = @1_sk[!1 = @sid],!1 = @sid_4]),@1_infoB_1[@1_m1_1 = (exp(g,@1_x[@1_skB = @1_sk[!1 = @sid_1],@1_skA = @1_sk[!1 = @sid],!1 = @sid_3]),@1_infoA_2),@1_skB = @1_sk[!1 = @sid_2],@1_skA = @1_sk[!1 = @sid],!1 = @sid_4]))))
+
+Derivation:
+Abbreviations:
+@1_sk_1 = @1_sk[!1 = @sid]
+@1_sk_2 = @1_sk[!1 = @sid_1]
+@1_sk_3 = @1_sk[!1 = @sid_2]
+@1_x_1 = @1_x[@1_skB = @1_sk_3,@1_skA = @1_sk_2,!1 = @sid_3]
+@1_y_1 = @1_y[@1_m1_1 = (exp(g,@1_x_1),@1_infoA_2),@1_skB = @1_sk_1,@1_skA = @1_sk_2,!1 = @sid_4]
+@1_infoB_2 = @1_infoB_1[@1_m1_1 = (exp(g,@1_x_1),@1_infoA_2),@1_skB = @1_sk_1,@1_skA = @1_sk_2,!1 = @sid_4]
+@1_infoA_3 = @1_infoA[@1_skB = @1_sk_3,@1_skA = @1_sk_2,!1 = @sid_3]
+@occ28_1 = @occ28[!1 = @sid_4]
+@occ12_1 = @occ12[!1 = @sid_3]
+
+1. The entry @1_Keys(@1_sk_2) may be inserted in a table at insert {4}.
+table(@1_Keys(@1_sk_2)).
+
+2. The entry @1_Keys(@1_sk_1) may be inserted in a table at insert {4}.
+table(@1_Keys(@1_sk_1)).
+
+3. We assume as hypothesis that
+attacker(@1_infoA_2).
+
+4. The entry @1_Keys(@1_sk_3) may be inserted in a table at insert {4}.
+table(@1_Keys(@1_sk_3)).
+
+5. The entry @1_Keys(@1_sk_2) that may be in a table by 1 may be read at get {47}.
+The entry @1_Keys(@1_sk_3) that may be in a table by 4 may be read at get {46}.
+We have @1_sk_2 ≠ @1_sk_3.
+So the message (exp(g,@1_x_1),@1_infoA_3) may be sent to the attacker at output {11}.
+attacker((exp(g,@1_x_1),@1_infoA_3)).
+
+6. By 5, the attacker may know (exp(g,@1_x_1),@1_infoA_3).
+Using the function 1-proj-2-tuple the attacker may obtain exp(g,@1_x_1).
+attacker(exp(g,@1_x_1)).
+
+7. By 6, the attacker may know exp(g,@1_x_1).
+By 3, the attacker may know @1_infoA_2.
+Using the function 2-tuple the attacker may obtain (exp(g,@1_x_1),@1_infoA_2).
+attacker((exp(g,@1_x_1),@1_infoA_2)).
+
+8. We assume as hypothesis that
+attacker(@1_infoB_3).
+
+9. The entry @1_Keys(@1_sk_2) that may be in a table by 1 may be read at get {47}.
+The entry @1_Keys(@1_sk_1) that may be in a table by 2 may be read at get {46}.
+The event @p_act(@occ28_1,(exp(g,@1_x_1),@1_infoA_2)) records how variables are instantiated at {28}.
+The message (exp(g,@1_x_1),@1_infoA_2) that the attacker may have by 7 may be received at input {28}.
+We have (forall @gen,@gen_1, exp(g,@1_x_1) ≠ CPcol1(@gen_1,@gen)) && (forall @gen_2,@gen_3,@gen_4, exp(g,@1_x_1) ≠ (CPcol1(@gen_4,@gen_3),@gen_2)) && (forall @gen_5,@gen_6,@gen_7, exp(g,@1_x_1) ≠ (@gen_7,CPcol1(@gen_6,@gen_5))) && (forall @gen_8,@gen_9,@gen_10,@gen_11, exp(g,@1_x_1) ≠ (@gen_11,(CPcol1(@gen_10,@gen_9),@gen_8))) && (forall @gen_12,@gen_13,@gen_14,@gen_15, exp(g,@1_x_1) ≠ (@gen_15,(@gen_14,CPcol1(@gen_13,@gen_12)))) && (forall @gen_16,@gen_17, exp(g,@1_x_1) ≠ CPcol2(@gen_17,@gen_16)) && (forall @gen_18,@gen_19,@gen_20, exp(g,@1_x_1) ≠ (CPcol2(@gen_20,@gen_19),@gen_18)) && (forall @gen_21,@gen_22,@gen_23, exp(g,@1_x_1) ≠ (@gen_23,CPcol2(@gen_22,@gen_21))) && (forall @gen_24,@gen_25,@gen_26,@gen_27, exp(g,@1_x_1) ≠ (@gen_27,(CPcol2(@gen_26,@gen_25),@gen_24))) && (forall @gen_28,@gen_29,@gen_30,@gen_31, exp(g,@1_x_1) ≠ (@gen_31,(@gen_30,CPcol2(@gen_29,@gen_28)))) && exp(g,@1_x_1) ≠ g && @1_sk_1 ≠ @1_sk_2.
+So the message (exp(g,@1_y_1),@1_infoB_2) may be sent to the attacker at output {35}.
+attacker((exp(g,@1_y_1),@1_infoB_2)).
+
+10. By 9, the attacker may know (exp(g,@1_y_1),@1_infoB_2).
+Using the function 1-proj-2-tuple the attacker may obtain exp(g,@1_y_1).
+attacker(exp(g,@1_y_1)).
+
+11. By 10, the attacker may know exp(g,@1_y_1).
+By 8, the attacker may know @1_infoB_3.
+Using the function 2-tuple the attacker may obtain (exp(g,@1_y_1),@1_infoB_3).
+attacker((exp(g,@1_y_1),@1_infoB_3)).
+
+12. The entry @1_Keys(@1_sk_2) that may be in a table by 1 may be read at get {47}.
+The entry @1_Keys(@1_sk_3) that may be in a table by 4 may be read at get {46}.
+The event @p_act(@occ12_1,(exp(g,@1_y_1),@1_infoB_3)) records how variables are instantiated at {12}.
+The message (exp(g,@1_y_1),@1_infoB_3) that the attacker may have by 11 may be received at input {12}.
+We have (forall @gen,@gen_1, exp(g,@1_y_1) ≠ CPcol1(@gen_1,@gen)) && (forall @gen_2,@gen_3,@gen_4, exp(g,@1_y_1) ≠ (CPcol1(@gen_4,@gen_3),@gen_2)) && (forall @gen_5,@gen_6,@gen_7, exp(g,@1_y_1) ≠ (@gen_7,CPcol1(@gen_6,@gen_5))) && (forall @gen_8,@gen_9,@gen_10,@gen_11, exp(g,@1_y_1) ≠ (@gen_11,(CPcol1(@gen_10,@gen_9),@gen_8))) && (forall @gen_12,@gen_13,@gen_14,@gen_15, exp(g,@1_y_1) ≠ (@gen_15,(@gen_14,CPcol1(@gen_13,@gen_12)))) && (forall @gen_16,@gen_17, exp(g,@1_y_1) ≠ CPcol2(@gen_17,@gen_16)) && (forall @gen_18,@gen_19,@gen_20, exp(g,@1_y_1) ≠ (CPcol2(@gen_20,@gen_19),@gen_18)) && (forall @gen_21,@gen_22,@gen_23, exp(g,@1_y_1) ≠ (@gen_23,CPcol2(@gen_22,@gen_21))) && (forall @gen_24,@gen_25,@gen_26,@gen_27, exp(g,@1_y_1) ≠ (@gen_27,(CPcol2(@gen_26,@gen_25),@gen_24))) && (forall @gen_28,@gen_29,@gen_30,@gen_31, exp(g,@1_y_1) ≠ (@gen_31,(@gen_30,CPcol2(@gen_29,@gen_28)))) && exp(g,@1_y_1) ≠ g && @1_sk_2 ≠ @1_sk_3.
+So the message (sign((H((exp(g,@1_x_1),(@1_infoA_3,(exp(g,@1_y_1),@1_infoB_3))),Nil),initTag),@1_sk_2),mac(pk(@1_sk_2),exp(exp(g,@1_y_1),@1_x_1))) may be sent to the attacker at output {19}.
+attacker((sign((H((exp(g,@1_x_1),(@1_infoA_3,(exp(g,@1_y_1),@1_infoB_3))),Nil),initTag),@1_sk_2),mac(pk(@1_sk_2),exp(exp(g,@1_y_1),@1_x_1)))).
+
+13. By 12, the attacker may know (sign((H((exp(g,@1_x_1),(@1_infoA_3,(exp(g,@1_y_1),@1_infoB_3))),Nil),initTag),@1_sk_2),mac(pk(@1_sk_2),exp(exp(g,@1_y_1),@1_x_1))).
+Using the function 2-proj-2-tuple the attacker may obtain mac(pk(@1_sk_2),exp(exp(g,@1_y_1),@1_x_1)).
+attacker(mac(pk(@1_sk_2),exp(exp(g,@1_y_1),@1_x_1))).
+
+14. The entry @1_Keys(@1_sk_2) that may be in a table by 1 may be read at get {51}.
+So the message @1_sk_2 may be sent to the attacker at output {50}.
+attacker(@1_sk_2).
+
+15. Using the function initTag the attacker may obtain initTag.
+attacker(initTag).
+
+16. Using the function Nil the attacker may obtain Nil.
+attacker(Nil).
+
+17. By 9, the attacker may know (exp(g,@1_y_1),@1_infoB_2).
+Using the function 2-proj-2-tuple the attacker may obtain @1_infoB_2.
+attacker(@1_infoB_2).
+
+18. By 7, the attacker may know (exp(g,@1_x_1),@1_infoA_2).
+By 10, the attacker may know exp(g,@1_y_1).
+Using the function 2-tuple the attacker may obtain ((exp(g,@1_x_1),@1_infoA_2),exp(g,@1_y_1)).
+attacker(((exp(g,@1_x_1),@1_infoA_2),exp(g,@1_y_1))).
+
+19. By 18, the attacker may know ((exp(g,@1_x_1),@1_infoA_2),exp(g,@1_y_1)).
+By 17, the attacker may know @1_infoB_2.
+Using the function 2-tuple the attacker may obtain (((exp(g,@1_x_1),@1_infoA_2),exp(g,@1_y_1)),@1_infoB_2).
+attacker((((exp(g,@1_x_1),@1_infoA_2),exp(g,@1_y_1)),@1_infoB_2)).
+
+20. By 19, the attacker may know (((exp(g,@1_x_1),@1_infoA_2),exp(g,@1_y_1)),@1_infoB_2).
+By 16, the attacker may know Nil.
+Using the function H the attacker may obtain H((((exp(g,@1_x_1),@1_infoA_2),exp(g,@1_y_1)),@1_infoB_2),Nil).
+attacker(H((((exp(g,@1_x_1),@1_infoA_2),exp(g,@1_y_1)),@1_infoB_2),Nil)).
+
+21. By 20, the attacker may know H((((exp(g,@1_x_1),@1_infoA_2),exp(g,@1_y_1)),@1_infoB_2),Nil).
+By 15, the attacker may know initTag.
+Using the function 2-tuple the attacker may obtain (H((((exp(g,@1_x_1),@1_infoA_2),exp(g,@1_y_1)),@1_infoB_2),Nil),initTag).
+attacker((H((((exp(g,@1_x_1),@1_infoA_2),exp(g,@1_y_1)),@1_infoB_2),Nil),initTag)).
+
+22. By 21, the attacker may know (H((((exp(g,@1_x_1),@1_infoA_2),exp(g,@1_y_1)),@1_infoB_2),Nil),initTag).
+By 14, the attacker may know @1_sk_2.
+Using the function sign the attacker may obtain sign((H((((exp(g,@1_x_1),@1_infoA_2),exp(g,@1_y_1)),@1_infoB_2),Nil),initTag),@1_sk_2).
+attacker(sign((H((((exp(g,@1_x_1),@1_infoA_2),exp(g,@1_y_1)),@1_infoB_2),Nil),initTag),@1_sk_2)).
+
+23. By 22, the attacker may know sign((H((((exp(g,@1_x_1),@1_infoA_2),exp(g,@1_y_1)),@1_infoB_2),Nil),initTag),@1_sk_2).
+By 13, the attacker may know mac(pk(@1_sk_2),exp(exp(g,@1_y_1),@1_x_1)).
+Using the function 2-tuple the attacker may obtain (sign((H((((exp(g,@1_x_1),@1_infoA_2),exp(g,@1_y_1)),@1_infoB_2),Nil),initTag),@1_sk_2),mac(pk(@1_sk_2),exp(exp(g,@1_y_1),@1_x_1))).
+attacker((sign((H((((exp(g,@1_x_1),@1_infoA_2),exp(g,@1_y_1)),@1_infoB_2),Nil),initTag),@1_sk_2),mac(pk(@1_sk_2),exp(exp(g,@1_y_1),@1_x_1)))).
+
+24. We assume as hypothesis that
+eq_hash(H((((exp(g,@1_x_1),@1_infoA_2),exp(g,@1_y_1)),@1_infoB_2),Nil),H((exp(g,@1_x_1),(@1_infoA_2,(exp(g,@1_y_1),@1_infoB_2))),Nil)).
+
+25. The entry @1_Keys(@1_sk_2) that may be in a table by 1 may be read at get {47}.
+The entry @1_Keys(@1_sk_1) that may be in a table by 2 may be read at get {46}.
+The event @p_act(@occ28_1,(exp(g,@1_x_1),@1_infoA_2)) records how variables are instantiated at {28}.
+The message (exp(g,@1_x_1),@1_infoA_2) that the attacker may have by 7 may be received at input {28}.
+The message (sign((H((((exp(g,@1_x_1),@1_infoA_2),exp(g,@1_y_1)),@1_infoB_2),Nil),initTag),@1_sk_2),mac(pk(@1_sk_2),exp(exp(g,@1_y_1),@1_x_1))) that the attacker may have by 23 may be received at input {36}.
+By 24, eq_hash(H((((exp(g,@1_x_1),@1_infoA_2),exp(g,@1_y_1)),@1_infoB_2),Nil),H((exp(g,@1_x_1),(@1_infoA_2,(exp(g,@1_y_1),@1_infoB_2))),Nil)) is true at {42}.
+We have @1_sk_1 ≠ @1_sk_2.
+So event acceptB(pk(@1_sk_1),pk(@1_sk_2),((exp(g,@1_x_1),@1_infoA_2),(exp(g,@1_y_1),@1_infoB_2))) may be executed at {44}.
+end(acceptB(pk(@1_sk_1),pk(@1_sk_2),((exp(g,@1_x_1),@1_infoA_2),(exp(g,@1_y_1),@1_infoB_2)))).
+
+26. By 25, end(acceptB(pk(@1_sk_1),pk(@1_sk_2),((exp(g,@1_x_1),@1_infoA_2),(exp(g,@1_y_1),@1_infoB_2)))).
+The goal is reached, represented in the following fact:
+end(acceptB(pk(@1_sk_1),pk(@1_sk_2),((exp(g,@1_x_1),@1_infoA_2),(exp(g,@1_y_1),@1_infoB_2)))).
+
+
+- Evaluation of ground_eq_hash(H((((exp(g,@1_x_1[]),a[]),exp(g,@1_y_1[])),@1_infoB_2[]),Nil),H((exp(g,@1_x_1[]),(a[],(exp(g,@1_y_1[]),@1_infoB_2[]))),Nil))
+  Result: true
+
+A more detailed output of the traces is available with
+  set traceDisplay = long.
+
+new @1_sk: t_sk creating @1_sk_1 at {2} in copy a
+
+out(c, ~M) with ~M = pk(@1_sk_1) at {3} in copy a
+
+insert @1_Keys(@1_sk_1) at {4} in copy a
+
+new @1_sk: t_sk creating @1_sk_2 at {2} in copy a_1
+
+out(c, ~M_1) with ~M_1 = pk(@1_sk_2) at {3} in copy a_1
+
+insert @1_Keys(@1_sk_2) at {4} in copy a_1
+
+new @1_sk: t_sk creating @1_sk_3 at {2} in copy a_2
+
+out(c, ~M_2) with ~M_2 = pk(@1_sk_3) at {3} in copy a_2
+
+insert @1_Keys(@1_sk_3) at {4} in copy a_2
+
+get @1_Keys(@1_sk_1) at {47} in copy a_3
+
+get @1_Keys(@1_sk_3) at {46} in copy a_3
+
+new @1_x: t_exponent creating @1_x_1 at {8} in copy a_3
+
+new @1_infoA: bitstring creating @1_infoA_2 at {9} in copy a_3
+
+out(c, (~M_3,~M_4)) with ~M_3 = exp(g,@1_x_1), ~M_4 = @1_infoA_2 at {11} in copy a_3
+
+get @1_Keys(@1_sk_1) at {47} in copy a_4
+
+get @1_Keys(@1_sk_2) at {46} in copy a_4
+
+new @1_x: t_exponent creating @1_x_2 at {8} in copy a_4
+
+new @1_infoA: bitstring creating @1_infoA_3 at {9} in copy a_4
+
+out(c, (~M_5,~M_6)) with ~M_5 = exp(g,@1_x_2), ~M_6 = @1_infoA_3 at {11} in copy a_4
+
+in(c, (~M_3,a_5)) with ~M_3 = exp(g,@1_x_1) at {28} in copy a_4
+
+new @1_y: t_exponent creating @1_y_1 at {31} in copy a_4
+
+new @1_infoB_1: bitstring creating @1_infoB_2 at {32} in copy a_4
+
+event initB(pk(@1_sk_2),pk(@1_sk_1),((exp(g,@1_x_1),a_5),(exp(g,@1_y_1),@1_infoB_2))) at {34} in copy a_4
+
+out(c, (~M_7,~M_8)) with ~M_7 = exp(g,@1_y_1), ~M_8 = @1_infoB_2 at {35} in copy a_4
+
+in(c, (~M_7,a_6)) with ~M_7 = exp(g,@1_y_1) at {12} in copy a_3
+
+event initA(pk(@1_sk_1),pk(@1_sk_3),((exp(g,@1_x_1),@1_infoA_2),(exp(g,@1_y_1),a_6))) at {15} in copy a_3
+
+out(c, (~M_9,~M_10)) with ~M_9 = sign((H((exp(g,@1_x_1),(@1_infoA_2,(exp(g,@1_y_1),a_6))),Nil),initTag),@1_sk_1), ~M_10 = mac(pk(@1_sk_1),exp(exp(g,@1_y_1),@1_x_1)) at {19} in copy a_3
+
+get @1_Keys(@1_sk_1) at {51} in copy a_7
+
+event Dishonest(pk(@1_sk_1)) at {49} in copy a_7
+
+out(c, ~M_11) with ~M_11 = @1_sk_1 at {50} in copy a_7
+
+in(c, (sign((H((((~M_3,a_5),~M_7),~M_8),Nil),initTag),~M_11),~M_10)) with sign((H((((~M_3,a_5),~M_7),~M_8),Nil),initTag),~M_11) = sign((H((((exp(g,@1_x_1),a_5),exp(g,@1_y_1)),@1_infoB_2),Nil),initTag),@1_sk_1), ~M_10 = mac(pk(@1_sk_1),exp(exp(g,@1_y_1),@1_x_1)) at {36} in copy a_4
+
+out(c, (~M_12,~M_13)) with ~M_12 = sign((H((exp(g,@1_x_1),(a_5,(exp(g,@1_y_1),@1_infoB_2))),Nil),respTag),@1_sk_2), ~M_13 = mac(pk(@1_sk_2),exp(exp(g,@1_x_1),@1_y_1)) at {43} in copy a_4
+
+event acceptB(pk(@1_sk_2),pk(@1_sk_1),((exp(g,@1_x_1),a_5),(exp(g,@1_y_1),@1_infoB_2))) at {44} in copy a_4 (goal)
+
+The event acceptB(pk(@1_sk_2),pk(@1_sk_1),((exp(g,@1_x_1),a_5),(exp(g,@1_y_1),@1_infoB_2))) is executed at {44} in copy a_4.
+A trace has been found.
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 290, characters 3-93, is satisfied by the attack trace.
+eq_hash(H(x1,h1),H(x1',h1')) && not(cond_var(x1',h1')) && not(cond_var(x1,h1)) ==> x1 = x1'
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 289, characters 3-106, is satisfied by the attack trace.
+eq_hash(H(x1,h1),H(x1',h1')) && not(cond_var(x1',h1')) && cond_var(x1,h1) ==> x1 = x1' || x1' = (x2',x1)
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 288, characters 3-105, is satisfied by the attack trace.
+eq_hash(H(x1,h1),H(x1',h1')) && cond_var(x1',h1') && not(cond_var(x1,h1)) ==> x1 = x1' || x1 = (x2,x1')
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 287, characters 3-118, is satisfied by the attack trace.
+eq_hash(H(x1,h1),H(x1',h1')) && cond_var(x1',h1') && cond_var(x1,h1) ==> x1 = x1' || x1 = (x2,x1') || x1' = (x2',x1)
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 236, characters 3-209, is satisfied by the attack trace.
+eq_hash(h2,h1_1) && is_normal_MDH(h1_1) && is_normal_MDH(h2) && H(x1_1,h1'_1) <-- rev_hash(h1_1,Nil) && H(x2_1,h2') <-- rev_hash(h2,Nil) && is_var(x1_1) && instantiate_allowed(x1_1,H(x2_1,h2')) ==> x1_1 = x2_1 || x1_1 = (x1'_1,x1'')
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 235, characters 3-209, is satisfied by the attack trace.
+eq_hash(h1_1,h2) && is_normal_MDH(h1_1) && is_normal_MDH(h2) && H(x1_1,h1'_1) <-- rev_hash(h1_1,Nil) && H(x2_1,h2') <-- rev_hash(h2,Nil) && is_var(x1_1) && instantiate_allowed(x1_1,H(x2_1,h2')) ==> x1_1 = x2_1 || x1_1 = (x1'_1,x1'')
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 234, characters 3-163, is satisfied by the attack trace.
+eq_hash(H(x2_1,h2),H(x1_1,h1_1)) && is_normal_MDH(H(x1_1,h1_1)) && is_normal_MDH(H(x2_1,h2)) && is_var(x1_1) && instantiate_allowed(x1_1,H(x2_1,h2)) ==> x1_1 = x2_1 || x1_1 = (x1'_1,x1'')
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 233, characters 3-163, is satisfied by the attack trace.
+eq_hash(H(x1_1,h1_1),H(x2_1,h2)) && is_normal_MDH(H(x1_1,h1_1)) && is_normal_MDH(H(x2_1,h2)) && is_var(x1_1) && instantiate_allowed(x1_1,H(x2_1,h2)) ==> x1_1 = x2_1 || x1_1 = (x1'_1,x1'')
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 214, characters 3-134, is satisfied by the attack trace.
+eq_hash(h1_2,h2_1) && H(u1,h1'_2) <-- rev_hash(h1_2,Nil) && H(u2,h2'_1) <-- rev_hash(h2_1,Nil) && not(is_var(u1)) && not(is_var(u2)) ==> u1 = u2
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 213, characters 3-78, is satisfied by the attack trace.
+eq_hash(H(u1,h1_2),H(u2,h2_1)) && not(is_var(u1)) && not(is_var(u2)) ==> u1 = u2
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 203, characters 3-80, is satisfied by the attack trace.
+not (eq_hash(h1_3,h2_2) && all_not_var(h1_3) && nb_element(h1_3) + 1 ≤ nb_element(h2_2))
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 202, characters 3-80, is satisfied by the attack trace.
+not (eq_hash(h1_3,h2_2) && all_not_var(h2_2) && nb_element(h2_2) + 1 ≤ nb_element(h1_3))
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 178, characters 3-155, is satisfied by the attack trace.
+not (eq_hash(h2_3,h1_4) && is_normal_MDH(h1_4) && is_normal_MDH(h2_3) && h1'_3 <-- rev_hash(h1_4,Nil) && h2'_2 <-- rev_hash(h2_3,Nil) && false_hash_var(h1'_3,h2'_2,Nil))
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 177, characters 3-155, is satisfied by the attack trace.
+not (eq_hash(h1_4,h2_3) && is_normal_MDH(h1_4) && is_normal_MDH(h2_3) && h1'_3 <-- rev_hash(h1_4,Nil) && h2'_2 <-- rev_hash(h2_3,Nil) && false_hash_var(h1'_3,h2'_2,Nil))
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 176, characters 3-109, is satisfied by the attack trace.
+not (eq_hash(h2_3,h1_4) && is_normal_MDH(h1_4) && is_normal_MDH(h2_3) && h1_4 ≠ h2_3 && false_hash_var(h1_4,h2_3,Nil))
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 175, characters 3-109, is satisfied by the attack trace.
+not (eq_hash(h1_4,h2_3) && is_normal_MDH(h1_4) && is_normal_MDH(h2_3) && h1_4 ≠ h2_3 && false_hash_var(h1_4,h2_3,Nil))
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 117, characters 3-119, is satisfied by the attack trace.
+eq_hash(h1_5,h2_4) && is_normal_MDH(h1_5) && is_normal_MDH(h2_4) && (h1'_4,h2'_3) <-- last_term_equal(h1_5,h2_4) ==> eq_hash(h1'_4,h2'_3)
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 116, characters 3-45, is satisfied by the attack trace.
+eq_hash(H(x,h1_5),H(x,h2_4)) ==> eq_hash(h1_5,h2_4)
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 80, characters 3-58, is satisfied by the attack trace.
+eq_hash(H(x1_2,Nil),H(x2_2,Nil)) && attacker(x2_2) ==> x1_2 = x2_2
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 79, characters 3-58, is satisfied by the attack trace.
+eq_hash(H(x1_2,Nil),H(x2_2,Nil)) && attacker(x1_2) ==> x1_2 = x2_2
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 74, characters 3-81, is satisfied by the attack trace.
+eq_hash(h1_6,h2_5) && not(is_normal_MDH(h2_5)) && h2'_4 <-- MDH(h2_5) ==> eq_hash(h1_6,h2'_4)
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 73, characters 3-81, is satisfied by the attack trace.
+eq_hash(h1_6,h2_5) && not(is_normal_MDH(h1_6)) && h1'_5 <-- MDH(h1_6) ==> eq_hash(h1'_5,h2_5)
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 72, characters 3-23, is satisfied by the attack trace.
+eq_hash(h,h) ==> true
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 54, characters 3-41, is satisfied by the attack trace.
+eq_hash(h1_7,H(x2_3,h2_6)) ==> h1_7 = H(x1_3,h1'_6)
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 53, characters 3-42, is satisfied by the attack trace.
+eq_hash(H(x1_3,h1'_6),h2_6) ==> h2_6 = H(x2_3,h2'_5)
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 52, characters 3-30, is satisfied by the attack trace.
+eq_hash(h1_7,Nil) ==> h1_7 = Nil
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 51, characters 3-30, is satisfied by the attack trace.
+eq_hash(Nil,h2_6) ==> h2_6 = Nil
+RESULT not event(acceptB(B,A,x)) is false.
+-- Query event(acceptB(B,A,x)) ==> event(initA(A,B,x)) || event(Dishonest(B)) || event(Dishonest(A)) in process 1.
+Translating the process into Horn clauses...
+Completing...
+200 rules inserted. Base: 146 rules (39 with conclusion selected). Queue: 12 rules.
+Starting query event(acceptB(B,A,x)) ==> event(initA(A,B,x)) || event(Dishonest(B)) || event(Dishonest(A))
+goal reachable: @sid ≠ @sid_1 && @sid_2 ≠ @sid && begin(initA(pk(@1_sk_1),pk(@1_sk_2),((exp(g,@1_x_1),@1_infoA_2),(exp(g,@1_y_1),@1_infoB_2)))) && begin(@p_act(@occ12_2,(exp(g,@1_y_1),@1_infoB_2))) && begin(@p_act(@occ28_2,(exp(g,@1_x_1),@1_infoA_2))) -> end(acceptB(pk(@1_sk_3),pk(@1_sk_1),((exp(g,@1_x_1),@1_infoA_2),(exp(g,@1_y_1),@1_infoB_2))))
+Abbreviations:
+@1_sk_3 = @1_sk[!1 = @sid_2]
+@1_sk_1 = @1_sk[!1 = @sid]
+@1_sk_2 = @1_sk[!1 = @sid_1]
+@1_x_1 = @1_x[@1_skB = @1_sk_2,@1_skA = @1_sk_1,!1 = @sid_3]
+@1_infoA_2 = @1_infoA[@1_skB = @1_sk_2,@1_skA = @1_sk_1,!1 = @sid_3]
+@1_y_1 = @1_y[@1_m1_1 = (exp(g,@1_x_1),@1_infoA_2),@1_skB = @1_sk_3,@1_skA = @1_sk_1,!1 = @sid_4]
+@1_infoB_2 = @1_infoB_1[@1_m1_1 = (exp(g,@1_x_1),@1_infoA_2),@1_skB = @1_sk_3,@1_skA = @1_sk_1,!1 = @sid_4]
+@occ12_2 = @occ12_1[!1 = @sid_3]
+@occ28_2 = @occ28_1[!1 = @sid_4]
+
+Derivation:
+Abbreviations:
+@1_sk_1 = @1_sk[!1 = @sid]
+@1_sk_2 = @1_sk[!1 = @sid_1]
+@1_sk_3 = @1_sk[!1 = @sid_2]
+@1_x_1 = @1_x[@1_skB = @1_sk_3,@1_skA = @1_sk_2,!1 = @sid_3]
+@1_infoA_2 = @1_infoA[@1_skB = @1_sk_3,@1_skA = @1_sk_2,!1 = @sid_3]
+@1_y_1 = @1_y[@1_m1_1 = (exp(g,@1_x_1),@1_infoA_2),@1_skB = @1_sk_1,@1_skA = @1_sk_2,!1 = @sid_4]
+@1_infoB_2 = @1_infoB_1[@1_m1_1 = (exp(g,@1_x_1),@1_infoA_2),@1_skB = @1_sk_1,@1_skA = @1_sk_2,!1 = @sid_4]
+@occ28_2 = @occ28_1[!1 = @sid_4]
+@occ12_2 = @occ12_1[!1 = @sid_3]
+
+1. The entry @1_Keys(@1_sk_2) may be inserted in a table at insert {4}.
+table(@1_Keys(@1_sk_2)).
+
+2. The entry @1_Keys(@1_sk_1) may be inserted in a table at insert {4}.
+table(@1_Keys(@1_sk_1)).
+
+3. The entry @1_Keys(@1_sk_3) may be inserted in a table at insert {4}.
+table(@1_Keys(@1_sk_3)).
+
+4. The entry @1_Keys(@1_sk_2) that may be in a table by 1 may be read at get {47}.
+The entry @1_Keys(@1_sk_3) that may be in a table by 3 may be read at get {46}.
+We have @1_sk_2 ≠ @1_sk_3.
+So the message (exp(g,@1_x_1),@1_infoA_2) may be sent to the attacker at output {11}.
+attacker((exp(g,@1_x_1),@1_infoA_2)).
+
+5. By 4, the attacker may know (exp(g,@1_x_1),@1_infoA_2).
+Using the function 2-proj-2-tuple the attacker may obtain @1_infoA_2.
+attacker(@1_infoA_2).
+
+6. By 4, the attacker may know (exp(g,@1_x_1),@1_infoA_2).
+Using the function 1-proj-2-tuple the attacker may obtain exp(g,@1_x_1).
+attacker(exp(g,@1_x_1)).
+
+7. By 6, the attacker may know exp(g,@1_x_1).
+By 5, the attacker may know @1_infoA_2.
+Using the function 2-tuple the attacker may obtain (exp(g,@1_x_1),@1_infoA_2).
+attacker((exp(g,@1_x_1),@1_infoA_2)).
+
+8. The entry @1_Keys(@1_sk_2) that may be in a table by 1 may be read at get {47}.
+The entry @1_Keys(@1_sk_1) that may be in a table by 2 may be read at get {46}.
+The event @p_act(@occ28_2,(exp(g,@1_x_1),@1_infoA_2)) records how variables are instantiated at {28}.
+The message (exp(g,@1_x_1),@1_infoA_2) that the attacker may have by 7 may be received at input {28}.
+We have (forall @gen,@gen_1, exp(g,@1_x_1) ≠ CPcol1(@gen_1,@gen)) && (forall @gen_2,@gen_3,@gen_4, exp(g,@1_x_1) ≠ (CPcol1(@gen_4,@gen_3),@gen_2)) && (forall @gen_5,@gen_6,@gen_7, exp(g,@1_x_1) ≠ (@gen_7,CPcol1(@gen_6,@gen_5))) && (forall @gen_8,@gen_9,@gen_10,@gen_11, exp(g,@1_x_1) ≠ (@gen_11,(CPcol1(@gen_10,@gen_9),@gen_8))) && (forall @gen_12,@gen_13,@gen_14,@gen_15, exp(g,@1_x_1) ≠ (@gen_15,(@gen_14,CPcol1(@gen_13,@gen_12)))) && (forall @gen_16,@gen_17, exp(g,@1_x_1) ≠ CPcol2(@gen_17,@gen_16)) && (forall @gen_18,@gen_19,@gen_20, exp(g,@1_x_1) ≠ (CPcol2(@gen_20,@gen_19),@gen_18)) && (forall @gen_21,@gen_22,@gen_23, exp(g,@1_x_1) ≠ (@gen_23,CPcol2(@gen_22,@gen_21))) && (forall @gen_24,@gen_25,@gen_26,@gen_27, exp(g,@1_x_1) ≠ (@gen_27,(CPcol2(@gen_26,@gen_25),@gen_24))) && (forall @gen_28,@gen_29,@gen_30,@gen_31, exp(g,@1_x_1) ≠ (@gen_31,(@gen_30,CPcol2(@gen_29,@gen_28)))) && exp(g,@1_x_1) ≠ g && @1_sk_1 ≠ @1_sk_2.
+So the message (exp(g,@1_y_1),@1_infoB_2) may be sent to the attacker at output {35}.
+attacker((exp(g,@1_y_1),@1_infoB_2)).
+
+9. By 8, the attacker may know (exp(g,@1_y_1),@1_infoB_2).
+Using the function 2-proj-2-tuple the attacker may obtain @1_infoB_2.
+attacker(@1_infoB_2).
+
+10. By 8, the attacker may know (exp(g,@1_y_1),@1_infoB_2).
+Using the function 1-proj-2-tuple the attacker may obtain exp(g,@1_y_1).
+attacker(exp(g,@1_y_1)).
+
+11. By 10, the attacker may know exp(g,@1_y_1).
+By 9, the attacker may know @1_infoB_2.
+Using the function 2-tuple the attacker may obtain (exp(g,@1_y_1),@1_infoB_2).
+attacker((exp(g,@1_y_1),@1_infoB_2)).
+
+12. The entry @1_Keys(@1_sk_2) that may be in a table by 1 may be read at get {47}.
+The entry @1_Keys(@1_sk_3) that may be in a table by 3 may be read at get {46}.
+The event @p_act(@occ12_2,(exp(g,@1_y_1),@1_infoB_2)) records how variables are instantiated at {12}.
+The message (exp(g,@1_y_1),@1_infoB_2) that the attacker may have by 11 may be received at input {12}.
+The event initA(pk(@1_sk_2),pk(@1_sk_3),((exp(g,@1_x_1),@1_infoA_2),(exp(g,@1_y_1),@1_infoB_2))) may be executed at {15}.
+We have (forall @gen,@gen_1, exp(g,@1_y_1) ≠ CPcol1(@gen_1,@gen)) && (forall @gen_2,@gen_3,@gen_4, exp(g,@1_y_1) ≠ (CPcol1(@gen_4,@gen_3),@gen_2)) && (forall @gen_5,@gen_6,@gen_7, exp(g,@1_y_1) ≠ (@gen_7,CPcol1(@gen_6,@gen_5))) && (forall @gen_8,@gen_9,@gen_10,@gen_11, exp(g,@1_y_1) ≠ (@gen_11,(CPcol1(@gen_10,@gen_9),@gen_8))) && (forall @gen_12,@gen_13,@gen_14,@gen_15, exp(g,@1_y_1) ≠ (@gen_15,(@gen_14,CPcol1(@gen_13,@gen_12)))) && (forall @gen_16,@gen_17, exp(g,@1_y_1) ≠ CPcol2(@gen_17,@gen_16)) && (forall @gen_18,@gen_19,@gen_20, exp(g,@1_y_1) ≠ (CPcol2(@gen_20,@gen_19),@gen_18)) && (forall @gen_21,@gen_22,@gen_23, exp(g,@1_y_1) ≠ (@gen_23,CPcol2(@gen_22,@gen_21))) && (forall @gen_24,@gen_25,@gen_26,@gen_27, exp(g,@1_y_1) ≠ (@gen_27,(CPcol2(@gen_26,@gen_25),@gen_24))) && (forall @gen_28,@gen_29,@gen_30,@gen_31, exp(g,@1_y_1) ≠ (@gen_31,(@gen_30,CPcol2(@gen_29,@gen_28)))) && exp(g,@1_y_1) ≠ g && @1_sk_2 ≠ @1_sk_3.
+So the message (sign((H((exp(g,@1_x_1),(@1_infoA_2,(exp(g,@1_y_1),@1_infoB_2))),Nil),initTag),@1_sk_2),mac(pk(@1_sk_2),exp(exp(g,@1_y_1),@1_x_1))) may be sent to the attacker at output {19}.
+attacker((sign((H((exp(g,@1_x_1),(@1_infoA_2,(exp(g,@1_y_1),@1_infoB_2))),Nil),initTag),@1_sk_2),mac(pk(@1_sk_2),exp(exp(g,@1_y_1),@1_x_1)))).
+
+13. By 12, the attacker may know (sign((H((exp(g,@1_x_1),(@1_infoA_2,(exp(g,@1_y_1),@1_infoB_2))),Nil),initTag),@1_sk_2),mac(pk(@1_sk_2),exp(exp(g,@1_y_1),@1_x_1))).
+Using the function 2-proj-2-tuple the attacker may obtain mac(pk(@1_sk_2),exp(exp(g,@1_y_1),@1_x_1)).
+attacker(mac(pk(@1_sk_2),exp(exp(g,@1_y_1),@1_x_1))).
+
+14. By 12, the attacker may know (sign((H((exp(g,@1_x_1),(@1_infoA_2,(exp(g,@1_y_1),@1_infoB_2))),Nil),initTag),@1_sk_2),mac(pk(@1_sk_2),exp(exp(g,@1_y_1),@1_x_1))).
+Using the function 1-proj-2-tuple the attacker may obtain sign((H((exp(g,@1_x_1),(@1_infoA_2,(exp(g,@1_y_1),@1_infoB_2))),Nil),initTag),@1_sk_2).
+attacker(sign((H((exp(g,@1_x_1),(@1_infoA_2,(exp(g,@1_y_1),@1_infoB_2))),Nil),initTag),@1_sk_2)).
+
+15. By 14, the attacker may know sign((H((exp(g,@1_x_1),(@1_infoA_2,(exp(g,@1_y_1),@1_infoB_2))),Nil),initTag),@1_sk_2).
+By 13, the attacker may know mac(pk(@1_sk_2),exp(exp(g,@1_y_1),@1_x_1)).
+Using the function 2-tuple the attacker may obtain (sign((H((exp(g,@1_x_1),(@1_infoA_2,(exp(g,@1_y_1),@1_infoB_2))),Nil),initTag),@1_sk_2),mac(pk(@1_sk_2),exp(exp(g,@1_y_1),@1_x_1))).
+attacker((sign((H((exp(g,@1_x_1),(@1_infoA_2,(exp(g,@1_y_1),@1_infoB_2))),Nil),initTag),@1_sk_2),mac(pk(@1_sk_2),exp(exp(g,@1_y_1),@1_x_1)))).
+
+16. We assume as hypothesis that
+eq_hash(H((exp(g,@1_x_1),(@1_infoA_2,(exp(g,@1_y_1),@1_infoB_2))),Nil),H((exp(g,@1_x_1),(@1_infoA_2,(exp(g,@1_y_1),@1_infoB_2))),Nil)).
+
+17. The entry @1_Keys(@1_sk_2) that may be in a table by 1 may be read at get {47}.
+The entry @1_Keys(@1_sk_1) that may be in a table by 2 may be read at get {46}.
+The event @p_act(@occ28_2,(exp(g,@1_x_1),@1_infoA_2)) records how variables are instantiated at {28}.
+The message (exp(g,@1_x_1),@1_infoA_2) that the attacker may have by 7 may be received at input {28}.
+The message (sign((H((exp(g,@1_x_1),(@1_infoA_2,(exp(g,@1_y_1),@1_infoB_2))),Nil),initTag),@1_sk_2),mac(pk(@1_sk_2),exp(exp(g,@1_y_1),@1_x_1))) that the attacker may have by 15 may be received at input {36}.
+By 16, eq_hash(H((exp(g,@1_x_1),(@1_infoA_2,(exp(g,@1_y_1),@1_infoB_2))),Nil),H((exp(g,@1_x_1),(@1_infoA_2,(exp(g,@1_y_1),@1_infoB_2))),Nil)) is true at {42}.
+We have @1_sk_1 ≠ @1_sk_2.
+So event acceptB(pk(@1_sk_1),pk(@1_sk_2),((exp(g,@1_x_1),@1_infoA_2),(exp(g,@1_y_1),@1_infoB_2))) may be executed at {44}.
+end(acceptB(pk(@1_sk_1),pk(@1_sk_2),((exp(g,@1_x_1),@1_infoA_2),(exp(g,@1_y_1),@1_infoB_2)))).
+
+18. By 17, end(acceptB(pk(@1_sk_1),pk(@1_sk_2),((exp(g,@1_x_1),@1_infoA_2),(exp(g,@1_y_1),@1_infoB_2)))).
+The goal is reached, represented in the following fact:
+end(acceptB(pk(@1_sk_1),pk(@1_sk_2),((exp(g,@1_x_1),@1_infoA_2),(exp(g,@1_y_1),@1_infoB_2)))).
+
+
+- Evaluation of ground_eq_hash(H((exp(g,@1_x_1[]),(@1_infoA_2[],(exp(g,@1_y_1[]),@1_infoB_2[]))),Nil),H((exp(g,@1_x_1[]),(@1_infoA_2[],(exp(g,@1_y_1[]),@1_infoB_2[]))),Nil))
+  Result: true
+
+A more detailed output of the traces is available with
+  set traceDisplay = long.
+
+new @1_sk: t_sk creating @1_sk_1 at {2} in copy a
+
+out(c, ~M) with ~M = pk(@1_sk_1) at {3} in copy a
+
+insert @1_Keys(@1_sk_1) at {4} in copy a
+
+new @1_sk: t_sk creating @1_sk_2 at {2} in copy a_1
+
+out(c, ~M_1) with ~M_1 = pk(@1_sk_2) at {3} in copy a_1
+
+insert @1_Keys(@1_sk_2) at {4} in copy a_1
+
+new @1_sk: t_sk creating @1_sk_3 at {2} in copy a_2
+
+out(c, ~M_2) with ~M_2 = pk(@1_sk_3) at {3} in copy a_2
+
+insert @1_Keys(@1_sk_3) at {4} in copy a_2
+
+get @1_Keys(@1_sk_1) at {47} in copy a_3
+
+get @1_Keys(@1_sk_3) at {46} in copy a_3
+
+new @1_x: t_exponent creating @1_x_1 at {8} in copy a_3
+
+new @1_infoA: bitstring creating @1_infoA_2 at {9} in copy a_3
+
+out(c, (~M_3,~M_4)) with ~M_3 = exp(g,@1_x_1), ~M_4 = @1_infoA_2 at {11} in copy a_3
+
+get @1_Keys(@1_sk_1) at {47} in copy a_4
+
+get @1_Keys(@1_sk_2) at {46} in copy a_4
+
+new @1_x: t_exponent creating @1_x_2 at {8} in copy a_4
+
+new @1_infoA: bitstring creating @1_infoA_3 at {9} in copy a_4
+
+out(c, (~M_5,~M_6)) with ~M_5 = exp(g,@1_x_2), ~M_6 = @1_infoA_3 at {11} in copy a_4
+
+in(c, (~M_3,~M_4)) with ~M_3 = exp(g,@1_x_1), ~M_4 = @1_infoA_2 at {28} in copy a_4
+
+new @1_y: t_exponent creating @1_y_1 at {31} in copy a_4
+
+new @1_infoB_1: bitstring creating @1_infoB_2 at {32} in copy a_4
+
+event initB(pk(@1_sk_2),pk(@1_sk_1),((exp(g,@1_x_1),@1_infoA_2),(exp(g,@1_y_1),@1_infoB_2))) at {34} in copy a_4
+
+out(c, (~M_7,~M_8)) with ~M_7 = exp(g,@1_y_1), ~M_8 = @1_infoB_2 at {35} in copy a_4
+
+in(c, (~M_7,~M_8)) with ~M_7 = exp(g,@1_y_1), ~M_8 = @1_infoB_2 at {12} in copy a_3
+
+event initA(pk(@1_sk_1),pk(@1_sk_3),((exp(g,@1_x_1),@1_infoA_2),(exp(g,@1_y_1),@1_infoB_2))) at {15} in copy a_3
+
+out(c, (~M_9,~M_10)) with ~M_9 = sign((H((exp(g,@1_x_1),(@1_infoA_2,(exp(g,@1_y_1),@1_infoB_2))),Nil),initTag),@1_sk_1), ~M_10 = mac(pk(@1_sk_1),exp(exp(g,@1_y_1),@1_x_1)) at {19} in copy a_3
+
+in(c, (~M_9,~M_10)) with ~M_9 = sign((H((exp(g,@1_x_1),(@1_infoA_2,(exp(g,@1_y_1),@1_infoB_2))),Nil),initTag),@1_sk_1), ~M_10 = mac(pk(@1_sk_1),exp(exp(g,@1_y_1),@1_x_1)) at {36} in copy a_4
+
+out(c, (~M_11,~M_12)) with ~M_11 = sign((H((exp(g,@1_x_1),(@1_infoA_2,(exp(g,@1_y_1),@1_infoB_2))),Nil),respTag),@1_sk_2), ~M_12 = mac(pk(@1_sk_2),exp(exp(g,@1_x_1),@1_y_1)) at {43} in copy a_4
+
+event acceptB(pk(@1_sk_2),pk(@1_sk_1),((exp(g,@1_x_1),@1_infoA_2),(exp(g,@1_y_1),@1_infoB_2))) at {44} in copy a_4 (goal)
+
+The event acceptB(pk(@1_sk_2),pk(@1_sk_1),((exp(g,@1_x_1),@1_infoA_2),(exp(g,@1_y_1),@1_infoB_2))) is executed at {44} in copy a_4.
+A trace has been found.
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 290, characters 3-93, is satisfied by the attack trace.
+eq_hash(H(x1,h1),H(x1',h1')) && not(cond_var(x1',h1')) && not(cond_var(x1,h1)) ==> x1 = x1'
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 289, characters 3-106, is satisfied by the attack trace.
+eq_hash(H(x1,h1),H(x1',h1')) && not(cond_var(x1',h1')) && cond_var(x1,h1) ==> x1 = x1' || x1' = (x2',x1)
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 288, characters 3-105, is satisfied by the attack trace.
+eq_hash(H(x1,h1),H(x1',h1')) && cond_var(x1',h1') && not(cond_var(x1,h1)) ==> x1 = x1' || x1 = (x2,x1')
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 287, characters 3-118, is satisfied by the attack trace.
+eq_hash(H(x1,h1),H(x1',h1')) && cond_var(x1',h1') && cond_var(x1,h1) ==> x1 = x1' || x1 = (x2,x1') || x1' = (x2',x1)
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 236, characters 3-209, is satisfied by the attack trace.
+eq_hash(h2,h1_1) && is_normal_MDH(h1_1) && is_normal_MDH(h2) && H(x1_1,h1'_1) <-- rev_hash(h1_1,Nil) && H(x2_1,h2') <-- rev_hash(h2,Nil) && is_var(x1_1) && instantiate_allowed(x1_1,H(x2_1,h2')) ==> x1_1 = x2_1 || x1_1 = (x1'_1,x1'')
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 235, characters 3-209, is satisfied by the attack trace.
+eq_hash(h1_1,h2) && is_normal_MDH(h1_1) && is_normal_MDH(h2) && H(x1_1,h1'_1) <-- rev_hash(h1_1,Nil) && H(x2_1,h2') <-- rev_hash(h2,Nil) && is_var(x1_1) && instantiate_allowed(x1_1,H(x2_1,h2')) ==> x1_1 = x2_1 || x1_1 = (x1'_1,x1'')
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 234, characters 3-163, is satisfied by the attack trace.
+eq_hash(H(x2_1,h2),H(x1_1,h1_1)) && is_normal_MDH(H(x1_1,h1_1)) && is_normal_MDH(H(x2_1,h2)) && is_var(x1_1) && instantiate_allowed(x1_1,H(x2_1,h2)) ==> x1_1 = x2_1 || x1_1 = (x1'_1,x1'')
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 233, characters 3-163, is satisfied by the attack trace.
+eq_hash(H(x1_1,h1_1),H(x2_1,h2)) && is_normal_MDH(H(x1_1,h1_1)) && is_normal_MDH(H(x2_1,h2)) && is_var(x1_1) && instantiate_allowed(x1_1,H(x2_1,h2)) ==> x1_1 = x2_1 || x1_1 = (x1'_1,x1'')
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 214, characters 3-134, is satisfied by the attack trace.
+eq_hash(h1_2,h2_1) && H(u1,h1'_2) <-- rev_hash(h1_2,Nil) && H(u2,h2'_1) <-- rev_hash(h2_1,Nil) && not(is_var(u1)) && not(is_var(u2)) ==> u1 = u2
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 213, characters 3-78, is satisfied by the attack trace.
+eq_hash(H(u1,h1_2),H(u2,h2_1)) && not(is_var(u1)) && not(is_var(u2)) ==> u1 = u2
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 203, characters 3-80, is satisfied by the attack trace.
+not (eq_hash(h1_3,h2_2) && all_not_var(h1_3) && nb_element(h1_3) + 1 ≤ nb_element(h2_2))
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 202, characters 3-80, is satisfied by the attack trace.
+not (eq_hash(h1_3,h2_2) && all_not_var(h2_2) && nb_element(h2_2) + 1 ≤ nb_element(h1_3))
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 178, characters 3-155, is satisfied by the attack trace.
+not (eq_hash(h2_3,h1_4) && is_normal_MDH(h1_4) && is_normal_MDH(h2_3) && h1'_3 <-- rev_hash(h1_4,Nil) && h2'_2 <-- rev_hash(h2_3,Nil) && false_hash_var(h1'_3,h2'_2,Nil))
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 177, characters 3-155, is satisfied by the attack trace.
+not (eq_hash(h1_4,h2_3) && is_normal_MDH(h1_4) && is_normal_MDH(h2_3) && h1'_3 <-- rev_hash(h1_4,Nil) && h2'_2 <-- rev_hash(h2_3,Nil) && false_hash_var(h1'_3,h2'_2,Nil))
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 176, characters 3-109, is satisfied by the attack trace.
+not (eq_hash(h2_3,h1_4) && is_normal_MDH(h1_4) && is_normal_MDH(h2_3) && h1_4 ≠ h2_3 && false_hash_var(h1_4,h2_3,Nil))
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 175, characters 3-109, is satisfied by the attack trace.
+not (eq_hash(h1_4,h2_3) && is_normal_MDH(h1_4) && is_normal_MDH(h2_3) && h1_4 ≠ h2_3 && false_hash_var(h1_4,h2_3,Nil))
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 117, characters 3-119, is satisfied by the attack trace.
+eq_hash(h1_5,h2_4) && is_normal_MDH(h1_5) && is_normal_MDH(h2_4) && (h1'_4,h2'_3) <-- last_term_equal(h1_5,h2_4) ==> eq_hash(h1'_4,h2'_3)
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 116, characters 3-45, is satisfied by the attack trace.
+eq_hash(H(x,h1_5),H(x,h2_4)) ==> eq_hash(h1_5,h2_4)
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 80, characters 3-58, is satisfied by the attack trace.
+eq_hash(H(x1_2,Nil),H(x2_2,Nil)) && attacker(x2_2) ==> x1_2 = x2_2
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 79, characters 3-58, is satisfied by the attack trace.
+eq_hash(H(x1_2,Nil),H(x2_2,Nil)) && attacker(x1_2) ==> x1_2 = x2_2
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 74, characters 3-81, is satisfied by the attack trace.
+eq_hash(h1_6,h2_5) && not(is_normal_MDH(h2_5)) && h2'_4 <-- MDH(h2_5) ==> eq_hash(h1_6,h2'_4)
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 73, characters 3-81, is satisfied by the attack trace.
+eq_hash(h1_6,h2_5) && not(is_normal_MDH(h1_6)) && h1'_5 <-- MDH(h1_6) ==> eq_hash(h1'_5,h2_5)
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 72, characters 3-23, is satisfied by the attack trace.
+eq_hash(h,h) ==> true
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 54, characters 3-41, is satisfied by the attack trace.
+eq_hash(h1_7,H(x2_3,h2_6)) ==> h1_7 = H(x1_3,h1'_6)
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 53, characters 3-42, is satisfied by the attack trace.
+eq_hash(H(x1_3,h1'_6),h2_6) ==> h2_6 = H(x2_3,h2'_5)
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 52, characters 3-30, is satisfied by the attack trace.
+eq_hash(h1_7,Nil) ==> h1_7 = Nil
+
+Warning: We could not verify that the following axiom, declared at File "hash_no_collision.pvl", line 51, characters 3-30, is satisfied by the attack trace.
+eq_hash(Nil,h2_6) ==> h2_6 = Nil
+RESULT event(acceptB(B,A,x)) ==> event(initA(A,B,x)) || event(Dishonest(B)) || event(Dishonest(A)) is false.
+-- Query event(acceptA(A,B,x)) ==> event(initB(B,A,x)) || event(Dishonest(A)) || event(Dishonest(B)) in process 1.
+Translating the process into Horn clauses...
+Completing...
+200 rules inserted. Base: 141 rules (42 with conclusion selected). Queue: 33 rules.
+Starting query event(acceptA(A,B,x)) ==> event(initB(B,A,x)) || event(Dishonest(A)) || event(Dishonest(B))
+goal reachable: @sid ≠ @sid_1 && begin(Dishonest(pk(@1_sk_1))) && attacker(z) && attacker(@1_infoB_2) && begin(@p_act(@occ12_3,(exp(g,z),@1_infoB_2))) -> end(acceptA(pk(@1_sk_2),pk(@1_sk_1),((exp(g,@1_x_1),@1_infoA_2),(exp(g,z),@1_infoB_2))))
+Abbreviations:
+@1_sk_2 = @1_sk[!1 = @sid]
+@1_sk_1 = @1_sk[!1 = @sid_1]
+@1_x_1 = @1_x[@1_skB = @1_sk_1,@1_skA = @1_sk_2,!1 = @sid_2]
+@1_infoA_2 = @1_infoA[@1_skB = @1_sk_1,@1_skA = @1_sk_2,!1 = @sid_2]
+@occ12_3 = @occ12_2[!1 = @sid_2]
+goal reachable: @sid ≠ @sid_1 && @sid_2 ≠ @sid && begin(Dishonest(pk(@1_sk_1))) && attacker(@1_infoB_2) && begin(@p_act(@occ12_3,(exp(g,@1_x_1),@1_infoB_2))) && attacker(@1_infoB_3) && begin(@p_act(@occ12_4,(exp(g,@1_x_2),@1_infoB_3))) -> end(acceptA(pk(@1_sk_2),pk(@1_sk_1),((exp(g,@1_x_1),@1_infoA_2),(exp(g,@1_x_2),@1_infoB_3))))
+Abbreviations:
+@1_sk_2 = @1_sk[!1 = @sid_2]
+@1_sk_1 = @1_sk[!1 = @sid]
+@1_x_1 = @1_x[@1_skB = @1_sk_1,@1_skA = @1_sk_2,!1 = @sid_3]
+@1_infoA_2 = @1_infoA[@1_skB = @1_sk_1,@1_skA = @1_sk_2,!1 = @sid_3]
+@1_sk_3 = @1_sk[!1 = @sid_1]
+@1_x_2 = @1_x[@1_skB = @1_sk_3,@1_skA = @1_sk_1,!1 = @sid_4]
+@occ12_3 = @occ12_2[!1 = @sid_4]
+@occ12_4 = @occ12_2[!1 = @sid_3]
+goal reachable: @sid ≠ @sid_1 && begin(Dishonest(pk(@1_sk_1))) && attacker(x1) && attacker(h1') && begin(Dishonest(pk(@1_sk_2))) && eq_hash(H(x1,h1'),H(@1_infoB_2,H(exp(g,@1_y_1),H(@1_infoA_2,H(exp(g,@1_x_1),Nil))))) && begin(initB(pk(@1_sk_1),pk(@1_sk_2),((exp(g,@1_x_1),@1_infoA_2),(exp(g,@1_y_1),@1_infoB_2)))) && attacker(@1_infoA_2) && begin(@p_act(@occ28_3,(exp(g,@1_x_1),@1_infoA_2))) && attacker(@1_infoB_3) && begin(@p_act(@occ12_3,(exp(g,@1_y_1),@1_infoB_3))) -> end(acceptA(pk(@1_sk_2),pk(@1_sk_1),((exp(g,@1_x_1),@1_infoA_3),(exp(g,@1_y_1),@1_infoB_3))))
+Abbreviations:
+@1_sk_2 = @1_sk[!1 = @sid]
+@1_sk_1 = @1_sk[!1 = @sid_1]
+@1_x_1 = @1_x[@1_skB = @1_sk_1,@1_skA = @1_sk_2,!1 = @sid_2]
+@1_infoA_3 = @1_infoA[@1_skB = @1_sk_1,@1_skA = @1_sk_2,!1 = @sid_2]
+@1_y_1 = @1_y[@1_m1_1 = (exp(g,@1_x_1),@1_infoA_2),@1_skB = @1_sk_1,@1_skA = @1_sk_2,!1 = @sid_3]
+@1_infoB_2 = @1_infoB_1[@1_m1_1 = (exp(g,@1_x_1),@1_infoA_2),@1_skB = @1_sk_1,@1_skA = @1_sk_2,!1 = @sid_3]
+@occ28_3 = @occ28_2[!1 = @sid_3]
+@occ12_3 = @occ12_2[!1 = @sid_2]
+goal reachable: @sid ≠ @sid_1 && begin(initB(pk(@1_sk_1),pk(@1_sk_2),((exp(g,@1_x_1),@1_infoA_2),(exp(g,@1_y_1),@1_infoB_2)))) && begin(@p_act(@occ28_3,(exp(g,@1_x_1),@1_infoA_2))) && begin(@p_act(@occ12_3,(exp(g,@1_y_1),@1_infoB_2))) -> end(acceptA(pk(@1_sk_2),pk(@1_sk_1),((exp(g,@1_x_1),@1_infoA_2),(exp(g,@1_y_1),@1_infoB_2))))
+Abbreviations:
+@1_sk_2 = @1_sk[!1 = @sid]
+@1_sk_1 = @1_sk[!1 = @sid_1]
+@1_x_1 = @1_x[@1_skB = @1_sk_1,@1_skA = @1_sk_2,!1 = @sid_2]
+@1_infoA_2 = @1_infoA[@1_skB = @1_sk_1,@1_skA = @1_sk_2,!1 = @sid_2]
+@1_y_1 = @1_y[@1_m1_1 = (exp(g,@1_x_1),@1_infoA_2),@1_skB = @1_sk_1,@1_skA = @1_sk_2,!1 = @sid_3]
+@1_infoB_2 = @1_infoB_1[@1_m1_1 = (exp(g,@1_x_1),@1_infoA_2),@1_skB = @1_sk_1,@1_skA = @1_sk_2,!1 = @sid_3]
+@occ28_3 = @occ28_2[!1 = @sid_3]
+@occ12_3 = @occ12_2[!1 = @sid_2]
+RESULT event(acceptA(A,B,x)) ==> event(initB(B,A,x)) || event(Dishonest(A)) || event(Dishonest(B)) is true.
+-- Query event(acceptB(B,A,x)) ==> event(initA(A,B',x)) || event(Dishonest(B)) || event(Dishonest(A)) in process 1.
+Translating the process into Horn clauses...
+Completing...
+200 rules inserted. Base: 146 rules (39 with conclusion selected). Queue: 12 rules.
+Starting query event(acceptB(B,A,x)) ==> event(initA(A,B',x)) || event(Dishonest(B)) || event(Dishonest(A))
+goal reachable: @sid ≠ @sid_1 && @sid_2 ≠ @sid && attacker(x1) && attacker(h1') && begin(Dishonest(pk(@1_sk_1))) && begin(initA(pk(@1_sk_1),pk(@1_sk_2),((exp(g,@1_x_1),@1_infoA_2),(exp(g,@1_y_1),@1_infoB_2)))) && attacker(@1_infoB_2) && begin(@p_act(@occ12_4,(exp(g,@1_y_1),@1_infoB_2))) && attacker(@1_infoA_3) && begin(@p_act(@occ28_4,(exp(g,@1_x_1),@1_infoA_3))) && eq_hash(H(x1,h1'),H(@1_infoB_3,H(exp(g,@1_y_1),H(@1_infoA_3,H(exp(g,@1_x_1),Nil))))) -> end(acceptB(pk(@1_sk_3),pk(@1_sk_1),((exp(g,@1_x_1),@1_infoA_3),(exp(g,@1_y_1),@1_infoB_3))))
+Abbreviations:
+@1_sk_3 = @1_sk[!1 = @sid_2]
+@1_sk_1 = @1_sk[!1 = @sid]
+@1_sk_2 = @1_sk[!1 = @sid_1]
+@1_x_1 = @1_x[@1_skB = @1_sk_2,@1_skA = @1_sk_1,!1 = @sid_3]
+@1_y_1 = @1_y[@1_m1_1 = (exp(g,@1_x_1),@1_infoA_3),@1_skB = @1_sk_3,@1_skA = @1_sk_1,!1 = @sid_4]
+@1_infoB_3 = @1_infoB_1[@1_m1_1 = (exp(g,@1_x_1),@1_infoA_3),@1_skB = @1_sk_3,@1_skA = @1_sk_1,!1 = @sid_4]
+@1_infoA_2 = @1_infoA[@1_skB = @1_sk_2,@1_skA = @1_sk_1,!1 = @sid_3]
+@occ12_4 = @occ12_3[!1 = @sid_3]
+@occ28_4 = @occ28_3[!1 = @sid_4]
+goal reachable: @sid ≠ @sid_1 && attacker(x1) && attacker(h1') && begin(Dishonest(pk(@1_sk_1))) && attacker(z) && attacker(@1_infoA_2) && begin(@p_act(@occ28_4,(exp(g,z),@1_infoA_2))) && eq_hash(H(x1,h1'),H(@1_infoB_2,H(exp(g,@1_y_1),H(@1_infoA_2,H(exp(g,z),Nil))))) -> end(acceptB(pk(@1_sk_2),pk(@1_sk_1),((exp(g,z),@1_infoA_2),(exp(g,@1_y_1),@1_infoB_2))))
+Abbreviations:
+@1_sk_2 = @1_sk[!1 = @sid]
+@1_sk_1 = @1_sk[!1 = @sid_1]
+@1_y_1 = @1_y[@1_m1_1 = (exp(g,z),@1_infoA_2),@1_skB = @1_sk_2,@1_skA = @1_sk_1,!1 = @sid_2]
+@1_infoB_2 = @1_infoB_1[@1_m1_1 = (exp(g,z),@1_infoA_2),@1_skB = @1_sk_2,@1_skA = @1_sk_1,!1 = @sid_2]
+@occ28_4 = @occ28_3[!1 = @sid_2]
+goal reachable: @sid ≠ @sid_1 && @sid_2 ≠ @sid && begin(initA(pk(@1_sk_1),pk(@1_sk_2),((exp(g,@1_x_1),@1_infoA_2),(exp(g,@1_y_1),@1_infoB_2)))) && begin(@p_act(@occ12_4,(exp(g,@1_y_1),@1_infoB_2))) && begin(@p_act(@occ28_4,(exp(g,@1_x_1),@1_infoA_2))) -> end(acceptB(pk(@1_sk_3),pk(@1_sk_1),((exp(g,@1_x_1),@1_infoA_2),(exp(g,@1_y_1),@1_infoB_2))))
+Abbreviations:
+@1_sk_3 = @1_sk[!1 = @sid_2]
+@1_sk_1 = @1_sk[!1 = @sid]
+@1_sk_2 = @1_sk[!1 = @sid_1]
+@1_x_1 = @1_x[@1_skB = @1_sk_2,@1_skA = @1_sk_1,!1 = @sid_3]
+@1_infoA_2 = @1_infoA[@1_skB = @1_sk_2,@1_skA = @1_sk_1,!1 = @sid_3]
+@1_y_1 = @1_y[@1_m1_1 = (exp(g,@1_x_1),@1_infoA_2),@1_skB = @1_sk_3,@1_skA = @1_sk_1,!1 = @sid_4]
+@1_infoB_2 = @1_infoB_1[@1_m1_1 = (exp(g,@1_x_1),@1_infoA_2),@1_skB = @1_sk_3,@1_skA = @1_sk_1,!1 = @sid_4]
+@occ12_4 = @occ12_3[!1 = @sid_3]
+@occ28_4 = @occ28_3[!1 = @sid_4]
+RESULT event(acceptB(B,A,x)) ==> event(initA(A,B',x)) || event(Dishonest(B)) || event(Dishonest(A)) is true.
+-- Query event(sessionKeyA(B,A,x)) && attacker(x) ==> event(Dishonest(B)) || event(Dishonest(A)) in process 1.
+Translating the process into Horn clauses...
+Completing...
+200 rules inserted. Base: 136 rules (37 with conclusion selected). Queue: 22 rules.
+Starting query event(sessionKeyA(B,A,x)) && attacker(x) ==> event(Dishonest(B)) || event(Dishonest(A))
+goal reachable: @sid ≠ @sid_1 && begin(Dishonest(pk(@1_sk_1))) && attacker(@1_infoB_2) && begin(@p_act(@occ12_5,(exp(g,y),@1_infoB_2))) && attacker(y) -> end(sessionKeyA(pk(@1_sk_2),pk(@1_sk_1),exp(exp(g,@1_x_1),y))) && attacker(exp(exp(g,@1_x_1),y))
+Abbreviations:
+@1_sk_2 = @1_sk[!1 = @sid]
+@1_sk_1 = @1_sk[!1 = @sid_1]
+@1_x_1 = @1_x[@1_skB = @1_sk_1,@1_skA = @1_sk_2,!1 = @sid_2]
+@occ12_5 = @occ12_4[!1 = @sid_2]
+RESULT event(sessionKeyA(B,A,x)) && attacker(x) ==> event(Dishonest(B)) || event(Dishonest(A)) is true.
+-- Query event(sessionKeyB(B,A,x)) && attacker(x) ==> event(Dishonest(B)) || event(Dishonest(A)) in process 1.
+Translating the process into Horn clauses...
+Completing...
+200 rules inserted. Base: 143 rules (37 with conclusion selected). Queue: 25 rules.
+Starting query event(sessionKeyB(B,A,x)) && attacker(x) ==> event(Dishonest(B)) || event(Dishonest(A))
+goal reachable: @sid ≠ @sid_1 && attacker(x1) && attacker(h1') && begin(Dishonest(pk(@1_sk_1))) && eq_hash(H(x1,h1'),H(@1_infoB_2,H(exp(g,@1_y_1),H(@1_infoA_2,H(exp(g,y),Nil))))) && attacker(@1_infoA_2) && begin(@p_act(@occ28_6,(exp(g,y),@1_infoA_2))) && attacker(y) -> end(sessionKeyB(pk(@1_sk_2),pk(@1_sk_1),exp(exp(g,@1_y_1),y))) && attacker(exp(exp(g,@1_y_1),y))
+Abbreviations:
+@1_sk_2 = @1_sk[!1 = @sid]
+@1_sk_1 = @1_sk[!1 = @sid_1]
+@1_y_1 = @1_y[@1_m1_1 = (exp(g,y),@1_infoA_2),@1_skB = @1_sk_2,@1_skA = @1_sk_1,!1 = @sid_2]
+@1_infoB_2 = @1_infoB_1[@1_m1_1 = (exp(g,y),@1_infoA_2),@1_skB = @1_sk_2,@1_skA = @1_sk_1,!1 = @sid_2]
+@occ28_6 = @occ28_5[!1 = @sid_2]
+RESULT event(sessionKeyB(B,A,x)) && attacker(x) ==> event(Dishonest(B)) || event(Dishonest(A)) is true.
+
+--------------------------------------------------------------
+Verification summary:
+
+Query(ies):
+ - Query not event(acceptB(B,A,x)) is false.
+ - Query event(acceptB(B,A,x)) ==> event(initA(A,B,x)) || event(Dishonest(B)) || event(Dishonest(A)) is false.
+ - Query event(acceptA(A,B,x)) ==> event(initB(B,A,x)) || event(Dishonest(A)) || event(Dishonest(B)) is true.
+ - Query event(acceptB(B,A,x)) ==> event(initA(A,B',x)) || event(Dishonest(B)) || event(Dishonest(A)) is true.
+ - Query event(sessionKeyA(B,A,x)) && attacker(x) ==> event(Dishonest(B)) || event(Dishonest(A)) is true.
+ - Query event(sessionKeyB(B,A,x)) && attacker(x) ==> event(Dishonest(B)) || event(Dishonest(A)) is true.
+Associated axiom(s):
+ - Axiom eq_hash(Nil,h2) ==> h2 = Nil; eq_hash(h1,Nil) ==> h1 = Nil; eq_hash(H(x1,h1'),h2) ==> h2 = H(x2,h2'); eq_hash(h1,H(x2,h2)) ==> h1 = H(x1,h1') in process 1.
+ - Axiom eq_hash(h,h) ==> true; eq_hash(h1,h2) && not(is_normal_MDH(h1)) && h1' <-- MDH(h1) ==> eq_hash(h1',h2); eq_hash(h1,h2) && not(is_normal_MDH(h2)) && h2' <-- MDH(h2) ==> eq_hash(h1,h2') in process 1.
+ - Axiom eq_hash(H(x1,Nil),H(x2,Nil)) && attacker(x1) ==> x1 = x2; eq_hash(H(x1,Nil),H(x2,Nil)) && attacker(x2) ==> x1 = x2 in process 1.
+ - Axiom eq_hash(H(x,h1),H(x,h2)) ==> eq_hash(h1,h2); eq_hash(h1,h2) && is_normal_MDH(h1) && is_normal_MDH(h2) && (h1',h2') <-- last_term_equal(h1,h2) ==> eq_hash(h1',h2') in process 1.
+ - Axiom not (eq_hash(h1,h2) && is_normal_MDH(h1) && is_normal_MDH(h2) && h1 ≠ h2 && false_hash_var(h1,h2,Nil)); not (eq_hash(h2,h1) && is_normal_MDH(h1) && is_normal_MDH(h2) && h1 ≠ h2 && false_hash_var(h1,h2,Nil)); not (eq_hash(h1,h2) && is_normal_MDH(h1) && is_normal_MDH(h2) && h1' <-- rev_hash(h1,Nil) && h2' <-- rev_hash(h2,Nil) && false_hash_var(h1',h2',Nil)); not (eq_hash(h2,h1) && is_normal_MDH(h1) && is_normal_MDH(h2) && h1' <-- rev_hash(h1,Nil) && h2' <-- rev_hash(h2,Nil) && false_hash_var(h1',h2',Nil)) in process 1.
+ - Axiom not (eq_hash(h1,h2) && all_not_var(h2) && nb_element(h2) + 1 ≤ nb_element(h1)); not (eq_hash(h1,h2) && all_not_var(h1) && nb_element(h1) + 1 ≤ nb_element(h2)) in process 1.
+ - Axiom eq_hash(H(u1,h1),H(u2,h2)) && not(is_var(u1)) && not(is_var(u2)) ==> u1 = u2; eq_hash(h1,h2) && H(u1,h1') <-- rev_hash(h1,Nil) && H(u2,h2') <-- rev_hash(h2,Nil) && not(is_var(u1)) && not(is_var(u2)) ==> u1 = u2 in process 1.
+ - Axiom eq_hash(H(x1,h1),H(x2,h2)) && is_normal_MDH(H(x1,h1)) && is_normal_MDH(H(x2,h2)) && is_var(x1) && instantiate_allowed(x1,H(x2,h2)) ==> x1 = x2 || x1 = (x1',x1''); eq_hash(H(x2,h2),H(x1,h1)) && is_normal_MDH(H(x1,h1)) && is_normal_MDH(H(x2,h2)) && is_var(x1) && instantiate_allowed(x1,H(x2,h2)) ==> x1 = x2 || x1 = (x1',x1''); eq_hash(h1,h2) && is_normal_MDH(h1) && is_normal_MDH(h2) && H(x1,h1') <-- rev_hash(h1,Nil) && H(x2,h2') <-- rev_hash(h2,Nil) && is_var(x1) && instantiate_allowed(x1,H(x2,h2')) ==> x1 = x2 || x1 = (x1',x1''); eq_hash(h2,h1) && is_normal_MDH(h1) && is_normal_MDH(h2) && H(x1,h1') <-- rev_hash(h1,Nil) && H(x2,h2') <-- rev_hash(h2,Nil) && is_var(x1) && instantiate_allowed(x1,H(x2,h2')) ==> x1 = x2 || x1 = (x1',x1'') in process 1.
+ - Axiom eq_hash(H(x1,h1),H(x1',h1')) && cond_var(x1',h1') && cond_var(x1,h1) ==> x1 = x1' || x1 = (x2,x1') || x1' = (x2',x1); eq_hash(H(x1,h1),H(x1',h1')) && cond_var(x1',h1') && not(cond_var(x1,h1)) ==> x1 = x1' || x1 = (x2,x1'); eq_hash(H(x1,h1),H(x1',h1')) && not(cond_var(x1',h1')) && cond_var(x1,h1) ==> x1 = x1' || x1' = (x2',x1); eq_hash(H(x1,h1),H(x1',h1')) && not(cond_var(x1',h1')) && not(cond_var(x1,h1)) ==> x1 = x1' in process 1.
+
+--------------------------------------------------------------
+

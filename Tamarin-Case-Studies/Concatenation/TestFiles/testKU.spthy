@@ -1,0 +1,15 @@
+theory inj
+
+// Checks that rule N5 is inforced
+
+begin
+builtins: concatenation
+functions: f/1,g/1
+
+equations: f(x) = g(x)
+
+
+
+
+
+end

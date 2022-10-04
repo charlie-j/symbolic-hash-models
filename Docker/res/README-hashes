@@ -1,0 +1,10 @@
+Hi! This is the hash project Docker image. You can now browse the image interactively:
+
+docker run -it securityprotocolsresearch/tamarin-proverif-hashes:latest bash
+
+You should obtain a shell that reads like that: `root@e0b92d4b92fc:/opt/hashes#`, and which allows you to:
+
+- execute `tamarin-prover` or `proverif` as usual, we refer to their manuals for this.
+
+- browse the multiple case-studies of the paper in their respective folder, with dedicated READMEs in the subfolders. For instance, the tables of the paper can be reproduced by following the Tamarin-Case-Studies/Concatenation/README.md instructions.
+

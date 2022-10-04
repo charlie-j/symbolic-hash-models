@@ -1,0 +1,92 @@
+==============================================================================
+summary of summaries:
+
+analyzed: CRCS.spthy
+
+  reachability (exists-trace): verified (12 steps)
+  unique_runid (all-traces): verified (14 steps)
+  end_after_start (all-traces): verified (9 steps)
+  fast_before_claim (all-traces): verified (6 steps)
+  dbsec (all-traces): falsified - found trace (9 steps)
+  dbsec_hnst (all-traces): verified (61 steps)
+  dbsec_hnst_collusion (all-traces): falsified - found trace (10 steps)
+  dbsec_hnst_star (all-traces): verified (168 steps)
+
+analyzed: CRCS_RevealSign.spthy
+
+  reachability (exists-trace): verified (12 steps)
+  unique_runid (all-traces): verified (14 steps)
+  end_after_start (all-traces): verified (9 steps)
+  fast_before_claim (all-traces): verified (6 steps)
+  dbsec (all-traces): falsified - found trace (9 steps)
+  dbsec_hnst (all-traces): verified (61 steps)
+  dbsec_hnst_collusion (all-traces): falsified - found trace (10 steps)
+  dbsec_hnst_star (all-traces): verified (168 steps)
+
+analyzed: KA.spthy
+
+  reachability (exists-trace): verified (10 steps)
+  unique_runid (all-traces): verified (14 steps)
+  end_after_start (all-traces): verified (6 steps)
+  fast_before_claim (all-traces): verified (7 steps)
+  dbsec (all-traces): falsified - found trace (6 steps)
+  dbsec_hnst (all-traces): falsified - found trace (6 steps)
+  dbsec_hnst_collusion (all-traces): falsified - found trace (6 steps)
+  dbsec_hnst_star (all-traces): falsified - found trace (8 steps)
+
+analyzed: MAD.spthy
+
+  reachability (exists-trace): verified (11 steps)
+  unique_runid (all-traces): verified (12 steps)
+  end_after_start (all-traces): verified (11 steps)
+  fast_before_claim (all-traces): verified (8 steps)
+  dbsec (all-traces): falsified - found trace (8 steps)
+  dbsec_hnst (all-traces): verified (87 steps)
+  dbsec_hnst_collusion (all-traces): falsified - found trace (10 steps)
+  dbsec_hnst_star (all-traces): verified (209 steps)
+
+analyzed: Meadows.spthy
+
+  reachability (exists-trace): verified (11 steps)
+  unique_runid (all-traces): verified (12 steps)
+  end_after_start (all-traces): verified (9 steps)
+  fast_before_claim (all-traces): verified (6 steps)
+  dbsec (all-traces): falsified - found trace (6 steps)
+  dbsec_hnst (all-traces): falsified - found trace (6 steps)
+  dbsec_hnst_collusion (all-traces): falsified - found trace (6 steps)
+  dbsec_hnst_star (all-traces): falsified - found trace (7 steps)
+
+analyzed: Meadows2.spthy
+
+  reachability (exists-trace): verified (10 steps)
+  unique_runid (all-traces): verified (12 steps)
+  end_after_start (all-traces): verified (9 steps)
+  fast_before_claim (all-traces): verified (6 steps)
+  dbsec (all-traces): falsified - found trace (5 steps)
+  dbsec_hnst (all-traces): falsified - found trace (5 steps)
+  dbsec_hnst_collusion (all-traces): falsified - found trace (5 steps)
+  dbsec_hnst_star (all-traces): falsified - found trace (7 steps)
+
+analyzed: Meadows3.spthy
+
+  reachability (exists-trace): verified (11 steps)
+  unique_runid (all-traces): verified (12 steps)
+  end_after_start (all-traces): verified (9 steps)
+  fast_before_claim (all-traces): verified (6 steps)
+  dbsec (all-traces): falsified - found trace (5 steps)
+  dbsec_hnst (all-traces): falsified - found trace (5 steps)
+  dbsec_hnst_collusion (all-traces): falsified - found trace (5 steps)
+  dbsec_hnst_star (all-traces): falsified - found trace (6 steps)
+
+analyzed: Munilla.spthy
+
+  reachability (exists-trace): verified (9 steps)
+  unique_runid (all-traces): verified (14 steps)
+  end_after_start (all-traces): verified (9 steps)
+  fast_before_claim (all-traces): verified (6 steps)
+  dbsec (all-traces): falsified - found trace (5 steps)
+  dbsec_hnst (all-traces): falsified - found trace (5 steps)
+  dbsec_hnst_collusion (all-traces): falsified - found trace (5 steps)
+  dbsec_hnst_star (all-traces): falsified - found trace (7 steps)
+
+==============================================================================

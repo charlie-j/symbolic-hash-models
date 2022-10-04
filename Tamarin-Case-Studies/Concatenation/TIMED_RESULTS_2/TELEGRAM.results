@@ -1,0 +1,46 @@
+Compressed Results
+{
+    "t_auth": {
+        "ACN": "false",
+        "AllCol_RO": "false",
+        "Adv_CP_Clo_PI1_RO_i": "true"
+    },
+    "t_secC": {
+        "ACN": "false",
+        "AllCol_RO": "false",
+        "Adv_CP_Clo_PI1_RO_i": "true"
+    }
+}
+TOTAL Tamarin calls: 89
+TOTAL execution time forTelegram/telegram_with_HEB.spthy: 105.72844576835632
+Timed Results
+{
+    "t_auth": {
+        "ACN": [
+            "false",
+            2.271761894226074
+        ],
+        "AllCol_RO": [
+            "false",
+            11.994796514511108
+        ],
+        "Adv_CP_Clo_PI1_RO_i": [
+            "true",
+            3.2759151458740234
+        ]
+    },
+    "t_secC": {
+        "ACN": [
+            "false",
+            2.2008795738220215
+        ],
+        "AllCol_RO": [
+            "false",
+            25.0794415473938
+        ],
+        "Adv_CP_Clo_PI1_RO_i": [
+            "true",
+            3.236363410949707
+        ]
+    }
+}

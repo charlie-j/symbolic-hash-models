@@ -1,0 +1,347 @@
+/*
+Sigma protocol model.
+
+We are looking for attacks, so we consider an over secure model with:
+ * roles
+ * does not allow reflection attacks.
+ * only consider that one A with one pk talks to a single other B with one pk.
+Hence, even  agree_A_to_B_false is true.
+
+Secure in all cases, but CPcol or full collisions.
+With CPcol, attacks on :
+  target_secA (all-traces): falsified - found trace (20 steps)
+  target_secB (all-traces): falsified - found trace (17 steps)
+  target_agree_B_to_A (all-traces): falsified - found trace (20 steps)
+  target_agree_A_to_B_or_Bbis (all-traces): falsified - found trace (17 steps)
+
+
+
+
+==============================================================================
+summary of summaries:
+
+analyzed: sigma.spthy
+
+  WARNING: 3 wellformedness check failed!
+           The analysis results might be wrong!
+
+  orig (all-traces): verified (4 steps)
+  helper1 (all-traces): verified (6 steps)
+  helper2 (all-traces): verified (4 steps)
+  agree_A_to_B_false (all-traces): verified (18 steps)
+  secA (all-traces): verified (77 steps)
+  secB (all-traces): verified (17 steps)
+  agree_B_to_A (all-traces): verified (70 steps)
+  agree_A_to_B_or_Bbis (all-traces): verified (18 steps)
+  execB (exists-trace): verified (10 steps)
+  execB2 (exists-trace): verified (19 steps)
+  execA (exists-trace): verified (12 steps)
+  execA2 (exists-trace): verified (23 steps)
+
+==============================================================================
+
+real	1m31.998s
+user	5m3.386s
+sys	2m7.448s
+─( 11:58:58 )─< ~/Tests >──────────────────────────────────────────────────────────────────────[ 0 ]─
+c01chja@Colossus02 $ time tamarin-prover-concat sigma.spthy +RTS -N10 -RTS -D=EventHashFresh -D=CR --prove
+
+
+==============================================================================
+summary of summaries:
+
+analyzed: sigma.spthy
+
+  WARNING: 3 wellformedness check failed!
+           The analysis results might be wrong!
+
+  orig (all-traces): verified (4 steps)
+  helper1 (all-traces): verified (6 steps)
+  helper2 (all-traces): verified (4 steps)
+  agree_A_to_B_false (all-traces): verified (17 steps)
+  secA (all-traces): verified (60 steps)
+  secB (all-traces): verified (16 steps)
+  agree_B_to_A (all-traces): verified (55 steps)
+  agree_A_to_B_or_Bbis (all-traces): verified (17 steps)
+  execB (exists-trace): verified (9 steps)
+  execB2 (exists-trace): verified (17 steps)
+  execA (exists-trace): verified (11 steps)
+  execA2 (exists-trace): verified (21 steps)
+
+==============================================================================
+
+real	1m40.975s
+user	5m19.774s
+sys	2m24.222s
+─( 12:01:37 )─< ~/Tests >──────────────────────────────────────────────────────────────────────[ 0 ]─
+c01chja@Colossus02 $ time tamarin-prover-concat sigma.spthy +RTS -N10 -RTS -D=EventHashAtt -D=CR --prove
+
+==============================================================================
+summary of summaries:
+
+analyzed: sigma.spthy
+
+  WARNING: 3 wellformedness check failed!
+           The analysis results might be wrong!
+
+  orig (all-traces): verified (15 steps)
+  helper1 (all-traces): verified (6 steps)
+  helper2 (all-traces): verified (4 steps)
+  agree_A_to_B_false (all-traces): verified (18 steps)
+  secA (all-traces): verified (61 steps)
+  secB (all-traces): verified (17 steps)
+  agree_B_to_A (all-traces): verified (56 steps)
+  agree_A_to_B_or_Bbis (all-traces): verified (18 steps)
+  execB (exists-trace): verified (10 steps)
+  execB2 (exists-trace): verified (19 steps)
+  execA (exists-trace): verified (12 steps)
+  execA2 (exists-trace): verified (23 steps)
+
+==============================================================================
+
+real	1m19.864s
+user	4m23.315s
+sys	1m51.031s
+─( 12:04:20 )─< ~/Tests >──────────────────────────────────────────────────────────────────────[ 0 ]─
+c01chja@Colossus02 $ time tamarin-prover-concat sigma.spthy +RTS -N10 -RTS -D=EventHashAtt -D=PreImage --prove
+
+
+==============================================================================
+summary of summaries:
+
+analyzed: sigma.spthy
+
+  WARNING: 3 wellformedness check failed!
+           The analysis results might be wrong!
+
+  orig (all-traces): verified (4 steps)
+  helper1 (all-traces): verified (6 steps)
+  helper2 (all-traces): verified (4 steps)
+  agree_A_to_B_false (all-traces): falsified - found trace (10 steps)
+  secA (all-traces): falsified - found trace (14 steps)
+  secB (all-traces): falsified - found trace (10 steps)
+  agree_B_to_A (all-traces): falsified - found trace (14 steps)
+  agree_A_to_B_or_Bbis (all-traces): falsified - found trace (10 steps)
+  execB (exists-trace): verified (8 steps)
+  execB2 (exists-trace): verified (15 steps)
+  execA (exists-trace): verified (15 steps)
+  execA2 (exists-trace): verified (29 steps)
+
+==============================================================================
+
+real	3m31.916s
+user	5m53.368s
+sys	2m25.094s
+─( 12:13:32 )─< ~/Tests >──────────────────────────────────────────────────────────────────────[ 0 ]─
+c01chja@Colossus02 $ time tamarin-prover-concat sigma.spthy +RTS -N10 -RTS -D=EventHashAtt --prove
+
+==============================================================================
+summary of summaries:
+
+analyzed: sigma.spthy
+
+  WARNING: 3 wellformedness check failed!
+           The analysis results might be wrong!
+
+  orig (all-traces): analysis incomplete (1 steps)
+  helper1 (all-traces): analysis incomplete (1 steps)
+  helper2 (all-traces): analysis incomplete (1 steps)
+  agree_A_to_B_false (all-traces): analysis incomplete (1 steps)
+  target_secA (all-traces): falsified - found trace (20 steps)
+  target_secB (all-traces): falsified - found trace (17 steps)
+  target_agree_B_to_A (all-traces): falsified - found trace (20 steps)
+  target_agree_A_to_B_or_Bbis (all-traces): falsified - found trace (17 steps)
+  execB (exists-trace): analysis incomplete (1 steps)
+  execB2 (exists-trace): analysis incomplete (1 steps)
+  execA (exists-trace): analysis incomplete (1 steps)
+  execA2 (exists-trace): analysis incomplete (1 steps)
+
+==============================================================================
+
+real	8m34.216s
+user	47m42.077s
+sys	16m34.497s
+─( 12:24:02 )─< ~/Tests >───────────────────────────────────────────────[ 0 ]─
+c01chja@Colossus02 $ time tamarin-prover-concat sigma.spthy +RTS -N10 -RTS -D=EventHashAtt -D=CPcol --prove=target*
+
+
+==============================================================================
+summary of summaries:
+
+analyzed: sigma.spthy
+
+  WARNING: 4 wellformedness check failed!
+           The analysis results might be wrong!
+
+  orig (all-traces): analysis incomplete (1 steps)
+  helper1 (all-traces): analysis incomplete (1 steps)
+  helper2 (all-traces): analysis incomplete (1 steps)
+  agree_A_to_B_false (all-traces): analysis incomplete (1 steps)
+  target_secA (all-traces): verified (119 steps)
+  target_secB (all-traces): verified (31 steps)
+  target_agree_B_to_A (all-traces): verified (109 steps)
+  target_agree_A_to_B_or_Bbis (all-traces): verified (33 steps)
+  execB (exists-trace): analysis incomplete (1 steps)
+  execB2 (exists-trace): analysis incomplete (1 steps)
+  execA (exists-trace): analysis incomplete (1 steps)
+  execA2 (exists-trace): analysis incomplete (1 steps)
+
+==============================================================================
+
+real	0m5.329s
+user	0m25.332s
+sys	0m7.956s
+─( 12:32:00 )─< ~/Tests >──────────────────────────────────────────────────────────────────────[ 0 ]─
+c01chja@Colossus02 $ time tamarin-prover-concat sigma.spthy +RTS -N10 -RTS -D=EventHashAtt -D=SndPreImage --prove=target*
+
+
+*/
+
+
+
+theory Sigma
+begin
+
+builtins: signing, diffie-hellman
+
+functions: mac/2, init/0, resp/0
+
+functions: algo/0
+functions: h/2
+
+#ifdef noRole
+
+equations: init() = resp()
+
+#endif
+
+
+
+
+rule InitKeys:
+[Fr(~skA),Fr(~skB)]--[HKey(~skA),HKey(~skB),Start()]->[!A0(~skA,pk(~skB)), !B0(pk(~skA),~skB),Out(pk(~skA)),Out(pk(~skB))]
+
+rule A_0:
+  let m1 = <'g'^~x,~infoA> in
+[!A0(~skA,pkB), Fr(~x), Fr(~infoA)]--[_restrict(not( pk(~skA) = pkB)),Share(~x)]->[Out(m1), A1(~skA,pkB,~x,~infoA)]
+
+rule A_1:
+  let
+      gY = 'g'^~y // careful with this, the In() pattern magically checks that we have a valid DH share AND we even consider only truly random field element
+      k =gY^~x
+      transcript=  <'g'^~x,~infoA, gY, infoB>
+      htrans = h(algo(), transcript)
+  in
+  [A1(~skA,pkB,~x,~infoA), In('g'^~y), In(infoB) ]
+  --[InitA(pk(~skA),pkB,'g'^~x, gY), _restrict(not(gY= 'g')), MagicShare(~y)]->
+  [Out(<sign(
+	<htrans,init()>
+	,~skA),mac(pk(~skA),k) > )
+   , A2(~skA,pkB,~x,~infoA,gY,infoB,htrans)]
+
+rule A_2:
+  let m1 = <'g'^~x,~infoA>
+      k =gY^~x
+      transcript= <'g'^~x,~infoA, gY, infoB>
+  in
+[A2(~skA,pkB,~x,~infoA,gY,infoB,htrans), In(s),In(m)]--[_restrict( verify(s,<htrans,resp()>,pkB) =true & m = mac(pkB,k)),AcceptA(pk(~skA),pkB,'g'^~x, gY), SessionKeyA(pk(~skA),pkB,gY^~x)]->[]
+
+
+rule B_0:
+  let
+   gX = 'g'^~x  // careful with this, the In() pattern magically checks that we have a valid DH share
+   m2 = <'g'^~y,~infoB>
+   transcript = <gX,  infoA,'g'^~y, ~infoB>
+  in
+[!B0(pkA,~skB), In('g'^~x),In(infoA), Fr(~y), Fr(~infoB)]--[InitB(pk(~skB),pkA,gX,'g'^~y),
+ _restrict(not(gX = 'g')), MagicShare(~x),
+Share(~y)]->[Out(m2),B1(pkA,~skB,~y,~infoB,gX,infoA)]
+
+rule B_1:
+  let m2 = <'g'^~y,~infoB>
+      k=gX^~y
+   transcript =  <gX,  infoA,'g'^~y, ~infoB>
+   htrans = h(algo(), transcript)
+  in
+[B1(pkA,~skB,~y,~infoB,gX,infoA), In(s),In(m) ]--[_restrict( verify(s,<htrans,init()>,pkA) = true & m=mac(pkA,k)   )  ]->[Out( <sign(<htrans,resp()>,~skB), mac(pk(~skB),k)> ),B2(pkA,~skB,~y,~infoB,gX,infoA)]
+
+
+rule B_2:
+[B2(pkA,~skB,~y,~infoB,gX,infoA)]--[AcceptB(pk(~skB),pkA,gX,'g'^~y), SessionKeyB(pk(~skB),pkA,gX^~y)]->[]
+
+
+
+lemma helper1[reuse]:
+ "not(Ex x #i #j. Share(x)@i & KU(x)@j)"
+
+lemma helper2[reuse]:
+ "not(Ex x #i #j. HKey(x)@i & KU(x)@j)"
+
+/* Agreement on (pkA,pkB,m1,m2) from A to B. (?)  */
+lemma agree_A_to_B_false:
+"
+ All pkA pkB gX gY #i. AcceptB(pkB,pkA,gX,gY)@i ==>
+    Ex #j. InitA(pkA,pkB,gX,gY)@j
+"
+
+
+
+
+lemma target_secA:
+"
+ not(Ex pkA pkB k #i #j. SessionKeyA(pkB,pkA,k)@i & K(k)@j)
+"
+
+
+lemma target_secB:
+"
+ not(Ex pkA pkB k #i #j. SessionKeyB(pkB,pkA,k)@i & K(k)@j)
+"
+
+
+/* Agreement on (A,B,m1,m2) from B to A. (holds) */
+// verified for two Starts and
+lemma target_agree_B_to_A:
+"
+ All pkA pkB gX gY #i. AcceptA(pkA,pkB,gX,gY)@i ==>
+    Ex #j. InitB(pkB,pkA,gX,gY)@j
+"
+
+
+
+/*  Agreement on (A,m1,m2) and authentication of B from A to B. (?) */
+lemma target_agree_A_to_B_or_Bbis:
+"
+ All pkA pkB gX gY #i. AcceptB(pkB,pkA,gX,gY)@i ==>
+    Ex pkB2 #j. InitA(pkA,pkB2,gX,gY)@j
+"
+
+/* Sanity check: executability (?) */
+lemma execB:
+ exists-trace
+ "
+ Ex pkB pkA gX gY #i. AcceptB(pkB,pkA,gX,gY)@i
+ "
+
+lemma execB2:
+ exists-trace
+ "
+ Ex pkB pkA gX gY #i pkB2 pkA2 gX2 gY2 #i2. AcceptB(pkA,pkB,gX,gY)@i & AcceptB(pkA2,pkB2,gX2,gY2)@i2 & not(#i=#i2)
+ "
+
+
+lemma execA:
+ exists-trace
+ "
+ Ex pkB pkA gX gY #i. AcceptA(pkA,pkB,gX,gY)@i
+ "
+
+lemma execA2:
+ exists-trace
+ "
+ Ex pkB pkA gX gY #i pkB2 pkA2 gX2 gY2 #i2. AcceptA(pkA,pkB,gX,gY)@i & AcceptA(pkA2,pkB2,gX2,gY2)@i2 & not(#i=#i2)
+ "
+
+
+
+end

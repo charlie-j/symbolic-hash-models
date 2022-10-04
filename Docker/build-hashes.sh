@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# call in top-level dir...
+DOCKER_BUILDKIT=1 docker build -t tamarin-proverif/hashes:latest -f Docker/Dockerfile-hashes .

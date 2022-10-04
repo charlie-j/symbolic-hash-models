@@ -1,0 +1,28 @@
+//
+
+theory Sigma
+begin
+
+builtins: concatenation
+
+// functions: mac/2, hd/1,tail/1
+// equations: cons(x,nil())=x // not sure why I need to add that, cons is supposed to have the neutral e
+// lement
+// equations: hd(cons(x,y))=x
+// equations: tail(cons(x,y)) =y
+
+
+
+
+rule Test:
+[ In(x) ]--[_restrict(x || '0' =  '0' || x) , Test(x) ]->[]
+
+
+lemma pt:
+exists-trace
+ "Ex x  #i. Test(x)@i"
+
+lemma sadness:
+ "All x #i. Test(x)@i ==> x='0'"
+
+end

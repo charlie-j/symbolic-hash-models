@@ -1,0 +1,120 @@
+Compressed Results
+{
+    "trans_auth": {
+        "AllCol_RO": "false",
+        "Clo_Ex_RO": "false",
+        "Clo_IP_RO": "timeout",
+        "ACT_CP_Clo_i": "timeout",
+        "ACT_Adv_CP_PI1_i": "true",
+        "ACT_CP_Clo": "timeout",
+        "ACT_Clo_IP_i": "timeout",
+        "ACT_Clo_IP": "timeout",
+        "ACT_Adv_Clo_i": "true",
+        "ACN_CP_Clo_i": "timeout",
+        "ACN_CP_Clo": "timeout",
+        "ACN_Clo_IP_i": "timeout",
+        "ACN_Clo_IP": "timeout",
+        "CP_Clo_RO_i": "timeout",
+        "CP_Clo_RO": "timeout",
+        "Adv_Clo_IP_RO": "false",
+        "Clo_IP_RO_i": "timeout"
+    },
+    "secrecy_key_A": {
+        "AllCol_RO": "false",
+        "ACT_Adv_CP_Clo_PI1_i": "true"
+    },
+    "secrecy_key_B": {
+        "RO": "false"
+    }
+}
+TOTAL Tamarin calls: 156
+TOTAL execution time forIKE/IKE_Cookie/ikeV2_HEB_A.spthy: 115.70486521720886
+Timed Results
+{
+    "trans_auth": {
+        "AllCol_RO": [
+            "false",
+            3.244659662246704
+        ],
+        "Clo_Ex_RO": [
+            "false",
+            6.764064073562622
+        ],
+        "Clo_IP_RO": [
+            "timeout",
+            30
+        ],
+        "ACT_CP_Clo_i": [
+            "timeout",
+            30
+        ],
+        "ACT_Adv_CP_PI1_i": [
+            "true",
+            2.802614450454712
+        ],
+        "ACT_CP_Clo": [
+            "timeout",
+            30
+        ],
+        "ACT_Clo_IP_i": [
+            "timeout",
+            30
+        ],
+        "ACT_Clo_IP": [
+            "timeout",
+            30
+        ],
+        "ACT_Adv_Clo_i": [
+            "true",
+            2.631307363510132
+        ],
+        "ACN_CP_Clo_i": [
+            "timeout",
+            30
+        ],
+        "ACN_CP_Clo": [
+            "timeout",
+            30
+        ],
+        "ACN_Clo_IP_i": [
+            "timeout",
+            30
+        ],
+        "ACN_Clo_IP": [
+            "timeout",
+            30
+        ],
+        "CP_Clo_RO_i": [
+            "timeout",
+            30
+        ],
+        "CP_Clo_RO": [
+            "timeout",
+            30
+        ],
+        "Adv_Clo_IP_RO": [
+            "false",
+            14.623188018798828
+        ],
+        "Clo_IP_RO_i": [
+            "timeout",
+            30
+        ]
+    },
+    "secrecy_key_A": {
+        "AllCol_RO": [
+            "false",
+            5.921560764312744
+        ],
+        "ACT_Adv_CP_Clo_PI1_i": [
+            "true",
+            5.691940069198608
+        ]
+    },
+    "secrecy_key_B": {
+        "RO": [
+            "false",
+            6.794802904129028
+        ]
+    }
+}

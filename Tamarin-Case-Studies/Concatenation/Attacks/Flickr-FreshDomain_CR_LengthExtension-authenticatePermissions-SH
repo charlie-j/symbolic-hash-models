@@ -1,0 +1,311 @@
+maude tool: 'maude'
+ checking version: 3.0. OK.
+ checking installation:   solved goal nr. 0 (directly): Processing( S.1, C.2, p ) @ #i.3
+  solved goal nr. 8 (directly):
+    HashE( (~k.4||$C.4||p), MAC.4 ) @ #j.11
+  solved goal nr. 9 (directly): Init( $S.4, C.12, ~k.4 ) @ #j.13
+  solved goal nr. 0 (directly): !HashVals( t.1 ) ▶₀ #i
+  solved goal nr. 0 (directly): !KU( col2(t.1, t.2) ) @ #i
+  solved goal nr. 0 (directly): F_ServerState( t.1, t.2 ) ▶₀ #i
+  solved goal nr. 0 (directly): !KU( colip1(t.1) ) @ #i
+  solved goal nr. 0 (directly): !KU( colip2(t.1) ) @ #i
+  solved goal nr. 0 (directly): ClientState( t.1, t.2 ) ▶₀ #i
+  solved goal nr. 0 (directly): !KU( fst(t.1) ) @ #i
+  solved goal nr. 0 (directly): !KU( ~t.1 ) @ #i
+  solved goal nr. 0 (directly): !KU( col1(t.1, t.2) ) @ #i
+  solved goal nr. 0 (directly): !KU( h(t.1) ) @ #i
+  solved goal nr. 0 (directly): !KU( pre(t.1) ) @ #i
+  solved goal nr. 5 (directly): !HashVals( ~t.1 ) ▶₁ #vr.6
+  solved goal nr. 0 (directly): !KU( snd(t.1) ) @ #i
+  solved goal nr. 0 (directly): !KU( sndpre(t.1) ) @ #i
+  solved goal nr. 6 (directly): !HashVals( ~hy.7 ) ▶₂ #vr.6
+  solved goal nr. 7 (directly): !HashVals( ~t.1 ) ▶₃ #vr.6
+  solved goal nr. 10 (directly):
+     (∃ #j. (HV( MAC.6 ) @ #j) ∧ #j < #vr.5)  ∥
+     (∃ #j. (!KU( MAC.6 ) @ #j) ∧ #j < #vr.5)
+  solved goal nr. 10 (directly):
+     (∃ #j. (HV( MAC.10 ) @ #j) ∧ #j < #vr.9)  ∥
+     (∃ #j. (!KU( MAC.10 ) @ #j) ∧ #j < #vr.9)
+  solved goal nr. 10 (directly):
+     (∃ #j. (HV( MAC.7 ) @ #j) ∧ #j < #vr.6)  ∥
+     (∃ #j. (!KU( MAC.7 ) @ #j) ∧ #j < #vr.6)
+  solved goal nr. 10 (directly):
+     (∃ #j. (HV( MAC.7 ) @ #j) ∧ #j < #vr.6)  ∥
+     (∃ #j. (!KU( MAC.7 ) @ #j) ∧ #j < #vr.6)
+  solved goal nr. 10 (directly):
+     (∃ #j. (HV( MAC.7 ) @ #j) ∧ #j < #vr.6)  ∥
+     (∃ #j. (!KU( MAC.7 ) @ #j) ∧ #j < #vr.6)
+  solved goal nr. 10 (directly):
+     (∃ #j. (HV( MAC.10 ) @ #j) ∧ #j < #vr.9)  ∥
+     (∃ #j. (!KU( MAC.10 ) @ #j) ∧ #j < #vr.9)
+  solved goal nr. 11 (directly): HV( MAC.6 ) @ #j.13
+  solved goal nr. 11 (directly): HV( MAC.10 ) @ #j.17
+  solved goal nr. 11 (directly): HV( MAC.7 ) @ #j.14
+  solved goal nr. 11 (directly): HV( MAC.7 ) @ #j.14
+  solved goal nr. 11 (directly): HV( MAC.7 ) @ #j.14
+  solved goal nr. 11 (directly): HV( MAC.10 ) @ #j.17
+  solved goal nr. 10 (directly):
+     (∃ #j. (HV( MAC.7 ) @ #j) ∧ #j < #vr.6)  ∥
+     (∃ #j. (!KU( MAC.7 ) @ #j) ∧ #j < #vr.6)
+  solved goal nr. 10 (directly):
+     (∃ #j. (HV( MAC.7 ) @ #j) ∧ #j < #vr.6)  ∥
+     (∃ #j. (!KU( MAC.7 ) @ #j) ∧ #j < #vr.6)
+  solved goal nr. 11 (directly): HV( MAC.7 ) @ #j.14
+  solved goal nr. 11 (directly): HV( MAC.7 ) @ #j.18
+  solved goal nr. 10 (directly):
+     (∃ #j. (HV( MAC.6 ) @ #j) ∧ #j < #vr.5)  ∥
+     (∃ #j. (!KU( MAC.6 ) @ #j) ∧ #j < #vr.5)
+  solved goal nr. 11 (directly): HV( MAC.6 ) @ #j.13
+  solved goal nr. 10 (directly):
+     (∃ #j. (HV( MAC.7 ) @ #j) ∧ #j < #vr.6)  ∥
+     (∃ #j. (!KU( MAC.7 ) @ #j) ∧ #j < #vr.6)
+  solved goal nr. 13 (directly): !HashVals( ~t.1 ) ▶₀ #j.18
+  solved goal nr. 11 (directly): HV( MAC.7 ) @ #j.14
+  solved goal nr. 12 (precomputed): !HashVals( ~n ) ▶₀ #j
+  solved goal nr. 16 (precomputed): !KU( ~n ) @ #vk.4
+  solved goal nr. 21 (directly): HashE( (~k||$C||p), ~n ) @ #j.14
+  solved goal nr. 23 (directly):
+    HashE( (~k.22||$C.21||p.23), ~n ) @ #j.20
+  solved goal nr. 23 (precomputed): !KU( ~k ) @ #vk.8
+OK.
+
+theory Flickr begin
+
+// Function signature and definition of the equational theory E
+
+builtins: concatenation
+functions: col1/2, col2/2, colip1/1, colip2/1, constcol1/0, constcol2/0,
+           fst/1[destructor], h/1, pair/2, pre/1, snd/1[destructor], sndpre/1
+equations: fst(<x.1, x.2>) = x.1, snd(<x.1, x.2>) = x.2
+
+
+
+/* looping facts with injective instances: ClientState/2, F_ServerState/2
+*/
+
+restriction originHash:
+  "∀ x hs #i.
+    (HashC( x, hs ) @ #i) ⇒ (∃ #j. (HashE( x, hs ) @ #j) ∧ (#j < #i))"
+
+restriction deterministic:
+  "∀ x1 x2 h1 h2 #i #j.
+    (((HashE( x1, h1 ) @ #i) ∧ (HashE( x2, h2 ) @ #j)) ∧ (x1 = x2)) ⇒
+    (#i = #j)"
+  // safety formula
+
+rule (modulo E) hashVals:
+   [ Fr( ~n ) ] --> [ !HashVals( ~n ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) createHash:
+   [ !HashVals( ~n ) ] --[ HashE( x, ~n ), HV( ~n ) ]-> [ ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) attHash:
+   [ In( x ), !HashVals( ~hs ) ] --[ HashC( x, ~hs ) ]-> [ Out( ~hs ) ]
+
+  /* has exactly the trivial AC variant */
+
+lemma orig [sources]:
+  all-traces
+  "∀ x hs #i.
+    (HashC( x, hs ) @ #i) ⇒
+    ((∃ #j. (HV( hs ) @ #j) ∧ (#j < #i)) ∨
+     (∃ #j. (!KU( hs ) @ #j) ∧ (#j < #i)))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ x hs #i.
+  (HashC( x, hs ) @ #i)
+ ∧
+  (∀ #j. (HV( hs ) @ #j) ⇒ ¬(#j < #i)) ∧
+  (∀ #j. (!KU( hs ) @ #j) ⇒ ¬(#j < #i))"
+*/
+by sorry
+
+restriction CollisionResistance:
+  "∀ x1 x2 n #i #j.
+    ((HashC( x1, n ) @ #i) ∧ (HashC( x2, n ) @ #j)) ⇒ (x1 = x2)"
+  // safety formula
+
+rule (modulo E) lengthextend:
+   [ In( l ), In( ~hy ), !HashVals( ~hy ), !HashVals( ~res ) ]
+  --[ HashC( y, ~hy ), HashC( <y, l>, ~res ), SingleHash4( ) ]->
+   [ Out( ~res ) ]
+
+  /* has exactly the trivial AC variant */
+
+restriction singLE:
+  "∀ #i #j. ((SingleHash4( ) @ #i) ∧ (SingleHash4( ) @ #j)) ⇒ (#i = #j)"
+  // safety formula
+
+
+
+
+
+rule (modulo E) Initialize:
+   [ In( $S ), In( $C ), Fr( ~k ) ]
+  --[ Init( $S, $C, ~k ), Key( ~k ) ]->
+   [ F_ServerState( ~k, $S ), ClientState( ~k, $C ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) APICallFirst:
+   [ In( per ), ClientState( ~k, $C ) ]
+  --[
+  SendAPICall( $C, per ), Hash( ~k, <$C, per> ),
+  HashC( (~k||$C||per), MAC ), SendToServer( $C, ~k )
+  ]->
+   [ Out( <$C, per, MAC> ), ClientState( ~k, $C ) ]
+
+  // loop breaker: [1]
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) ReceiveAPICall:
+   [ In( <$C, per, MAC> ), F_ServerState( ~k, $S ) ]
+  --[
+  Processing( $S, $C, per ), HashC( (~k||$C||per), Verify ),
+  Compare( Verify, MAC ), ReceiveFromClient( $S, ~k )
+  ]->
+   [ F_ServerState( ~k, $S ) ]
+
+  // loop breaker: [1]
+  /* has exactly the trivial AC variant */
+
+restriction MACValidation:
+  "∀ A B #j. (Compare( A, B ) @ #j) ⇒ (A = B)"
+  // safety formula
+
+restriction Twoparties:
+  "∀ A B k #j. (Init( A, B, k ) @ #j) ⇒ (¬(A = B))"
+  // safety formula
+
+lemma Sanity:
+  exists-trace "∃ c S C #i. Processing( S, C, c ) @ #i"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ c S C #i. (Processing( S, C, c ) @ #i)"
+*/
+by sorry
+
+lemma KeySecrecy [reuse]:
+  all-traces "∀ k #i. (Key( k ) @ #i) ⇒ (¬(∃ #j. K( k ) @ #j))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ k #i. (Key( k ) @ #i) ∧ ∃ #j. (K( k ) @ #j)"
+*/
+by sorry
+
+lemma helping_client [use_induction, reuse]:
+  all-traces
+  "∀ C k #i. (SendToServer( C, k ) @ #i) ⇒ (∃ S #j. Init( S, C, k ) @ #j)"
+/*
+guarded formula characterizing all counter-examples:
+"∃ C k #i.
+  (SendToServer( C, k ) @ #i) ∧ ∀ S #j. (Init( S, C, k ) @ #j) ⇒ ⊥"
+*/
+by sorry
+
+lemma helping_server [use_induction, reuse, hide_lemma=helping_client,
+                      heuristic=S]:
+  all-traces
+  "∀ S k #i.
+    (ReceiveFromClient( S, k ) @ #i) ⇒ (∃ C #j. Init( S, C, k ) @ #j)"
+/*
+guarded formula characterizing all counter-examples:
+"∃ S k #i.
+  (ReceiveFromClient( S, k ) @ #i) ∧ ∀ C #j. (Init( S, C, k ) @ #j) ⇒ ⊥"
+*/
+by sorry
+
+lemma authenticate:
+  all-traces
+  "∀ S C k #l #i.
+    (((SendToServer( C, k ) @ #i) ∧ (ReceiveFromClient( S, k ) @ #l)) ∧
+     (#i < #l)) ⇒
+    (∃ #j. Init( S, C, k ) @ #j)"
+/*
+guarded formula characterizing all counter-examples:
+"∃ S C k #l #i.
+  (SendToServer( C, k ) @ #i) ∧ (ReceiveFromClient( S, k ) @ #l)
+ ∧
+  (#i < #l) ∧ (∀ #j. (Init( S, C, k ) @ #j) ⇒ ⊥)"
+*/
+by sorry
+
+lemma authenticatePermissions [hide_lemma=helping_client]:
+  all-traces
+  "∀ p S C #i.
+    (Processing( S, C, p ) @ #i) ⇒ (∃ #j. SendAPICall( C, p ) @ #j)"
+/*
+guarded formula characterizing all counter-examples:
+"∃ p S C #i.
+  (Processing( S, C, p ) @ #i) ∧ ∀ #j. (SendAPICall( C, p ) @ #j) ⇒ ⊥"
+*/
+simplify
+solve( !HashVals( ~n ) ▶₀ #j )
+  case hashVals
+  solve( !KU( ~n ) @ #vk.4 )
+    case APICallFirst
+    by contradiction /* from formulas */
+  next
+    case attHash
+    by solve( !KU( ~k ) @ #vk.8 )
+  qed
+qed
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+WARNING: the following wellformedness checks failed!
+
+unbound:
+  rule `createHash' has unbound variables: 
+    x
+  
+  rule `lengthextend' has unbound variables: 
+    y
+  
+  rule `APICallFirst' has unbound variables: 
+    MAC
+  
+  rule `ReceiveAPICall' has unbound variables: 
+    Verify
+*/
+
+end
+
+==============================================================================
+summary of summaries:
+
+analyzed: Flickr/Flickr.spthy
+
+  WARNING: 4 wellformedness check failed!
+           The analysis results might be wrong!
+  
+  orig (all-traces): analysis incomplete (1 steps)
+  Sanity (exists-trace): analysis incomplete (1 steps)
+  KeySecrecy (all-traces): analysis incomplete (1 steps)
+  helping_client (all-traces): analysis incomplete (1 steps)
+  helping_server (all-traces): analysis incomplete (1 steps)
+  authenticate (all-traces): analysis incomplete (1 steps)
+  authenticatePermissions (all-traces): verified (5 steps)
+
+==============================================================================
+0.39user 0.12system 0:00.21elapsed 238%CPU (0avgtext+0avgdata 37112maxresident)k
+0inputs+24outputs (0major+6172minor)pagefaults 0swaps

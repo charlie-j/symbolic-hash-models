@@ -1,0 +1,85 @@
+const secr:bitstring [private].
+(* HF_EC: hash with chosen-prefix collision attacks that can be exploited (approach F1) *)
+const NIL:bitstring.
+fun H(bitstring,bitstring):bitstring. (* Merkle-Damgard construction *)
+fun H_(bitstring,bitstring):bitstring. (* Only used to compute associative concatenation *)
+
+(* [include MDH.pvl] *)
+(* Following lines are removed to speed up the analysis but also because H is public anyway so those "otherwise" are only useful for the honest agents using MDH, who use them only on tuple with >= 4 elements. So this is WLOG?
+otherwise forall x1:bitstring,x2:bitstring,x3:bitstring; MDH( (x1,x2,x3) ) = H(x3,H(x2,H(x1,NIL)))
+otherwise forall x1:bitstring,x2:bitstring; MDH( (x1,x2) ) = H(x2,H(x1,NIL)).
+*)
+(** THe following reduc does not make sense for Sigma as honest agents always apply MDH on 4 elements!:
+otherwise forall x1:bitstring,x2:bitstring,x3:bitstring,x4:bitstring,x5:bitstring; MDH( (x1,x2,(x3,x4,x5)) ) = H(x5,H(x4,H(x3,H(x2,H(x1,NIL)))))
+otherwise forall x1:bitstring,x2:bitstring,x3:bitstring,x4:bitstring,x5:bitstring; MDH( (x1,(x2,x3,x4),x5) ) = H(x5,H(x4,H(x3,H(x2,H(x1,NIL)))))
+*)
+(* SANITY CHECK:
+  otherwise  forall x1:bitstring,x2:bitstring,x3:bitstring,x4:bitstring,x5:bitstring,x6:bitstring,x7:bitstring; MDH( (x1,x2,x3,x4,x5,x6,x7)) = secr *)
+
+
+(* Without the equation below: same result (as expected) *)
+ifdef(`noCol',`(* No collision! *)',`dnl
+ifdef(`IPC',`(* Identical prefix collision! *)
+fun CPcol1(bitstring):bitstring.
+fun CPcol2(bitstring):bitstring.
+ifdef(`boundedCol',`(* Bounded IPC only *)
+equation forall x:bitstring;
+  H(CPcol1(H(x, NIL)), H(x, NIL)) = H(CPcol2(H(x, NIL)), H(x, NIL)).
+',`
+equation forall L:bitstring;
+  H(CPcol1(L),L) = H(CPcol2(L), L).
+')dnl
+',`(* Chosen prefix collision! *)
+fun CPcol1(bitstring,bitstring):bitstring.
+fun CPcol2(bitstring,bitstring):bitstring.
+ifdef(`boundedCol',`(* Bounded CPC only *)
+equation forall x,y:bitstring;
+  H(CPcol1(H(x, NIL),H(y,NIL)), H(x, NIL)) = H(CPcol2(H(x, NIL),H(y, NIL)), H(y, NIL)).
+',`
+equation forall L1:bitstring, L2:bitstring;
+  H(CPcol1(L1,L2), L1) = H(CPcol2(L1,L2), L2).
+')dnl
+')dnl
+')
+
+(* Collision detection (used to avoid collisions on "small" values, disable with "-D allCol" *)
+fun isCol(bitstring):bool
+ifdef(`allCol',`dnl(* All collision! *)
+reduc forall x:bitstring; isCol(x) = false.  (* No detection of collisions *)
+',`dnl
+ifdef(`noCol',`(* No collision! *)
+reduc forall x:bitstring; isCol(x) = false.  (* No detection of collisions *)
+',`dnl
+ifdef(`IPC',`(* Identical prefix collision! *)
+reduc forall L:bitstring;
+ isCol(CPcol1(L)) = true
+otherwise forall L:bitstring, L2:bitstring, y:bitstring;
+ isCol((CPcol1(L),y)) = true
+otherwise forall L:bitstring, L2:bitstring, y:bitstring;
+ isCol((y,(CPcol1(L)))) = true
+otherwise forall L:bitstring, L2:bitstring, y:bitstring,z:bitstring;
+ isCol((CPcol1(L),y,z)) = true
+otherwise forall L:bitstring, L2:bitstring, y:bitstring,z:bitstring;
+ isCol((y,(CPcol1(L),z))) = true
+otherwise forall L:bitstring, L2:bitstring, y:bitstring,z:bitstring;
+ isCol((y,z,(CPcol1(L)))) = true
+otherwise forall x:bitstring;
+ isCol(x) = false.
+',`(* Chosen prefix collision! *)
+reduc forall L1:bitstring, L2:bitstring;
+ isCol(CPcol1(L1,L2)) = true
+otherwise forall L1:bitstring, L2:bitstring, y:bitstring;
+ isCol((CPcol1(L1,L2),y)) = true
+otherwise forall L1:bitstring, L2:bitstring, y:bitstring;
+ isCol((y,(CPcol1(L1,L2)))) = true
+otherwise forall L1:bitstring, L2:bitstring, y:bitstring,z:bitstring;
+ isCol((CPcol1(L1,L2),y,z)) = true
+otherwise forall L1:bitstring, L2:bitstring, y:bitstring,z:bitstring;
+ isCol((y,(CPcol1(L1,L2),z))) = true
+otherwise forall L1:bitstring, L2:bitstring, y:bitstring,z:bitstring;
+ isCol((y,z,(CPcol1(L1,L2)))) = true
+otherwise forall x:bitstring;
+ isCol(x) = false.
+')dnl
+')dnl
+')

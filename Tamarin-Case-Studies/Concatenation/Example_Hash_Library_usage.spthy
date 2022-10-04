@@ -1,0 +1,108 @@
+
+theory Sigma
+begin
+
+builtins: signing, diffie-hellman, concatenation
+
+functions: mac/2, init/0, resp/0
+
+#ifdef noRole
+
+equations: init() = resp()
+
+#endif
+
+#include "HashLibrary.splib"
+
+rule HonestValue:
+    [Fr(~m)]--[HonestValue(~m)]->[Out(~m)]
+
+rule Gen_Honest_Hash_Sec_Input:
+    [ Fr(~m) ]
+  --[ HonestHashSecret(~m, hm), HashC(~m,hm)]->
+    [ Out(hm), LEtest(~m)]
+
+
+rule Gen_Honest_Hash_Full_Sec:
+    [ Fr(~m) ]
+  --[ HonestHashSecretOutput(~m, hm), HashC(~m,hm)]-> []
+
+
+rule Gen_Honest_Hash_Pub_Input:
+    [ Fr(~m) ]
+  --[ HonestHashKnown(~m,hm), HashC(~m,hm)]->
+    [ Out(<~m,hm>) ]
+
+
+
+
+rule Col_Tester:
+    [ In(m1) ]
+  --[ Tester(m1,hm1), HashC(m1,hm1)]->
+    [ ]
+
+
+rule Sing_Tester:
+   [In(hv)]--[TesterS(hv) ]->[]
+
+
+rule Gen_LE:
+   [LEtest(~m), Fr(~l)]--[HashC(~m || ~l, hl), ChallengeLE(hl)]->[Out(~l)]
+
+// Output dimension
+
+// Can a hash output equal a non-name term?
+lemma TypeFlawAttack_Resistance:
+ "All m hv #j. HashC(m,hv)@j ==>  not(Ex p1 p2. hv=<p1,p2>)"
+
+// Can a hash output equal a name honestly generated??
+lemma TypeFlawNameAttack_Resistance:
+ "All m hv #j #k. HashC(m,hv)@j & HonestValue(hv)@k ==>  F"
+
+// Can the attaker know a hash output that is not output by the protocol?
+lemma GuessingHash_Resistance:
+ "All m hv #i #j. TesterS(hv)@i & HonestHashSecretOutput(m,hv)@j ==>  F"
+
+
+// Collision dimension
+
+// Can the attacker provide a collision?
+lemma Collision_Resistance:
+   "All m1 m2 hv #i #j.  Tester(m1,hv)@i & Tester(m2,hv)@j ==> m1=m2"
+
+// For some given hv=h(m) can the attacker provide a valid pre-image?
+lemma PreImage_Resistance:
+  "All hv m1 m2 #i #j. Tester(m1,hv)@i & HonestHashSecret(m2, hv)@j ==> m1 = m2"
+
+// For some given hv=h(m1) can the attacker provide a valid pre-image m2 != m1?
+lemma SndPreImage_Resistance:
+  "All hv m1 m2 #i #j. Tester(m1,hv)@i & HonestHashKnown(m2, hv)@j ==> m1 = m2"
+
+// Can the attacker provide a chosen-prefix collision for nonces prefixes: collision between p1 || s1 and p2 || s2 when p1 and p2 are two honestly generated nonces?
+lemma ChosenPrefixCollision_Resistance:
+   "All p1 p2 s1 s2 hv #i1 #i2 #j #k.  Tester(p1 || s1 , hv)@i1 & Tester( p2 || s2,hv)@i2 & HonestValue(p1)@j & HonestValue(p2)@k ==> p1 = p2 "
+
+// Can the attacker provide an identical-prefix collision for a nonce prefix: collision between p || s1 and p || s2 when p is a honestly generated nonce and s1 != s2?
+lemma IdentiticalPrefixCollision_Resistance:
+   "All p s1 s2 hv #i1 #i2 #j.  Tester(p || s1, hv)@i1 & Tester(p || s2,hv)@i2 & HonestValue(p)@j ==> s1 = s2"
+
+
+// LE dimension
+
+// TODO: this only captures the closure of LEc over a specific basic ~, here ~_\exists. I am OK with this if it is clearly stated as it is.
+lemma LengthExtensionCol_Resistance:
+   "All p1 p2 s hv #i #j.  HashC(p1 || s, hv)@i & HashC(p2 || s, hv)@j ==> p1 = p2 "
+
+// Can the attacker find a pre-image of ~m || ~l knowing h(~m) and ~l?
+lemma LengthExtensionAdv_Resistance:
+  "All hl #i. ChallengeLE(hl)@i ==> not( Ex #k. KU(hl)@k)"
+
+
+// Leak dimension
+
+// Can the attacker learn m given h(m)? (Note that this is different from PreImage_Resistance.)
+lemma iLeaks_Resistance:
+ "All m hv #i.  HonestHashSecret(m,hv)@i ==> not( Ex #j. KU(m)@j)"
+
+
+end

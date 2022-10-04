@@ -1,0 +1,104 @@
+Compressed Results
+{
+    "target_secA": {
+        "AllCol_RO": "false",
+        "ACT_Adv_CP_PI1_i": "true",
+        "ACT_Adv_Clo_IP_PI1_i": "true",
+        "CP_Clo_RO": "false"
+    },
+    "target_secB": {
+        "AllCol_RO": "false",
+        "ACT_Adv_CP_PI1_i": "true",
+        "ACT_Adv_Clo_IP_PI1_i": "true",
+        "CP_Clo_RO": "false"
+    },
+    "target_agree_B_to_A": {
+        "AllCol_RO": "false",
+        "ACT_Adv_CP_PI1_i": "true",
+        "ACT_Adv_Clo_IP_PI1_i": "true",
+        "CP_Clo_RO": "false"
+    },
+    "target_agree_A_to_B_or_Bbis": {
+        "AllCol_RO": "false",
+        "ACT_Adv_CP_PI1_i": "true",
+        "ACT_Adv_Clo_IP_PI1_i": "true",
+        "CP_Clo_RO": "false"
+    }
+}
+TOTAL Tamarin calls: 108
+TOTAL execution time forSigma/sigma.spthy: 1750.4363491535187
+Timed Results
+{
+    "target_secA": {
+        "AllCol_RO": [
+            "false",
+            13.334198236465454
+        ],
+        "ACT_Adv_CP_PI1_i": [
+            "true",
+            7.801502466201782
+        ],
+        "ACT_Adv_Clo_IP_PI1_i": [
+            "true",
+            34.72273278236389
+        ],
+        "CP_Clo_RO": [
+            "false",
+            66.95750451087952
+        ]
+    },
+    "target_secB": {
+        "AllCol_RO": [
+            "false",
+            1.1507387161254883
+        ],
+        "ACT_Adv_CP_PI1_i": [
+            "true",
+            1.365335464477539
+        ],
+        "ACT_Adv_Clo_IP_PI1_i": [
+            "true",
+            3.652625799179077
+        ],
+        "CP_Clo_RO": [
+            "false",
+            92.94346928596497
+        ]
+    },
+    "target_agree_B_to_A": {
+        "AllCol_RO": [
+            "false",
+            11.983192682266235
+        ],
+        "ACT_Adv_CP_PI1_i": [
+            "true",
+            5.759471654891968
+        ],
+        "ACT_Adv_Clo_IP_PI1_i": [
+            "true",
+            27.924891710281372
+        ],
+        "CP_Clo_RO": [
+            "false",
+            62.702826499938965
+        ]
+    },
+    "target_agree_A_to_B_or_Bbis": {
+        "AllCol_RO": [
+            "false",
+            1.1817560195922852
+        ],
+        "ACT_Adv_CP_PI1_i": [
+            "true",
+            1.412689447402954
+        ],
+        "ACT_Adv_Clo_IP_PI1_i": [
+            "true",
+            4.268667459487915
+        ],
+        "CP_Clo_RO": [
+            "false",
+            88.36365056037903
+        ]
+    }
+}

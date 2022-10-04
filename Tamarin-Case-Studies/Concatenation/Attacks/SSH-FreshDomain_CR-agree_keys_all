@@ -1,0 +1,1214 @@
+maude tool: 'maude'
+ checking version: 3.0. OK.
+ checking installation:   solved goal nr. 0 (directly):
+    AcceptB( pkA.1, pkB, m1.2, m2.3, m3.4, m4.5 ) @ #i.6
+  solved goal nr. 0 (directly): !HashVals( t.1 ) ▶₀ #i
+  solved goal nr. 0 (directly): !Key( t.1 ) ▶₀ #i
+  solved goal nr. 0 (directly):
+    A21( t.1, t.2, t.3, t.4, t.5, t.6, t.7, t.8, t.9, t.10, t.11, t.12,
+         t.13
+    ) ▶₀ #i
+  solved goal nr. 0 (directly): B0( t.1, t.2, t.3, t.4 ) ▶₀ #i
+  solved goal nr. 0 (directly):
+    A1( t.1, t.2, t.3, t.4, t.5, t.6 ) ▶₀ #i
+  solved goal nr. 0 (directly):
+    A2( t.1, t.2, t.3, t.4, t.5, t.6, t.7, t.8, t.9, t.10, t.11 ) ▶₀ #i
+  solved goal nr. 0 (directly): A0( t.1, t.2, t.3, t.4 ) ▶₀ #i
+  solved goal nr. 0 (directly):
+    B1( t.1, t.2, t.3, t.4, t.5, t.6, t.7, t.8, t.9 ) ▶₀ #i
+  solved goal nr. 2 (directly): !Key( ~skA.6 ) ▶₀ #vr.5
+  solved goal nr. 0 (directly):
+    B11( t.1, t.2, t.3, t.4, t.5, t.6, t.7, t.8, t.9, t.10, t.11, t.12,
+         t.13
+    ) ▶₀ #i
+  solved goal nr. 2 (directly): !Key( ~skA.6 ) ▶₀ #vr.5
+  solved goal nr. 2 (directly): A0( t.1, t.2, ~skA.8, t.4 ) ▶₀ #vr.7
+  solved goal nr. 2 (directly):
+    A1( t.1, t.2, ~skA.13, t.4, ~aA.13, t.9 ) ▶₀ #vr.12
+  solved goal nr. 2 (directly):
+    B0( t.1, t.2, t.3, ~skB.11 ) ▶₀ #vr.10
+  solved goal nr. 2 (directly):
+    A2( t.1, t.2, ~skA.15, t.4, ~aA.15, t.6, t.7, ~x.15, t.10, t.11,
+        t.12
+    ) ▶₀ #vr.14
+  solved goal nr. 2 (directly):
+    B1( t.1, t.2, t.3, ~skB.15, t.5, t.6, ~aB.15, t.10, t.11
+    ) ▶₀ #vr.14
+  solved goal nr. 0 (directly):
+    B2( t.1, t.2, t.3, t.4, t.5, t.6, t.7, t.8, t.9, t.10, t.11, t.12,
+        t.13, t.14, t.15, t.16
+    ) ▶₀ #i
+  solved goal nr. 3 (directly): !Key( ~skB.6 ) ▶₁ #vr.5
+  solved goal nr. 11 (directly): !Key( ~skA.20 ) ▶₀ #vr.19
+  solved goal nr. 3 (directly): !Key( ~skB.6 ) ▶₁ #vr.5
+  solved goal nr. 11 (directly):
+    A0( t.1, t.2, ~skA.13, t.4 ) ▶₀ #vr.21
+  solved goal nr. 4 (directly): !Key( ~skA.8 ) ▶₀ #vr.10
+  solved goal nr. 7 (directly):
+    A1( t.1, t.2, ~skA.15, t.4, ~aA.15, t.10 ) ▶₀ #vr.20
+  solved goal nr. 12 (directly): !Key( ~skB.11 ) ▶₁ #vr.19
+  solved goal nr. 2 (directly):
+    B11( t.1, t.2, t.3, ~skB.18, t.5, t.6, ~aB.18, ~y.18, t.9, t.12,
+         t.13, t.14, t.15
+    ) ▶₀ #vr.17
+  solved goal nr. 7 (directly):
+    B0( t.1, t.2, t.3, ~skB.15 ) ▶₀ #vr.21
+  solved goal nr. 13 (directly): !Key( ~skA.13 ) ▶₀ #vr.24
+  solved goal nr. 5 (directly): !Key( ~skB.11 ) ▶₁ #vr.10
+  solved goal nr. 16 (directly): !Key( ~skA.31 ) ▶₀ #vr.30
+  solved goal nr. 0 (directly): !KU( ~t.1 ) @ #i
+  solved goal nr. 16 (directly):
+    A0( t.1, t.2, ~skA.15, t.4 ) ▶₀ #vr.29
+  solved goal nr. 14 (directly): !Key( ~skB.25 ) ▶₁ #vr.24
+  solved goal nr. 17 (directly): !Key( ~skB.15 ) ▶₁ #vr.30
+  solved goal nr. 0 (directly): !KU( V(t.1) ) @ #i
+  solved goal nr. 18 (directly): !Key( ~skA.15 ) ▶₀ #vr.32
+  solved goal nr. 5 (directly): !HashVals( ~t.1 ) ▶₁ #vr.6
+  solved goal nr. 0 (directly): !KU( col1(t.1, t.2) ) @ #i
+  solved goal nr. 19 (directly): !Key( ~skB.33 ) ▶₁ #vr.32
+  solved goal nr. 0 (directly): !KU( col2(t.1, t.2) ) @ #i
+  solved goal nr. 0 (directly): !KU( colip1(t.1) ) @ #i
+  solved goal nr. 4 (directly):
+    B1( t.1, t.2, t.3, ~skB.18, t.5, t.6, ~aB.18, t.12, t.13
+    ) ▶₀ #vr.19
+  solved goal nr. 4 (directly):
+    A0( user.7, VA.7, ~skA.7, pkB.7 ) ▶₀ #vr.6
+  solved goal nr. 0 (directly): !KU( colip2(t.1) ) @ #i
+  solved goal nr. 10 (directly): !Key( ~skA.7 ) ▶₀ #vr.15
+  solved goal nr. 9 (directly):
+    B0( t.1, t.2, t.3, ~skB.18 ) ▶₀ #vr.28
+  solved goal nr. 4 (directly):
+    A0( user.10, VA.10, ~skA.10, pkB.10 ) ▶₀ #vr.9
+  solved goal nr. 11 (directly): !Key( ~skB.16 ) ▶₁ #vr.15
+  solved goal nr. 4 (directly):
+    A0( user.10, VA.10, ~skA.10, pkB.10 ) ▶₀ #vr.9
+  solved goal nr. 18 (directly): !Key( ~skA.38 ) ▶₀ #vr.37
+  solved goal nr. 0 (directly): !KU( t.1^t.2 ) @ #i
+  solved goal nr. 19 (directly): !Key( ~skB.18 ) ▶₁ #vr.37
+  solved goal nr. 4 (directly):
+    A0( user.7, VA.7, ~skA.7, pkB.7 ) ▶₀ #vr.6
+  solved goal nr. 4 (directly):
+    A0( user.7, VA.7, ~skA.7, pkB.7 ) ▶₀ #vr.6
+  solved goal nr. 0 (directly): !KU( fst(t.1) ) @ #i
+  solved goal nr. 0 (directly): !KU( h(t.1) ) @ #i
+  solved goal nr. 4 (directly):
+    A0( user.7, VA.7, ~skA.7, pkB.7 ) ▶₀ #vr.6
+  solved goal nr. 4 (directly):
+    A0( user.10, VA.10, ~skA.10, pkB.10 ) ▶₀ #vr.9
+  solved goal nr. 4 (directly):
+    A0( user.7, VA.7, ~skA.7, pkB.7 ) ▶₀ #vr.6
+  solved goal nr. 10 (directly): !Key( ~skA.7 ) ▶₀ #vr.15
+  solved goal nr. 4 (directly):
+    B0( user.10, VB.10, pkA.10, ~skB.10 ) ▶₀ #vr.9
+  solved goal nr. 11 (directly): !Key( ~skB.16 ) ▶₁ #vr.15
+  solved goal nr. 4 (directly):
+    A0( user.7, VA.7, ~skA.7, pkB.7 ) ▶₀ #vr.6
+  solved goal nr. 4 (directly):
+    B0( user.10, VB.10, pkA.10, ~skB.10 ) ▶₀ #vr.9
+  solved goal nr. 4 (directly):
+    B0( user.7, VB.7, pkA.7, ~skB.7 ) ▶₀ #vr.6
+  solved goal nr. 4 (directly):
+    B0( user.7, VB.7, pkA.7, ~skB.7 ) ▶₀ #vr.6
+  solved goal nr. 4 (directly):
+    B0( user.10, VB.10, pkA.10, ~skB.10 ) ▶₀ #vr.9
+  solved goal nr. 15 (directly): !Key( ~skA.22 ) ▶₀ #vr.21
+  solved goal nr. 0 (directly): !KU( kdf(t.1, t.2, t.3) ) @ #i
+  solved goal nr. 16 (directly): !Key( ~skB.7 ) ▶₁ #vr.21
+  solved goal nr. 4 (directly):
+    B0( user.7, VB.7, pkA.7, ~skB.7 ) ▶₀ #vr.6
+  solved goal nr. 0 (directly): !KU( pk(t.1) ) @ #i
+  solved goal nr. 0 (directly): !KU( pre(t.1) ) @ #i
+  solved goal nr. 0 (directly): !KU( sdec(t.1, t.2) ) @ #i
+  solved goal nr. 4 (directly):
+    A0( user.6, VA.6, ~skA.6, pkB.6 ) ▶₀ #vr.5
+  solved goal nr. 0 (directly): !KU( senc(t.1, t.2) ) @ #i
+  solved goal nr. 4 (directly):
+    B0( user.7, VB.7, pkA.7, ~skB.7 ) ▶₀ #vr.6
+  solved goal nr. 4 (directly):
+    A1( user.10, VA.10, ~skA.10, pkB.10, ~aA.10, m0A.10 ) ▶₀ #vr.9
+  solved goal nr. 0 (directly): !KU( sign(t.1, t.2) ) @ #i
+  solved goal nr. 13 (directly):
+    A0( user.10, VA.10, ~skA.10, pkB.10 ) ▶₀ #vr.21
+  solved goal nr. 0 (directly): !KU( snd(t.1) ) @ #i
+  solved goal nr. 15 (directly): !Key( ~skA.10 ) ▶₀ #vr.24
+  solved goal nr. 16 (directly): !Key( ~skB.25 ) ▶₁ #vr.24
+  solved goal nr. 0 (directly): !KU( sndpre(t.1) ) @ #i
+  solved goal nr. 4 (directly):
+    B0( user.7, VB.7, pkA.7, ~skB.7 ) ▶₀ #vr.6
+  solved goal nr. 0 (directly): !KU( user(t.1) ) @ #i
+  solved goal nr. 15 (directly): !Key( ~skA.22 ) ▶₀ #vr.21
+  solved goal nr. 0 (directly): !KU( verify(t.1, t.2, t.3) ) @ #i
+  solved goal nr. 16 (directly): !Key( ~skB.7 ) ▶₁ #vr.21
+  solved goal nr. 4 (directly):
+    B0( user.6, VB.6, pkA.6, ~skB.6 ) ▶₀ #vr.5
+  solved goal nr. 4 (directly):
+    B0( user.7, VB.7, pkA.7, ~skB.7 ) ▶₀ #vr.6
+  solved goal nr. 4 (directly):
+    A1( user.10, VA.10, ~skA.10, pkB.10, ~aA.10, m0A.10 ) ▶₀ #vr.9
+  solved goal nr. 16 (directly):
+    A0( user.10, VA.10, ~skA.10, pkB.10 ) ▶₀ #vr.26
+  solved goal nr. 18 (directly): !Key( ~skA.10 ) ▶₀ #vr.29
+  solved goal nr. 19 (directly): !Key( ~skB.30 ) ▶₁ #vr.29
+  solved goal nr. 4 (directly):
+    A0( user.13, VA.13, ~skA.13, pkB.13 ) ▶₀ #vr.12
+  solved goal nr. 4 (directly):
+    B0( user.13, VB.13, pkA.13, ~skB.13 ) ▶₀ #vr.12
+  solved goal nr. 4 (directly):
+    B1( user.10, VB.10, pkA.10, ~skB.10, VA.10, aA.10, ~aB.10, m0A.10,
+        m0B.10
+    ) ▶₀ #vr.9
+  solved goal nr. 11 (directly):
+    B0( user.10, VB.10, pkA.10, ~skB.10 ) ▶₀ #vr.19
+  solved goal nr. 4 (directly):
+    A0( user.7, VA.7, ~skA.7, pkB.7 ) ▶₀ #vr.6
+  solved goal nr. 20 (directly): !Key( ~skA.29 ) ▶₀ #vr.28
+  solved goal nr. 21 (directly): !Key( ~skB.10 ) ▶₁ #vr.28
+  solved goal nr. 4 (directly):
+    A0( user.7, VA.7, ~skA.7, pkB.7 ) ▶₀ #vr.6
+  solved goal nr. 4 (directly):
+    A0( user.7, VA.7, ~skA.7, pkB.7 ) ▶₀ #vr.6
+  solved goal nr. 4 (directly):
+    B0( user.7, VB.7, pkA.7, ~skB.7 ) ▶₀ #vr.6
+  solved goal nr. 4 (directly):
+    A0( user.10, VA.10, ~skA.10, pkB.10 ) ▶₀ #vr.9
+  solved goal nr. 4 (directly):
+    B0( user.7, VB.7, pkA.7, ~skB.7 ) ▶₀ #vr.6
+  solved goal nr. 4 (directly):
+    A0( user.10, VA.10, ~skA.10, pkB.10 ) ▶₀ #vr.9
+  solved goal nr. 4 (directly):
+    B0( user.7, VB.7, pkA.7, ~skB.7 ) ▶₀ #vr.6
+  solved goal nr. 4 (directly):
+    B0( user.10, VB.10, pkA.10, ~skB.10 ) ▶₀ #vr.9
+  solved goal nr. 4 (directly):
+    A0( user.6, VA.6, ~skA.6, pkB.6 ) ▶₀ #vr.5
+  solved goal nr. 4 (directly):
+    B11( user.7, VB.7, pkA.7, ~skB.7, VA.7, aA.7, ~aB.7, ~y.7, gX.7,
+         m0A.7, m0B.7, m1A.7, m1B.7
+    ) ▶₀ #vr.6
+  solved goal nr. 4 (directly):
+    B0( user.10, VB.10, pkA.10, ~skB.10 ) ▶₀ #vr.9
+  solved goal nr. 10 (directly):
+    B1( user.7, VB.7, pkA.7, ~skB.7, VA.7, aA.7, ~aB.7, m0A.7, m0B.7
+    ) ▶₀ #vr.14
+  solved goal nr. 15 (directly):
+    B0( user.7, VB.7, pkA.7, ~skB.7 ) ▶₀ #vr.23
+  solved goal nr. 24 (directly): !Key( ~skA.33 ) ▶₀ #vr.32
+  solved goal nr. 4 (directly):
+    B0( user.6, VB.6, pkA.6, ~skB.6 ) ▶₀ #vr.5
+  solved goal nr. 25 (directly): !Key( ~skB.7 ) ▶₁ #vr.32
+  solved goal nr. 4 (directly):
+    A0( user.7, VA.7, ~skA.7, pkB.7 ) ▶₀ #vr.6
+  solved goal nr. 4 (directly):
+    B11( user.10, VB.10, pkA.10, ~skB.10, VA.10, aA.10, ~aB.10, ~y.10,
+         gX.10, m0A.10, m0B.10, m1A.10, m1B.10
+    ) ▶₀ #vr.9
+  solved goal nr. 4 (directly):
+    A0( user.7, VA.7, ~skA.7, pkB.7 ) ▶₀ #vr.6
+  solved goal nr. 10 (directly):
+    B1( user.10, VB.10, pkA.10, ~skB.10, VA.10, aA.10, ~aB.10, m0A.10,
+        m0B.10
+    ) ▶₀ #vr.17
+  solved goal nr. 4 (directly):
+    B0( user.7, VB.7, pkA.7, ~skB.7 ) ▶₀ #vr.6
+  solved goal nr. 15 (directly):
+    B0( user.10, VB.10, pkA.10, ~skB.10 ) ▶₀ #vr.26
+  solved goal nr. 4 (directly):
+    B0( user.7, VB.7, pkA.7, ~skB.7 ) ▶₀ #vr.6
+  solved goal nr. 4 (directly):
+    A21( user.10, VA.10, ~skA.10, pk(x.18), ~aA.10, VB.10, aB.10,
+         ~x.10, gY.10, m0A.10, m0B.10, m1A.10, m1B.10
+    ) ▶₀ #vr.9
+  solved goal nr. 24 (directly): !Key( ~skA.36 ) ▶₀ #vr.35
+  solved goal nr. 25 (directly): !Key( ~skB.10 ) ▶₁ #vr.35
+  solved goal nr. 13 (directly):
+    A2( user.10, VA.10, ~skA.10, pk(x.18), ~aA.10, VB.10, aB.10, ~x.27,
+        m0A.10, m0B.10, m1A.10
+    ) ▶₀ #vr.21
+  solved goal nr. 18 (directly):
+    A1( user.10, VA.10, ~skA.10, pk(x.18), ~aA.10, m0A.10 ) ▶₀ #vr.29
+  solved goal nr. 4 (directly):
+    A0( user.8, VA.8, ~skA.8, pkB.8 ) ▶₀ #vr.7
+  solved goal nr. 27 (directly):
+    A0( user.10, VA.10, ~skA.10, pk(x.18) ) ▶₀ #vr.38
+  solved goal nr. 4 (directly):
+    B1( user.10, VB.10, pkA.10, ~skB.10, VA.10, aA.10, ~aB.10, m0A.10,
+        m0B.10
+    ) ▶₀ #vr.9
+  solved goal nr. 29 (directly): !Key( ~skA.10 ) ▶₀ #vr.41
+  solved goal nr. 14 (directly):
+    B0( user.10, VB.10, pkA.10, ~skB.10 ) ▶₀ #vr.24
+  solved goal nr. 30 (directly): !Key( ~skB.42 ) ▶₁ #vr.41
+  solved goal nr. 23 (directly): !Key( ~skA.34 ) ▶₀ #vr.33
+  solved goal nr. 24 (directly): !Key( ~skB.10 ) ▶₁ #vr.33
+  solved goal nr. 4 (directly):
+    B0( user.8, VB.8, pkA.8, ~skB.8 ) ▶₀ #vr.7
+  solved goal nr. 4 (directly):
+    A21( user.10, VA.10, ~skA.10, pk(x.18), ~aA.10, VB.10, aB.10,
+         ~x.10, gY.10, m0A.10, m0B.10, m1A.10, m1B.10
+    ) ▶₀ #vr.9
+  solved goal nr. 19 (directly):
+    A2( user.10, VA.10, ~skA.10, pk(x.18), ~aA.10, VB.10, aB.10, ~x.34,
+        m0A.10, m0B.10, m1A.10
+    ) ▶₀ #vr.28
+  solved goal nr. 24 (directly):
+    A1( user.10, VA.10, ~skA.10, pk(x.18), ~aA.10, m0A.10 ) ▶₀ #vr.36
+  solved goal nr. 33 (directly):
+    A0( user.10, VA.10, ~skA.10, pk(x.18) ) ▶₀ #vr.45
+  solved goal nr. 35 (directly): !Key( ~skA.10 ) ▶₀ #vr.48
+  solved goal nr. 36 (directly): !Key( ~skB.49 ) ▶₁ #vr.48
+  solved goal nr. 15 (precomputed):
+    !KU( kdf('g'^(~x.34*~y.35), HashedV.10, '1') ) @ #vk.24
+  solved goal nr. 2 (precomputed):
+    B2( user, VB, pk(x), ~skB, VA, aA, ~aB, ~y, gX, k1, hashtrans, m1,
+        m2, m3, m4, HashedV
+    ) ▶₀ #i
+  solved goal nr. 18 (directly):
+    HashE( (VA||V(~skB)||aA||~aB||pk(~skB)||'g'^~x.3||'g'^~y||
+            'g'^(~y*~x.3)),
+           HashedV
+    ) @ #j.23
+  solved goal nr. 20 (precomputed): !HashVals( ~n ) ▶₀ #j
+  solved goal nr. 3 (precomputed):
+    !KU( senc(<'AUTH', sign(h(<user(~skA), ~n, pk(~skA)>), ~skA)>,
+              kdf('g'^(~x*~y), ~n, '1'))
+    ) @ #vk
+  solved goal nr. 41 (directly):
+    HashE( (V(~skA.44)||V(~skB.45)||~aA.46||~aB.43||pk(~skB.45)||
+            'g'^~x||'g'^~y||'g'^(~x*~y)),
+           ~n
+    ) @ #j.42
+  solved goal nr. 41 (directly):
+    HashE( (V(~skA.44)||V(~skB.45)||~aA.46||x.47||~aB.43||pk(~skB.45)||
+            'g'^~x||'g'^~y||'g'^(~x*~y)),
+           ~n
+    ) @ #j.42
+  solved goal nr. 41 (directly):
+    HashE( (V(~skA.44)||V(~skB.45)||x.47||~aA.46||~aB.43||pk(~skB.45)||
+            'g'^~x||'g'^~y||'g'^(~x*~y)),
+           ~n
+    ) @ #j.42
+  solved goal nr. 41 (directly):
+    HashE( (V(~skA.44)||x.47||V(~skB.45)||~aA.46||~aB.43||pk(~skB.45)||
+            'g'^~x||'g'^~y||'g'^(~x*~y)),
+           ~n
+    ) @ #j.42
+  solved goal nr. 41 (directly):
+    HashE( (V(~skA.44)||V(~skB.45)||x.48||~aA.46||x.47||~aB.43||
+            pk(~skB.45)||'g'^~x||'g'^~y||'g'^(~x*~y)),
+           ~n
+    ) @ #j.42
+  solved goal nr. 41 (directly):
+    HashE( (V(~skA.44)||x.48||V(~skB.45)||~aA.46||x.47||~aB.43||
+            pk(~skB.45)||'g'^~x||'g'^~y||'g'^(~x*~y)),
+           ~n
+    ) @ #j.42
+  solved goal nr. 41 (directly):
+    HashE( (V(~skA.44)||x.48||V(~skB.45)||x.47||~aA.46||~aB.43||
+            pk(~skB.45)||'g'^~x||'g'^~y||'g'^(~x*~y)),
+           ~n
+    ) @ #j.42
+  solved goal nr. 41 (directly):
+    HashE( (V(~skA.44)||VB.48||~aA.47||V(~skB.45)||aA.46||~aB.43||
+            pk(~skB.45)||'g'^~x||'g'^~y||'g'^(~x*~y)),
+           ~n
+    ) @ #j.42
+  solved goal nr. 41 (directly):
+    HashE( (V(~skA.44)||x.48||V(~skB.45)||x.49||~aA.46||x.47||~aB.43||
+            pk(~skB.45)||'g'^~x||'g'^~y||'g'^(~x*~y)),
+           ~n
+    ) @ #j.42
+  solved goal nr. 41 (directly):
+    HashE( (V(~skA.44)||VB.48||~aA.47||x.49||V(~skB.45)||aA.46||
+            ~aB.43||pk(~skB.45)||'g'^~x||'g'^~y||'g'^(~x*~y)),
+           ~n
+    ) @ #j.42
+  solved goal nr. 41 (directly):
+    HashE( (V(~skA.44)||V(~skB.45)||~aA.47||~aB.43||pk(~skB.45)||
+            'g'^~x.46||'g'^~x.46||'g'^(~x.46*~x.46)),
+           ~n
+    ) @ #j.42
+  solved goal nr. 41 (directly):
+    HashE( (V(~skA.44)||V(~skB.45)||~aA.47||x.48||~aB.43||pk(~skB.45)||
+            'g'^~x.46||'g'^~x.46||'g'^(~x.46*~x.46)),
+           ~n
+    ) @ #j.42
+  solved goal nr. 41 (directly):
+    HashE( (V(~skA.44)||V(~skB.45)||x.48||~aA.47||~aB.43||pk(~skB.45)||
+            'g'^~x.46||'g'^~x.46||'g'^(~x.46*~x.46)),
+           ~n
+    ) @ #j.42
+  solved goal nr. 41 (directly):
+    HashE( (V(~skA.44)||x.48||V(~skB.45)||~aA.47||~aB.43||pk(~skB.45)||
+            'g'^~x.46||'g'^~x.46||'g'^(~x.46*~x.46)),
+           ~n
+    ) @ #j.42
+  solved goal nr. 41 (directly):
+    HashE( (V(~skA.44)||V(~skB.45)||x.49||~aA.47||x.48||~aB.43||
+            pk(~skB.45)||'g'^~x.46||'g'^~x.46||'g'^(~x.46*~x.46)),
+           ~n
+    ) @ #j.42
+  solved goal nr. 41 (directly):
+    HashE( (V(~skA.44)||x.49||V(~skB.45)||~aA.47||x.48||~aB.43||
+            pk(~skB.45)||'g'^~x.46||'g'^~x.46||'g'^(~x.46*~x.46)),
+           ~n
+    ) @ #j.42
+  solved goal nr. 41 (directly):
+    HashE( (V(~skA.44)||x.49||V(~skB.45)||x.48||~aA.47||~aB.43||
+            pk(~skB.45)||'g'^~x.46||'g'^~x.46||'g'^(~x.46*~x.46)),
+           ~n
+    ) @ #j.42
+  solved goal nr. 41 (directly):
+    HashE( (V(~skA.44)||VB.49||~aA.48||V(~skB.45)||aA.47||~aB.43||
+            pk(~skB.45)||'g'^~x.46||'g'^~x.46||'g'^(~x.46*~x.46)),
+           ~n
+    ) @ #j.42
+  solved goal nr. 41 (directly):
+    HashE( (V(~skA.44)||x.49||V(~skB.45)||x.50||~aA.47||x.48||~aB.43||
+            pk(~skB.45)||'g'^~x.46||'g'^~x.46||'g'^(~x.46*~x.46)),
+           ~n
+    ) @ #j.42
+  solved goal nr. 41 (directly):
+    HashE( (V(~skA.44)||VB.49||~aA.48||x.50||V(~skB.45)||aA.47||
+            ~aB.43||pk(~skB.45)||'g'^~x.46||'g'^~x.46||'g'^(~x.46*~x.46)),
+           ~n
+    ) @ #j.42
+  solved goal nr. 24 (precomputed):
+    !KU( kdf('g'^(~x*~y), ~n, '1') ) @ #vk.10
+  solved goal nr. 44 (precomputed): !KU( ~aA ) @ #vk.19
+  solved goal nr. 49 (precomputed): !KU( ~aB ) @ #vk.21
+  solved goal nr. 28 (precomputed): !KU( sign(~n, ~skB) ) @ #vk.16
+  solved goal nr. 83 (directly):
+    HashE( (V(~skA.54)||V(~skB.55)||~aA.52||V(~skB.55)||aA.58||~aB.53||
+            pk(~skB.55)||'g'^~x.57||'g'^~y.56||'g'^(~y.56*~x.57)),
+           ~n
+    ) @ #j.51
+  solved goal nr. 83 (directly):
+    HashE( (V(~skA.54)||V(~skB)||~aA.52||x.56||~aB.53||pk(~skB)||
+            'g'^~x.57||'g'^~y.55||'g'^(~y.55*~x.57)),
+           ~n
+    ) @ #j.51
+  solved goal nr. 83 (directly):
+    HashE( (V(~skA.54)||V(~skB.55)||~aA.52||x.59||V(~skB.55)||aA.58||
+            ~aB.53||pk(~skB.55)||'g'^~x.57||'g'^~y.56||'g'^(~y.56*~x.57)),
+           ~n
+    ) @ #j.51
+  solved goal nr. 70 (precomputed): !KU( ~n ) @ #vk.22
+  solved goal nr. 6 (precomputed): !KU( 'g'^~x.1 ) @ #vk.11
+  solved goal nr. 75 (directly):
+    HashE( (V(~skA)||V(~skB)||~aA||x||~aB||pk(~skB)||'g'^~x.1||'g'^~y||
+            'g'^(~y*~x.1)),
+           ~n
+    ) @ #j.31
+  solved goal nr. 29 (precomputed): !KU( ~n ) @ #vk.14
+  solved goal nr. 34 (directly):
+    HashE( (VA||V(~skB)||aA||~aB||pk(~skB)||'g'^~x||'g'^~y||'g'^(~x*~y)
+           ),
+           ~n
+    ) @ #j.23
+  solved goal nr. 26 (precomputed):
+    !KU( sign(h(<user(~skA), ~n, pk(~skA)>), ~skA) ) @ #vk.14
+  solved goal nr. 60 (directly):
+    HashE( (VA.24||V(~skA)||aA.25||~aB.26||pk(~skA)||'g'^~x.28||
+            'g'^~y.27||'g'^(~y.27*~x.28)),
+           h(<user(~skA), ~n, pk(~skA)>)
+    ) @ #j.50
+  solved goal nr. 69 (directly):
+    HashE( (V(~skA.62)||V(~skB.63)||~aA.66||~aB.61||pk(~skB.63)||
+            'g'^~x.64||'g'^~y.65||'g'^(~x.64*~y.65)),
+           ~n
+    ) @ #j.60
+  solved goal nr. 69 (directly):
+    HashE( (V(~skA.62)||V(~skB.63)||~aA.66||x.67||~aB.61||pk(~skB.63)||
+            'g'^~x.64||'g'^~y.65||'g'^(~x.64*~y.65)),
+           ~n
+    ) @ #j.60
+  solved goal nr. 69 (directly):
+    HashE( (V(~skA.62)||V(~skB.63)||x.67||~aA.66||~aB.61||pk(~skB.63)||
+            'g'^~x.64||'g'^~y.65||'g'^(~x.64*~y.65)),
+           ~n
+    ) @ #j.60
+  solved goal nr. 69 (directly):
+    HashE( (V(~skA.62)||x.67||V(~skB.63)||~aA.66||~aB.61||pk(~skB.63)||
+            'g'^~x.64||'g'^~y.65||'g'^(~x.64*~y.65)),
+           ~n
+    ) @ #j.60
+  solved goal nr. 69 (directly):
+    HashE( (V(~skA.62)||V(~skB.63)||x.68||~aA.66||x.67||~aB.61||
+            pk(~skB.63)||'g'^~x.64||'g'^~y.65||'g'^(~x.64*~y.65)),
+           ~n
+    ) @ #j.60
+  solved goal nr. 69 (directly):
+    HashE( (V(~skA.62)||x.68||V(~skB.63)||~aA.66||x.67||~aB.61||
+            pk(~skB.63)||'g'^~x.64||'g'^~y.65||'g'^(~x.64*~y.65)),
+           ~n
+    ) @ #j.60
+  solved goal nr. 69 (directly):
+    HashE( (V(~skA.62)||x.68||V(~skB.63)||x.67||~aA.66||~aB.61||
+            pk(~skB.63)||'g'^~x.64||'g'^~y.65||'g'^(~x.64*~y.65)),
+           ~n
+    ) @ #j.60
+  solved goal nr. 69 (directly):
+    HashE( (V(~skA.62)||VB.68||~aA.67||V(~skB.63)||aA.66||~aB.61||
+            pk(~skB.63)||'g'^~x.64||'g'^~y.65||'g'^(~x.64*~y.65)),
+           ~n
+    ) @ #j.60
+  solved goal nr. 69 (directly):
+    HashE( (V(~skA.62)||x.68||V(~skB.63)||x.69||~aA.66||x.67||~aB.61||
+            pk(~skB.63)||'g'^~x.64||'g'^~y.65||'g'^(~x.64*~y.65)),
+           ~n
+    ) @ #j.60
+  solved goal nr. 69 (directly):
+    HashE( (V(~skA.62)||VB.68||~aA.67||x.69||V(~skB.63)||aA.66||
+            ~aB.61||pk(~skB.63)||'g'^~x.64||'g'^~y.65||'g'^(~x.64*~y.65)),
+           ~n
+    ) @ #j.60
+  solved goal nr. 48 (precomputed): !KU( ~skA ) @ #vk.22
+  solved goal nr. 28 (precomputed): !KU( 'g'^(~y*~x.1) ) @ #vk.18
+  solved goal nr. 52 (directly): HashE( x.25, ~skA ) @ #j.30
+  solved goal nr. 99 (precomputed): !KU( ~x.1 ) @ #vk.23
+  solved goal nr. 27 (precomputed): !KU( pk(~skB) ) @ #vk.18
+  solved goal nr. 94 (precomputed): !KU( ~x.1 ) @ #vk.30
+  solved goal nr. 96 (precomputed): !KU( ~y ) @ #vk.30
+  solved goal nr. 93 (precomputed): !KU( ~y ) @ #vk.32
+  solved goal nr. 125 (directly):
+    HashE( (VA.26||V(~skB)||aA.27||~aB.28||pk(~skB)||'g'^~x.30||
+            'g'^~y.29||'g'^(~y.29*~x.30)),
+           HashedV.23
+    ) @ #j.52
+  solved goal nr. 112 (precomputed): !KU( ~skB ) @ #vk.22
+  solved goal nr. 116 (directly): HashE( x.25, ~skB ) @ #j.30
+  solved goal nr. 29 (precomputed): !KU( 'g'^~y ) @ #vk.19
+  solved goal nr. 127 (precomputed): !HashVals( ~n.1 ) ▶₀ #j.1
+  solved goal nr. 114 (precomputed): !KU( 'g'^~x.2 ) @ #vk.24
+  solved goal nr. 131 (precomputed): !KU( ~x.2 ) @ #vk.29
+  solved goal nr. 135 (directly): HashE( x.32, ~x.2 ) @ #j.37
+  solved goal nr. 29 (precomputed): !KU( 'g'^~y ) @ #vk.23
+  solved goal nr. 132 (precomputed): !KU( 'g'^~x.3 ) @ #vk.30
+  solved goal nr. 141 (precomputed): !KU( ~y ) @ #vk.33
+  solved goal nr. 42 (precomputed): !KU( V(~skA) ) @ #vk.23
+  solved goal nr. 157 (precomputed): !KU( ~skA ) @ #vk.32
+  solved goal nr. 46 (precomputed): !KU( V(~skB) ) @ #vk.24
+  solved goal nr. 46 (precomputed): !KU( V(~skB) ) @ #vk.25
+  solved goal nr. 161 (directly): HashE( x.36, ~skA ) @ #j.41
+  solved goal nr. 161 (precomputed): !KU( ~skB ) @ #vk.32
+OK.
+
+theory SSH2HEB begin
+
+// Function signature and definition of the equational theory E
+
+builtins: diffie-hellman, concatenation
+functions: V/1, col1/2, col2/2, colip1/1, colip2/1, constcol1/0,
+           constcol2/0, fst/1[destructor], h/1, kdf/3, pair/2, pk/1, pre/1,
+           sdec/2[destructor], senc/2, sign/2, snd/1[destructor], sndpre/1, true/0,
+           user/1, verify/3[destructor]
+equations:
+    fst(<x.1, x.2>) = x.1,
+    sdec(senc(x.1, x.2), x.2) = x.1,
+    snd(<x.1, x.2>) = x.2,
+    verify(sign(x.1, x.2), x.1, pk(x.2)) = true
+
+
+
+
+
+
+
+
+
+
+
+restriction originHash:
+  "∀ x hs #i.
+    (HashC( x, hs ) @ #i) ⇒ (∃ #j. (HashE( x, hs ) @ #j) ∧ (#j < #i))"
+
+restriction deterministic:
+  "∀ x1 x2 h1 h2 #i #j.
+    (((HashE( x1, h1 ) @ #i) ∧ (HashE( x2, h2 ) @ #j)) ∧ (x1 = x2)) ⇒
+    (#i = #j)"
+  // safety formula
+
+rule (modulo E) hashVals:
+   [ Fr( ~n ) ] --> [ !HashVals( ~n ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) createHash:
+   [ !HashVals( ~n ) ] --[ HashE( x, ~n ), HV( ~n ) ]-> [ ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) attHash:
+   [ In( x ), !HashVals( ~hs ) ] --[ HashC( x, ~hs ) ]-> [ Out( ~hs ) ]
+
+  /* has exactly the trivial AC variant */
+
+lemma orig [sources]:
+  all-traces
+  "∀ x hs #i.
+    (HashC( x, hs ) @ #i) ⇒
+    ((∃ #j. (HV( hs ) @ #j) ∧ (#j < #i)) ∨
+     (∃ #j. (!KU( hs ) @ #j) ∧ (#j < #i)))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ x hs #i.
+  (HashC( x, hs ) @ #i)
+ ∧
+  (∀ #j. (HV( hs ) @ #j) ⇒ ¬(#j < #i)) ∧
+  (∀ #j. (!KU( hs ) @ #j) ⇒ ¬(#j < #i))"
+*/
+by sorry
+
+restriction CollisionResistance:
+  "∀ x1 x2 n #i #j.
+    ((HashC( x1, n ) @ #i) ∧ (HashC( x2, n ) @ #j)) ⇒ (x1 = x2)"
+  // safety formula
+
+restriction FixedLength:
+  "∀ x #i. (FixedLength( x ) @ #i) ⇒ (¬(∃ y z. x = (y||z)))"
+  // safety formula
+
+rule (modulo E) InitKeys:
+   [ Fr( ~sk ) ] --[ HKey( ~sk ) ]-> [ !Key( ~sk ), Out( pk(~sk) ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) InitKeysBis:
+   [ !Key( ~skA ), !Key( ~skB ) ]
+  --[ Start( ) ]->
+   [
+   A0( user(~skA), V(~skA), ~skA, pk(~skB) ),
+   B0( user(~skA), V(~skB), pk(~skA), ~skB )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+restriction Restr_A_0_1:
+  "∀ x #NOW x.1. (Restr_A_0_1( x, x.1 ) @ #NOW) ⇒ (¬(x = x.1))"
+  // safety formula
+
+rule (modulo E) A_0:
+   [ A0( user, VA, ~skA, pkB ), Fr( ~algorithms ) ]
+  --[ Restr_A_0_1( pk(~skA), pkB ) ]->
+   [
+   A1( user, VA, ~skA, pkB, ~algorithms, <'INIT', VA, ~algorithms> ),
+   Out( <'INIT', VA, ~algorithms> )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+restriction Restr_B_0_1:
+  "∀ x #NOW x.1. (Restr_B_0_1( x, x.1 ) @ #NOW) ⇒ (¬(x = x.1))"
+  // safety formula
+
+rule (modulo E) B_0:
+   [ B0( user, VB, pkA, ~skB ), Fr( ~algorithms ), In( <'INIT', VA, aA> ) ]
+  --[ Restr_B_0_1( pk(~skB), pkA ) ]->
+   [
+   B1( user, VB, pkA, ~skB, VA, aA, ~algorithms, <'INIT', VA, aA>,
+       <'INIT', VB, ~algorithms>
+   ),
+   Out( <'INIT', VB, ~algorithms> )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) A_1:
+   [ A1( user, VA, ~skA, pkB, ~aA, m0A ), Fr( ~x ), In( <'INIT', VB, aB> ) ]
+  -->
+   [
+   Out( <'KEX', 'g'^~x> ),
+   A2( user, VA, ~skA, pkB, ~aA, VB, aB, ~x, m0A, <'INIT', VB, aB>,
+       <'KEX', 'g'^~x>
+   )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) B_1_1:
+   [
+   B1( user, VB, pkA, ~skB, VA, aA, ~aB, m0A, m0B ), Fr( ~y ),
+   In( <'KEX', 'g'^~x> )
+   ]
+  --[ InitB( pkA, pk(~skB), m0A, m0B, <'KEX', 'g'^~x>, <'KEX', 'g'^~y> )
+  ]->
+   [
+   Out( <'KEX', 'g'^~y> ),
+   B11( user, VB, pkA, ~skB, VA, aA, ~aB, ~y, 'g'^~x, m0A, m0B,
+        <'KEX', 'g'^~x>, <'KEX', 'g'^~y>
+   )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) A_2_1:
+   [
+   A2( user, VA, ~skA, pkB, ~aA, VB, aB, ~x, m0A, m0B, m1A ),
+   In( <'KEX', 'g'^~y> )
+   ]
+  --[ InitA( pk(~skA), pkB, m0A, m0B, m1A, <'KEX', 'g'^~y> ) ]->
+   [
+   A21( user, VA, ~skA, pkB, ~aA, VB, aB, ~x, 'g'^~y, m0A, m0B, m1A,
+        <'KEX', 'g'^~y>
+   )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) B_1_2:
+   [ B11( user, VB, pkA, ~skB, VA, aA, ~aB, ~y, gX, m0A, m0B, m1A, m1B ) ]
+  --[
+  TransB( pkA, pk(~skB), (VA||VB||aA||~aB||pk(~skB)||gX||'g'^~y||gX^~y),
+          kdf(gX^~y, HashedV, '1')
+  ),
+  TransHashB( pkA, pk(~skB), HashedV, kdf(gX^~y, HashedV, '1') ),
+  HashC( (VA||VB||aA||~aB||pk(~skB)||gX||'g'^~y||gX^~y), HashedV ),
+  FixedLength( VA ), FixedLength( VB ), FixedLength( pk(~skB) ),
+  FixedLength( gX ), FixedLength( 'g'^~y ), FixedLength( gX^~y )
+  ]->
+   [
+   Out( <'KEX', pk(~skB), sign(HashedV, ~skB)> ),
+   B2( user, VB, pkA, ~skB, VA, aA, ~aB, ~y, gX, kdf(gX^~y, HashedV, '1'),
+       <VA, VB, aA, ~aB, pk(~skB), gX, 'g'^~y, gX^~y>, m0A, m0B, m1A, m1B,
+       HashedV
+   )
+   ]
+
+  /*
+  rule (modulo AC) B_1_2:
+     [ B11( user, VB, pkA, ~skB, VA, aA, ~aB, ~y, gX, m0A, m0B, m1A, m1B ) ]
+    --[
+    TransB( pkA, pk(~skB), (VA||VB||aA||~aB||pk(~skB)||gX||'g'^~y||z),
+            kdf(z, HashedV, '1')
+    ),
+    TransHashB( pkA, pk(~skB), HashedV, kdf(z, HashedV, '1') ),
+    HashC( (VA||VB||aA||~aB||pk(~skB)||gX||'g'^~y||z), HashedV ),
+    FixedLength( VA ), FixedLength( VB ), FixedLength( pk(~skB) ),
+    FixedLength( gX ), FixedLength( 'g'^~y ), FixedLength( z )
+    ]->
+     [
+     Out( <'KEX', pk(~skB), sign(HashedV, ~skB)> ),
+     B2( user, VB, pkA, ~skB, VA, aA, ~aB, ~y, gX, kdf(z, HashedV, '1'),
+         <VA, VB, aA, ~aB, pk(~skB), gX, 'g'^~y, z>, m0A, m0B, m1A, m1B, HashedV
+     )
+     ]
+    variants (modulo AC)
+    1. ~y    = ~y.23
+       gX    = gX.28
+       z     = gX.28^~y.23
+    
+    2. ~y    = ~y.31
+       gX    = z.44^inv(~y.31)
+       z     = z.44
+    
+    3. ~y    = ~y.110
+       gX    = x.215^x.216
+       z     = x.215^(~y.110*x.216)
+    
+    4. ~y    = ~y.115
+       gX    = x.225^inv((~y.115*x.226))
+       z     = x.225^inv(x.226)
+    
+    5. ~y    = ~y.115
+       gX    = x.225^(x.226*inv(~y.115))
+       z     = x.225^x.226
+    
+    6. ~y    = ~y.116
+       gX    = x.226^(x.227*inv((~y.116*x.228)))
+       z     = x.226^(x.227*inv(x.228))
+    
+    7. gX    = grpid
+       z     = grpid
+  */
+
+restriction Restr_A_2_2_1:
+  "∀ x #NOW. (Restr_A_2_2_1( x ) @ #NOW) ⇒ (x = true)"
+  // safety formula
+
+restriction Restr_A_2_2_2:
+  "∀ x #NOW x.1. (Restr_A_2_2_2( x, x.1 ) @ #NOW) ⇒ (x = x.1)"
+  // safety formula
+
+rule (modulo E) A_2_2:
+   [
+   A21( user, VA, ~skA, pkB, ~aA, VB, aB, ~x, gY, m0A, m0B, m1A, m1B ),
+   In( <'KEX', pkBTest, sigBTest> )
+   ]
+  --[
+  TransA( pk(~skA), pkB, (VA||VB||~aA||aB||pkB||'g'^~x||gY||gY^~x),
+          kdf(gY^~x, HashedV, '1')
+  ),
+  TransHashA( pk(~skA), pkB, HashedV, kdf(gY^~x, HashedV, '1') ),
+  SessionKeyA( pk(~skA), pkB, kdf(gY^~x, HashedV, '1') ),
+  HashC( (VA||VB||~aA||aB||pkB||'g'^~x||gY||gY^~x), HashedV ),
+  AcceptA( pk(~skA), pkB, m0A, m0B, m1A, m1B ), FixedLength( VA ),
+  FixedLength( VB ), FixedLength( pkB ), FixedLength( 'g'^~x ),
+  FixedLength( gY ), FixedLength( gY^~x ),
+  Restr_A_2_2_1( verify(sigBTest, HashedV, pkBTest) ),
+  Restr_A_2_2_2( pkBTest, pkB )
+  ]->
+   [
+   Out( senc(<'AUTH', sign(h(<user, HashedV, pk(~skA)>), ~skA)>,
+             kdf(gY^~x, HashedV, '1'))
+   )
+   ]
+
+  /*
+  rule (modulo AC) A_2_2:
+     [
+     A21( user, VA, ~skA, pkB, ~aA, VB, aB, ~x, gY, m0A, m0B, m1A, m1B ),
+     In( <'KEX', pkBTest, sigBTest> )
+     ]
+    --[
+    TransA( pk(~skA), pkB, (VA||VB||~aA||aB||pkB||'g'^~x||gY||z),
+            kdf(z, HashedV, '1')
+    ),
+    TransHashA( pk(~skA), pkB, HashedV, kdf(z, HashedV, '1') ),
+    SessionKeyA( pk(~skA), pkB, kdf(z, HashedV, '1') ),
+    HashC( (VA||VB||~aA||aB||pkB||'g'^~x||gY||z), HashedV ),
+    AcceptA( pk(~skA), pkB, m0A, m0B, m1A, m1B ), FixedLength( VA ),
+    FixedLength( VB ), FixedLength( pkB ), FixedLength( 'g'^~x ),
+    FixedLength( gY ), FixedLength( z ), Restr_A_2_2_1( z.1 ),
+    Restr_A_2_2_2( pkBTest, pkB )
+    ]->
+     [
+     Out( senc(<'AUTH', sign(h(<user, HashedV, pk(~skA)>), ~skA)>,
+               kdf(z, HashedV, '1'))
+     )
+     ]
+    variants (modulo AC)
+     1. ~x    = ~x.36
+        HashedV
+              = HashedV.37
+        gY    = gY.41
+        pkBTest
+              = pkBTest.47
+        sigBTest
+              = sigBTest.48
+        z     = gY.41^~x.36
+        z.1   = verify(sigBTest.48, HashedV.37, pkBTest.47)
+    
+     2. ~x    = ~x.40
+        HashedV
+              = HashedV.41
+        gY    = z.56^inv(~x.40)
+        pkBTest
+              = pkBTest.51
+        sigBTest
+              = sigBTest.52
+        z     = z.56
+        z.1   = verify(sigBTest.52, HashedV.41, pkBTest.51)
+    
+     3. ~x    = ~x.157
+        HashedV
+              = HashedV.158
+        gY    = x.309^x.310
+        pkBTest
+              = pkBTest.168
+        sigBTest
+              = sigBTest.169
+        z     = x.309^(~x.157*x.310)
+        z.1   = verify(sigBTest.169, HashedV.158, pkBTest.168)
+    
+     4. ~x    = ~x.162
+        HashedV
+              = HashedV.163
+        gY    = x.319^inv((~x.162*x.320))
+        pkBTest
+              = pkBTest.173
+        sigBTest
+              = sigBTest.174
+        z     = x.319^inv(x.320)
+        z.1   = verify(sigBTest.174, HashedV.163, pkBTest.173)
+    
+     5. ~x    = ~x.162
+        HashedV
+              = HashedV.163
+        gY    = x.319^(x.320*inv(~x.162))
+        pkBTest
+              = pkBTest.173
+        sigBTest
+              = sigBTest.174
+        z     = x.319^x.320
+        z.1   = verify(sigBTest.174, HashedV.163, pkBTest.173)
+    
+     6. ~x    = ~x.163
+        HashedV
+              = HashedV.164
+        gY    = x.320^(x.321*inv((~x.163*x.322)))
+        pkBTest
+              = pkBTest.174
+        sigBTest
+              = sigBTest.175
+        z     = x.320^(x.321*inv(x.322))
+        z.1   = verify(sigBTest.175, HashedV.164, pkBTest.174)
+    
+     7. ~x    = ~x.166
+        HashedV
+              = HashedV.167
+        gY    = gY.171
+        pkBTest
+              = pk(x.328)
+        sigBTest
+              = sign(HashedV.167, x.328)
+        z     = gY.171^~x.166
+        z.1   = true
+    
+     8. ~x    = ~x.167
+        HashedV
+              = HashedV.168
+        gY    = z.183^inv(~x.167)
+        pkBTest
+              = pk(x.330)
+        sigBTest
+              = sign(HashedV.168, x.330)
+        z     = z.183
+        z.1   = true
+    
+     9. ~x    = ~x.167
+        HashedV
+              = HashedV.168
+        gY    = x.323^x.324
+        pkBTest
+              = pk(x.330)
+        sigBTest
+              = sign(HashedV.168, x.330)
+        z     = x.323^(~x.167*x.324)
+        z.1   = true
+    
+    10. ~x    = ~x.168
+        HashedV
+              = HashedV.169
+        gY    = x.325^inv((~x.168*x.326))
+        pkBTest
+              = pk(x.332)
+        sigBTest
+              = sign(HashedV.169, x.332)
+        z     = x.325^inv(x.326)
+        z.1   = true
+    
+    11. ~x    = ~x.168
+        HashedV
+              = HashedV.169
+        gY    = x.325^(x.326*inv(~x.168))
+        pkBTest
+              = pk(x.332)
+        sigBTest
+              = sign(HashedV.169, x.332)
+        z     = x.325^x.326
+        z.1   = true
+    
+    12. ~x    = ~x.169
+        HashedV
+              = HashedV.170
+        gY    = x.326^(x.327*inv((~x.169*x.328)))
+        pkBTest
+              = pk(x.334)
+        sigBTest
+              = sign(HashedV.170, x.334)
+        z     = x.326^(x.327*inv(x.328))
+        z.1   = true
+    
+    13. HashedV
+              = HashedV.35
+        gY    = grpid
+        pkBTest
+              = pkBTest.45
+        sigBTest
+              = sigBTest.46
+        z     = grpid
+        z.1   = verify(sigBTest.46, HashedV.35, pkBTest.45)
+    
+    14. HashedV
+              = HashedV.163
+        gY    = grpid
+        pkBTest
+              = pk(x.321)
+        sigBTest
+              = sign(HashedV.163, x.321)
+        z     = grpid
+        z.1   = true
+  */
+
+restriction Restr_B_2_1:
+  "∀ x #NOW. (Restr_B_2_1( x ) @ #NOW) ⇒ (x = true)"
+  // safety formula
+
+rule (modulo E) B_2:
+   [
+   B2( user, VB, pkA, ~skB, VA, aA, ~aB, ~y, gX, k1, hashtrans, m0A, m0B,
+       m1A, m1B, HashedV
+   ),
+   In( senc(<'AUTH', sigATest>, k1) )
+   ]
+  --[
+  Finish( pkA, pk(~skB) ), Sanity( ), SessionKeyB( pkA, pk(~skB), k1 ),
+  AcceptB( pkA, pk(~skB), m0A, m0B, m1A, m1B ),
+  Restr_B_2_1( verify(sigATest, h(<user, HashedV, pkA>), pkA) )
+  ]->
+   [ ]
+
+  /*
+  rule (modulo AC) B_2:
+     [
+     B2( user, VB, pkA, ~skB, VA, aA, ~aB, ~y, gX, k1, hashtrans, m0A, m0B,
+         m1A, m1B, HashedV
+     ),
+     In( senc(<'AUTH', sigATest>, k1) )
+     ]
+    --[
+    Finish( pkA, pk(~skB) ), Sanity( ), SessionKeyB( pkA, pk(~skB), k1 ),
+    AcceptB( pkA, pk(~skB), m0A, m0B, m1A, m1B ), Restr_B_2_1( z )
+    ]->
+     [ ]
+    variants (modulo AC)
+    1. HashedV
+             = HashedV.21
+       pkA   = pkA.32
+       sigATest
+             = sigATest.33
+       user  = user.34
+       z     = verify(sigATest.33, h(<user.34, HashedV.21, pkA.32>), pkA.32)
+    
+    2. HashedV
+             = HashedV.33
+       pkA   = pk(x.60)
+       sigATest
+             = sign(h(<user.46, HashedV.33, pk(x.60)>), x.60)
+       user  = user.46
+       z     = true
+  */
+
+lemma sanity:
+  exists-trace "∃ #i. Sanity( ) @ #i"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ #i. (Sanity( ) @ #i)"
+*/
+by sorry
+
+lemma secrecy_key_A:
+  all-traces
+  "∀ pkA pkB k #i.
+    (SessionKeyA( pkA, pkB, k ) @ #i) ⇒ (¬(∃ #j. K( k ) @ #j))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ pkA pkB k #i. (SessionKeyA( pkA, pkB, k ) @ #i) ∧ ∃ #j. (K( k ) @ #j)"
+*/
+by sorry
+
+lemma secrecy_key_B:
+  all-traces
+  "∀ pkA pkB k #i.
+    (SessionKeyB( pkA, pkB, k ) @ #i) ⇒ (¬(∃ #j. K( k ) @ #j))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ pkA pkB k #i. (SessionKeyB( pkA, pkB, k ) @ #i) ∧ ∃ #j. (K( k ) @ #j)"
+*/
+by sorry
+
+lemma trans_auth:
+  all-traces
+  "∀ pkA pkB #i.
+    (Finish( pkA, pkB ) @ #i) ⇒
+    (∃ trans k #j #m.
+      (((TransA( pkA, pkB, trans, k ) @ #j) ∧
+        (TransB( pkA, pkB, trans, k ) @ #m)) ∧
+       (#m < #i)) ∧
+      (#j < #i))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ pkA pkB #i.
+  (Finish( pkA, pkB ) @ #i)
+ ∧
+  ∀ trans k #j #m.
+   (TransA( pkA, pkB, trans, k ) @ #j) ∧ (TransB( pkA, pkB, trans, k ) @ #m)
+  ⇒
+   ((¬(#m < #i)) ∨ (¬(#j < #i)))"
+*/
+by sorry
+
+lemma trans_hash_auth:
+  all-traces
+  "∀ pkA pkB #i.
+    (Finish( pkA, pkB ) @ #i) ⇒
+    (∃ trans k #j #m.
+      (((TransHashA( pkA, pkB, trans, k ) @ #j) ∧
+        (TransHashB( pkA, pkB, trans, k ) @ #m)) ∧
+       (#m < #i)) ∧
+      (#j < #i))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ pkA pkB #i.
+  (Finish( pkA, pkB ) @ #i)
+ ∧
+  ∀ trans k #j #m.
+   (TransHashA( pkA, pkB, trans, k ) @ #j) ∧
+   (TransHashB( pkA, pkB, trans, k ) @ #m)
+  ⇒
+   ((¬(#m < #i)) ∨ (¬(#j < #i)))"
+*/
+by sorry
+
+lemma agree_keys:
+  all-traces
+  "∀ pkB pkA m1 m2 m3 m4 #i.
+    (AcceptB( pkA, pkB, m1, m2, m3, m4 ) @ #i) ⇒
+    (∃ m5 m6 m7 m8 #j. InitA( pkA, pkB, m5, m6, m7, m8 ) @ #j)"
+/*
+guarded formula characterizing all counter-examples:
+"∃ pkB pkA m1 m2 m3 m4 #i.
+  (AcceptB( pkA, pkB, m1, m2, m3, m4 ) @ #i)
+ ∧
+  ∀ m5 m6 m7 m8 #j. (InitA( pkA, pkB, m5, m6, m7, m8 ) @ #j) ⇒ ⊥"
+*/
+by sorry
+
+lemma agree_keys_all:
+  all-traces
+  "∀ pkB pkA m1 m2 m3 m4 #i.
+    (AcceptB( pkA, pkB, m1, m2, m3, m4 ) @ #i) ⇒
+    (∃ #j. InitA( pkA, pkB, m1, m2, m3, m4 ) @ #j)"
+/*
+guarded formula characterizing all counter-examples:
+"∃ pkB pkA m1 m2 m3 m4 #i.
+  (AcceptB( pkA, pkB, m1, m2, m3, m4 ) @ #i)
+ ∧
+  ∀ #j. (InitA( pkA, pkB, m1, m2, m3, m4 ) @ #j) ⇒ ⊥"
+*/
+simplify
+solve( B2( user, VB, pk(x), ~skB, VA, aA, ~aB, ~y, gX, k1, hashtrans, m1,
+           m2, m3, m4, HashedV
+       ) ▶₀ #i )
+  case B_1_2
+  solve( !HashVals( ~n ) ▶₀ #j )
+    case hashVals
+    solve( !KU( senc(<'AUTH', sign(h(<user(~skA), ~n, pk(~skA)>), ~skA)>,
+                     kdf('g'^(~x*~y), ~n, '1'))
+           ) @ #vk )
+      case A_2_2_case_02
+      solve( !KU( ~aA ) @ #vk.19 )
+        case A_0
+        solve( !KU( ~aB ) @ #vk.21 )
+          case B_0
+          solve( !KU( sign(~n, ~skB) ) @ #vk.16 )
+            case B_1_2
+            solve( !KU( 'g'^~x.1 ) @ #vk.11 )
+              case A_1
+              solve( !KU( pk(~skB) ) @ #vk.18 )
+                case B_1_2
+                solve( !HashVals( ~n.1 ) ▶₀ #j.1 )
+                  case hashVals
+                  solve( !KU( 'g'^~x.2 ) @ #vk.24 )
+                    case A_1
+                    solve( !KU( 'g'^~y ) @ #vk.23 )
+                      case B_1_1
+                      solve( !KU( V(~skA) ) @ #vk.23 )
+                        case A_0
+                        solve( !KU( V(~skB) ) @ #vk.24 )
+                          case A_0
+                          SOLVED // trace found
+                        qed
+                      qed
+                    qed
+                  qed
+                qed
+              qed
+            qed
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma agree_Bkey_2:
+  all-traces
+  "∀ pkB pkA m1 m2 m3 m4 #i.
+    (AcceptA( pkA, pkB, m1, m2, m3, m4 ) @ #i) ⇒
+    (∃ pkA2 m5 m6 m7 m8 #j. InitB( pkA2, pkB, m5, m6, m7, m8 ) @ #j)"
+/*
+guarded formula characterizing all counter-examples:
+"∃ pkB pkA m1 m2 m3 m4 #i.
+  (AcceptA( pkA, pkB, m1, m2, m3, m4 ) @ #i)
+ ∧
+  ∀ pkA2 m5 m6 m7 m8 #j. (InitB( pkA2, pkB, m5, m6, m7, m8 ) @ #j) ⇒ ⊥"
+*/
+by sorry
+
+lemma agree_Bkey_all_2:
+  all-traces
+  "∀ pkB pkA m1 m2 m3 m4 #i.
+    (AcceptA( pkA, pkB, m1, m2, m3, m4 ) @ #i) ⇒
+    (∃ pkA2 #j. InitB( pkA2, pkB, m1, m2, m3, m4 ) @ #j)"
+/*
+guarded formula characterizing all counter-examples:
+"∃ pkB pkA m1 m2 m3 m4 #i.
+  (AcceptA( pkA, pkB, m1, m2, m3, m4 ) @ #i)
+ ∧
+  ∀ pkA2 #j. (InitB( pkA2, pkB, m1, m2, m3, m4 ) @ #j) ⇒ ⊥"
+*/
+by sorry
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+WARNING: the following wellformedness checks failed!
+
+unbound:
+  rule `createHash' has unbound variables: 
+    x
+  
+  rule `B_1_2' has unbound variables: 
+    HashedV
+  
+  rule `A_2_2' has unbound variables: 
+    HashedV
+*/
+
+end
+
+==============================================================================
+summary of summaries:
+
+analyzed: SSH/sshV2_HEB_A.spthy
+
+  WARNING: 3 wellformedness check failed!
+           The analysis results might be wrong!
+  
+  orig (all-traces): analysis incomplete (1 steps)
+  sanity (exists-trace): analysis incomplete (1 steps)
+  secrecy_key_A (all-traces): analysis incomplete (1 steps)
+  secrecy_key_B (all-traces): analysis incomplete (1 steps)
+  trans_auth (all-traces): analysis incomplete (1 steps)
+  trans_hash_auth (all-traces): analysis incomplete (1 steps)
+  agree_keys (all-traces): analysis incomplete (1 steps)
+  agree_keys_all (all-traces): falsified - found trace (15 steps)
+  agree_Bkey_2 (all-traces): analysis incomplete (1 steps)
+  agree_Bkey_all_2 (all-traces): analysis incomplete (1 steps)
+
+==============================================================================
+10.11user 3.02system 0:03.14elapsed 418%CPU (0avgtext+0avgdata 76868maxresident)k
+0inputs+80outputs (0major+29644minor)pagefaults 0swaps

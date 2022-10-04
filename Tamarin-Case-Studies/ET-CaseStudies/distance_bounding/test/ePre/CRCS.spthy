@@ -1,0 +1,254 @@
+/*
+		Implementation of the CRCS protocol
+		http://www.usenix.org/events/sec10/tech/full_papers/Rasmussen.pdf
+*/
+
+theory CRCS
+
+begin
+
+builtins : asymmetric-encryption, signing
+functions: h/1, pre/1
+equations: h(pre(m))=m
+functions: f/2
+
+// -------------------- Protocol Rules -------------------- //
+rule Prov1:				//prover sends a commit
+		[ Fr(~m),
+			!Ltk(P, ltk) ]
+	--[ Start(~m) ]->
+		[ Send(P, sign(h(~m), ltk) ),
+			ProverState1(P, ~m),
+			MayLeak(P, ~m)]
+
+rule Ver1:				//verifier receives a commit
+									//and sends a challenge
+		[ Fr(~n),
+			In(comm) ]
+	--[ Start(~n),
+			Send($V, ~n) ]->
+		[ Out(~n),
+			VerifierState1($V, ~n, comm) ]
+
+rule Prov2:				//prover receives a challenge
+									//and sends the response
+		let resp = f(n, m)
+		in
+		[ ProverState1(P, m),
+			In(n) ]
+	-->
+		[ Send(P, resp),
+			ProverState2(P, m, n) ]
+
+rule Ver2:				//verifier receives the response
+		[ VerifierState1(V, n, comm),
+			Recv(V, resp) ]
+	-->
+		[ VerifierState2(V, n, comm, resp) ]
+
+rule Prov3:				//prover sends final message
+		let s = <$V, m, n>
+				signature = sign(s, ltk)
+				msg = <s, signature>
+		in
+		[ ProverState2(P, m, n),
+			!Ltk(P, ltk) ]
+	--[ End(m) ]->
+		[ Send(P, msg) ]
+
+rule Ver3:				//verifier receives the final message
+						//checks signature and declares dbsec
+		let s = <V, m, n>
+				verif_initial_sig = verify(initial_sig, h(m), pkP) 
+				verif_final_sig = verify(final_sig, s, pkP)
+		in
+		[ VerifierState2(V, n, initial_sig, f(n, m)),
+			In(<s, final_sig>),
+			!Pk(P, pkP) ]
+	--[ Eq(verif_initial_sig, true),
+			Eq(verif_final_sig, true),
+			DBSec(V, P, n, f(n, m)),
+			End(n) ]->
+		[ ]
+
+// -------------------- Restrictions --------------------------- //
+// Only traces in which a=b holds whenever Eq(a,b) occurs 
+restriction equals:
+	"
+	All a b #i. Eq(a,b)@i ==> a=b
+	"
+
+//GENERIC CODE AFTER THIS LINE
+///////////////////////////////////////////////////////////////////////
+
+// ------------------- Key Generation and Compromise --------------- //
+rule LtkGen:
+	[ Fr(~k) ]--[ Once($X) ]->[	!Ltk($X, ~k), !Pk($X, pk(~k)), Out(pk(~k)) ]
+
+rule ShkGen:
+	[ Fr(~k) ]--[ Once(<$X, $Y>) ]->[ !Shk($X, $Y, ~k) ]
+
+rule LtkReveal:
+	[ !Ltk($X, k) ]--[ !Compromise($X) ]->[ Out(k), !Compromise($X) ]
+
+rule ShkRevealX:
+	[ !Shk($X, $Y, k) ]--[ !Compromise($X) ]->[ Out(k), !Compromise($X) ]
+
+rule ShkRevealY:
+	[ !Shk($X, $Y, k) ]--[ !Compromise($Y) ]->[ Out(k), !Compromise($Y) ]
+
+// ------------------- Network and Adversary  ----------------------- //
+rule DBInject:
+	[ In(m), !Compromise($X) ]-->[ Send($X, m) ]
+
+rule DBSend:
+	[ Send($X, m) ]--[ Send($X, m), Action($X) ]->[ Net(m), Out(m) ]
+
+rule DBRecv:
+	[ Net(m) ]--[ Action($Y), Recv($Y, m) ]->[ Recv($Y, m) ]
+
+// -------------------- Collusion (Leakage) Rule -------------------- //
+rule Leak:
+	[ MayLeak($X, m) ]--[ Action($X), Collusion() ]->[ Out(m) ]
+
+// ------------------- Reachability & Sanity Check ------------------ //
+// Clean trace exists
+lemma reachability:
+	exists-trace
+	"
+	Ex V P chal resp #i /*#i2*/ #j #k #l.
+		Send(V, chal)@i &
+		//Recv(P, chal)@i2 &
+		Send(P, resp)@j &
+		Recv(V, resp)@k &
+		DBSec(V, P, chal, resp)@l &
+		i<j & j<k & k<l &
+		not (Ex C #r. !Compromise(C)@r) &
+		not (Ex #c. Collusion()@c)
+	"
+
+// Each run id is unique
+lemma unique_runid:
+	"All x #i #j. (Start(x)@i & Start(x)@j) ==> #i=#j"
+
+// Each run ends after it starts
+lemma end_after_start:
+	"All x #j. End(x)@j ==> Ex #i. Start(x)@i & (#i=#j|i<j)"
+
+// For each DBSec claim there was a fast phase before it
+// *	Should this lemma fail, then the results for 
+//		the security lemmas might be wrong
+lemma fast_before_claim:
+	"
+	All V P chal resp #l. DBSec(V, P, chal, resp)@l ==>
+		(Ex #i #j. Send(V, chal)@i & Recv(V, resp)@j & i<l & j<l)	|
+		(Ex #j. !Compromise(V)@j)		
+	"
+// ------------------------ Restrictions ---------------------------- //
+// Only traces where Once(x) happened once
+restriction once:
+	"All x #i #j. (Once(x)@i & Once(x)@j) ==> #i=#j"
+
+/*
+// Runs can always be completed
+restriction completion:
+	"
+	All run #i. Start(run)@i ==> Ex #j. End(run)@j
+	"
+*/
+// ----------------- Expiry Rule and Restrictions ------------------- //
+rule SetExpiry:
+	[ ]--[ Expiry(), Once('expiry') ]->[ ]
+
+restriction no_collusion_after_expiry:
+	"All #i #j. (Expiry()@i & Collusion()@j) ==> j<i"
+
+restriction sessions_complete_before_expiry:
+	"All x #i #e. (Start(x)@i & Expiry()@e & i<e) ==> Ex #j. (End(x)@j & j<e)"
+
+
+////////////////////////////////////////////////////////////////////////
+// ------------------------ Security Lemmas ------------------------- //
+////////////////////////////////////////////////////////////////////////
+
+// For each trace (in which collusion did not occurr) it is the case that
+// * 	EITHER the verifier is compromised,
+// * 	OR the prover is not and he was active during the fast phase,
+// * 	OR the prover is compromised and there was a compromised 
+//		prover active during the fast phase.
+lemma dbsec:
+	"
+	All V P chal resp #l. 
+		DBSec(V, P, chal, resp)@l ==>
+			(	//EITHER P is active in fast phase
+				Ex #i #j #k.
+					Send(V, chal)@i &
+					Action(P)@j &
+					Recv(V, resp)@k &
+					i<j & j<k
+			) | 
+			(	//OR (P is compromised AND there's a compromised 
+				//agent active in fast phase)
+				Ex P2 #p #p2 #i #j #k.
+					!Compromise(P)@p &
+					!Compromise(P2)@p2 &
+					Send(V, chal)@i &
+					Action(P2)@j &
+					Recv(V, resp)@k &
+					i<j & j<k
+			) |
+			(Ex #j. !Compromise(V)@j) |
+			(Ex #j. Collusion()@j) //this is just to drop traces w. collusion
+	"
+
+// dbsec provided that neither the prover nor verifier are compromised
+// * 	If this lemma fails, then there's a mafia fraud
+// * 	If this lemma holds and dbsec fails, then there's a 
+//		distance fraud, or a distance hijacking, or both
+lemma dbsec_hnst:
+	"
+	All V P chal resp #l. 
+		DBSec(V, P, chal, resp)@l ==>
+			(Ex #i #j #k.
+				Send(V, chal)@i &
+				Action(P)@j &
+				Recv(V, resp)@k &
+				i<j & j<k
+			) |
+			(Ex #j. !Compromise(V)@j) |
+			(Ex #j. !Compromise(P)@j) |
+			(Ex #j. Collusion()@j) //this is just to drop traces w. collusion
+	"
+
+// dbsec_hnst with collusion
+lemma dbsec_hnst_collusion:
+	"
+	All V P chal resp #l.
+		DBSec(V, P, chal, resp)@l ==>
+			(Ex #i #j #k.
+				Send(V, chal)@i &
+				Action(P)@j &
+				Recv(V, resp)@k &
+				i<j & j<k
+			) |
+			(Ex #j. !Compromise(V)@j) |
+			(Ex #j. !Compromise(P)@j)
+	"
+
+// post-collusion security w.r.t dbsec_hnst
+// *	If this lemma holds and dbsec_hnst_collusion fails,
+//		then there's a terrorist fraud
+lemma dbsec_hnst_star:
+	"
+	All V P chal resp #e #l.
+		(DBSec(V, P, chal, resp)@l & Expiry()@e & e<l) ==>
+			(Ex #i #j #k.
+				Send(V, chal)@i &
+				Action(P)@j &
+				Recv(V, resp)@k &
+				i<j & j<k
+			) |
+			(Ex #j. !Compromise(V)@j) |
+			(Ex #j. !Compromise(P)@j)
+	"
+end

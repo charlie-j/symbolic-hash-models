@@ -1,0 +1,232 @@
+/*
+		Implementation of Meadows et al. protocol
+		https://doi.org/10.1007/978-0-387-46276-9_12
+
+		Version: F(...) := <nv ⊕ h1(P, np)>
+*/
+
+theory Meadows2
+
+begin
+
+builtins : symmetric-encryption, asymmetric-encryption
+
+functions: h/2, h1/2, XOR/2 //doesn't terminate with built-in xor
+
+equations:	XOR(x, XOR(x, y)) = y
+
+// -------------------- Protocol Rules -------------------- //
+rule Verifier1:	
+		[ Fr(~nv) ]
+	--[ Start(~nv) ]->
+		[ Out(<$V, 'hello'>),
+			VerifierState1($V, ~nv) ]
+
+rule Prover1:
+		[ Fr(~np),
+			In(<V, 'hello'> ) ]
+	--[ Start(~np) ]->
+		[ ProverState1(V, $P, ~np),
+			MayLeak($P, ~np) ]
+
+rule Verifier2:			//fast phase starts
+		[ VerifierState1(V, nv) ]
+	--[ Send(V, nv) ]->
+		[ Out(nv),
+			VerifierState2(V, nv) ]
+
+rule Prover2:
+		let resp = XOR(nv, h1(P, np))
+		in
+		[ ProverState1(V, P, np),
+			In(nv) ]
+	-->
+		[ Send(P, resp),
+			ProverState2(V, P, np, nv) ]
+
+rule Verifier3:			//fast phase ends
+		[ VerifierState2(V, nv),
+			Recv(V, resp) ]
+	-->
+		[ VerifierState3(V, nv, resp) ]
+
+rule Prover3:
+		let s = <P, 'locP', np, nv>
+				final_msg = <s, h(k, s)>
+		in
+		[ ProverState2(V, P, np, nv),
+			//Fr(~locP),
+			!Shk(V, P, k) ]
+	--[ End(np) ]->
+		[ Send(P, final_msg) ]
+
+rule Verifier4:
+		let s = <P, locP, np, nv>
+				rp = XOR(nv, h1(P, np))	          
+		in
+		[ VerifierState3(V, nv, XOR(nv, h1(P, np))),
+			In(<s, h(k, s)>),
+			!Shk(V, P, k) ]
+	--[ DBSec(V, P, nv, rp),
+			End(nv) ]->
+		[ ]
+
+//GENERIC CODE AFTER THIS LINE
+///////////////////////////////////////////////////////////////////////
+
+// ------------------- Key Generation and Compromise --------------- //
+rule LtkGen:
+	[ Fr(~k) ]--[ Once($X) ]->[	!Ltk($X, ~k), !Pk($X, pk(~k)), Out(pk(~k)) ]
+
+rule ShkGen:
+	[ Fr(~k) ]--[ Once(<$X, $Y>) ]->[ !Shk($X, $Y, ~k) ]
+
+rule LtkReveal:
+	[ !Ltk($X, k) ]--[ !Compromise($X) ]->[ Out(k), !Compromise($X) ]
+
+rule ShkRevealX:
+	[ !Shk($X, $Y, k) ]--[ !Compromise($X) ]->[ Out(k), !Compromise($X) ]
+
+rule ShkRevealY:
+	[ !Shk($X, $Y, k) ]--[ !Compromise($Y) ]->[ Out(k), !Compromise($Y) ]
+
+// ------------------- Network and Adversary  ----------------------- //
+rule DBInject:
+	[ In(m), !Compromise($X) ]-->[ Send($X, m) ]
+
+rule DBSend:
+	[ Send($X, m) ]--[ Send($X, m), Action($X) ]->[ Net(m), Out(m) ]
+
+rule DBRecv:
+	[ Net(m) ]--[ Action($Y), Recv($Y, m) ]->[ Recv($Y, m) ]
+
+// -------------------- Collusion (Leakage) Rule -------------------- //
+rule Leak:
+	[ MayLeak($X, m) ]--[ Action($X), Collusion() ]->[ Out(m) ]
+
+// ------------------- Reachability & Sanity Check ------------------ //
+// Clean trace exists
+lemma reachability:
+	exists-trace
+	"
+	Ex V P chal resp #i /*#i2*/ #j #k #l.
+		Send(V, chal)@i &
+		//Recv(P, chal)@i2 &
+		Send(P, resp)@j &
+		Recv(V, resp)@k &
+		DBSec(V, P, chal, resp)@l &
+		i<j & j<k & k<l &
+		not (Ex C #r. !Compromise(C)@r) &
+		not (Ex #c. Collusion()@c)
+	"
+
+// Each run id is unique
+lemma unique_runid:
+	"All x #i #j. (Start(x)@i & Start(x)@j) ==> #i=#j"
+
+// Each run ends after it starts
+lemma end_after_start:
+	"All x #j. End(x)@j ==> Ex #i. Start(x)@i & (#i=#j|i<j)"
+
+// For each DBSec claim there was a fast phase before it
+// *	Should this lemma fail, then the results for 
+//		the security lemmas might be wrong
+lemma fast_before_claim:
+	"
+	All V P chal resp #l. DBSec(V, P, chal, resp)@l ==>
+		(Ex #i #j. Send(V, chal)@i & Recv(V, resp)@j & i<l & j<l)	|
+		(Ex #j. !Compromise(V)@j)		
+	"
+// ------------------------ Restrictions ---------------------------- //
+// Only traces where Once(x) happened once
+restriction once:
+	"All x #i #j. (Once(x)@i & Once(x)@j) ==> #i=#j"
+
+/*
+// Runs can always be completed
+restriction completion:
+	"
+	All run #i. Start(run)@i ==> Ex #j. End(run)@j
+	"
+*/
+// ----------------- Expiry Rule and Restrictions ------------------- //
+rule SetExpiry:
+	[ ]--[ Expiry(), Once('expiry') ]->[ ]
+
+restriction no_collusion_after_expiry:
+	"All #i #j. (Expiry()@i & Collusion()@j) ==> j<i"
+
+restriction sessions_complete_before_expiry:
+	"All x #i #e. (Start(x)@i & Expiry()@e & i<e) ==> Ex #j. (End(x)@j & j<e)"
+
+
+////////////////////////////////////////////////////////////////////////
+// ------------------------ Security Lemmas ------------------------- //
+////////////////////////////////////////////////////////////////////////
+
+// For each trace (in which collusion did not occurr) it is the case that
+// * 	EITHER the verifier is compromised,
+// * 	OR the prover is not and he was active during the fast phase,
+// * 	OR the prover is compromised and there was a compromised 
+//		prover active during the fast phase.
+lemma dbsec:
+	"
+	All V P chal resp #l. 
+		DBSec(V, P, chal, resp)@l ==>
+			(	//EITHER P is active in fast phase
+				Ex #i #j #k.
+					Send(V, chal)@i &
+					Action(P)@j &
+					Recv(V, resp)@k &
+					i<j & j<k
+			) | 
+			(	//OR (P is compromised AND there's a compromised 
+				//agent active in fast phase)
+				Ex P2 #p #p2 #i #j #k.
+					!Compromise(P)@p &
+					!Compromise(P2)@p2 &
+					Send(V, chal)@i &
+					Action(P2)@j &
+					Recv(V, resp)@k &
+					i<j & j<k
+			) |
+			(Ex #j. !Compromise(V)@j) |
+			(Ex #j. Collusion()@j) //this is just to drop traces w. collusion
+	"
+
+// dbsec provided that neither the prover nor verifier are compromised
+// * 	If this lemma fails, then there's a mafia fraud
+// * 	If this lemma holds and dbsec fails, then there's a 
+//		distance fraud, or a distance hijacking, or both
+lemma dbsec_hnst:
+	"
+	All V P chal resp #l. 
+		DBSec(V, P, chal, resp)@l ==>
+			(Ex #i #j #k.
+				Send(V, chal)@i &
+				Action(P)@j &
+				Recv(V, resp)@k &
+				i<j & j<k
+			) |
+			(Ex #j. !Compromise(V)@j) |
+			(Ex #j. !Compromise(P)@j) |
+			(Ex #j. Collusion()@j) //this is just to drop traces w. collusion
+	"
+
+// post-collusion security w.r.t dbsec_hnst
+// *	If this lemma holds and dbsec_hnst_collusion fails,
+//		then there's a terrorist fraud
+lemma dbsec_hnst_star:
+	"
+	All V P chal resp #e #l.
+		(DBSec(V, P, chal, resp)@l & Expiry()@e & e<l) ==>
+			(Ex #i #j #k.
+				Send(V, chal)@i &
+				Action(P)@j &
+				Recv(V, resp)@k &
+				i<j & j<k
+			) |
+			(Ex #j. !Compromise(V)@j) |
+			(Ex #j. !Compromise(P)@j)
+	"
+end

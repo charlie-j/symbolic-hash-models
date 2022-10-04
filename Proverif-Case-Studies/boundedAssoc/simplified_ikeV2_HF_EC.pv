@@ -1,0 +1,217 @@
+(* Simplified IKEv2 case study with bounded associative list under hashes. *)
+set verboseDestructors = true.
+channel c.
+
+(** Types *)
+type G.
+type t_exponent.
+type t_sk.
+type t_pk.
+type t_key.
+fun G2key(G): t_key [typeConverter].
+fun G2bs(G): bitstring [typeConverter].
+fun pk2bs(t_pk): bitstring [typeConverter].
+
+(** DH exponentiation (fixed base element 'g') *)
+const g: G.
+const badElement:t_exponent.
+const weak:G.
+(* We model weak DH groups as in [2] *)
+fun exp_ideal(G, t_exponent): G.
+equation forall y: t_exponent, z: t_exponent; exp_ideal(exp_ideal(g,y),z) = exp_ideal(exp_ideal(g,z),y).
+fun exp(G, t_exponent): G
+reduc      forall a:G, y:t_exponent; exp(a,badElement) = weak
+otherwise  forall a:G, y:t_exponent; exp(weak,y) = weak
+otherwise  forall a:G, y:t_exponent; exp(a,y) = exp_ideal(a,y).
+
+(** Signature *)
+fun sign(bitstring,t_sk):bitstring.
+fun pk(t_sk):t_pk.
+fun signCheck(bitstring, bitstring, t_pk): bool
+reduc forall m:bitstring, sk:t_sk; signCheck(m, sign(m,sk), pk(sk)) = true
+      otherwise forall m:bitstring, s:bitstring, pkS:t_pk; signCheck(m, s, pkS) = false.
+
+(** MAC and KDF *)
+fun MAC(bitstring, t_key): bitstring.
+fun KDF(G, bitstring, nat): t_key.  (* Third argument can be 1,2,3, or 4 to get k1, k2, k3, or k4. *)
+
+(** Encryption *)
+fun senc(bitstring, t_key):bitstring.
+reduc forall m: bitstring, k:t_key; sdec(senc(m,k),k) = m.
+(* See MDH.m4 and MDH_lib.m4*)
+
+(** Security goals *)
+(* Events *)
+event Dishonest(t_pk).
+event acceptA(t_pk,t_pk,bitstring,bitstring,bitstring).
+event sessionKeyA(t_pk,t_pk,t_key).
+event initA(t_pk,t_pk,bitstring,bitstring,bitstring,bitstring).
+event initA2(t_pk,bitstring).
+event acceptB(t_pk,t_pk,bitstring,bitstring,bitstring,bitstring).
+event acceptB2(t_pk,t_pk,bitstring).
+event sessionKeyB(t_pk,t_pk,t_key).
+event initB(t_pk,t_pk,bitstring,bitstring,bitstring).
+event SanityA(bool,bitstring). (* bool records whether cookies are forbidden (=true) *)
+event SanityB(bool,bitstring). (* bool records whether cookies are forbidden (=true) *)
+
+query A:t_pk,B:t_pk,B':t_pk,x,x':bitstring,y,y':bitstring,k:t_key, h,h',t,t',sA:bitstring;
+(*** Basic agreement properties *)
+(*(* Agreement on (A,B,nA,nB) from A to B. (violated as there is no agreement on B yet) *)
+event(acceptB(B,A,x,y,t,h)) ==> (event(initA(A,B,x,y',t',h')) || event(Dishonest(B)) || event(Dishonest(A)));
+(* Agreement on (A,B,nA,nB) from B to A. (holds) *)
+event(acceptA(A,B,x,y,t,h)) ==> (event(initB(B,A,x,y',t',h')) || event(Dishonest(A)) || event(Dishonest(B)));
+(* Agreement on (A,nA,nB) and authentication of B from A to B. (holds) *)
+event(acceptB(B,A,x,y,t,h)) ==> (event(initA(A,B',x,y',t',h')) || event(Dishonest(B)) || event(Dishonest(A)));
+
+(* Agreement on (A,B,m1,m2) from A to B. (violated as there is no agreement on B yet) *)
+event(acceptB(B,A,x,y,t,h)) ==> (event(initA(A,B,x,y,t',h')) || event(Dishonest(B)) || event(Dishonest(A)));
+(* Agreement on (A,B,m1,m2) from B to A. (holds) *)
+event(acceptA(A,B,x,y,t,h)) ==> (event(initB(B,A,x,y,t',h')) || event(Dishonest(A)) || event(Dishonest(B))); *)
+
+(***** TYPE FLAWS AND COLLISION ATTACKS ******)
+(* Agreement on (A,sA) and authentication of B from A to B. This captures the type flaw attack. (holds with noFlat, violated with allFlat)*)
+event(acceptB2(B,A,sA)) ==> (event(initA2(A,sA)) || event(Dishonest(B)) || event(Dishonest(A)));
+(* Agreement on (A, m1||m2) and authentication of B from A to B. (holds with allFlat and noCol, violated with collision) [SK] HERE IS THE BUG: never falsified ! *)
+event(acceptB(B,A,x,y,t,h)) ==> (event(initA(A,B',x',y',t,h')) || event(Dishonest(B)) || event(Dishonest(A)));
+(* Agreement on (A, H(m1||m2)) and authentication of B from A to B. (holds with allFlat and collision) *)
+event(acceptB(B,A,x,y,t,h)) ==> (event(initA(A,B',x',y',t',h)) || event(Dishonest(B)) || event(Dishonest(A)));
+(*
+(*** Session key secrecy (between honest agents). (holds) *)
+(event(sessionKeyA(B,A,k)) && attacker(k)) ==> (event(Dishonest(B)) || event(Dishonest(A)));
+(event(sessionKeyB(B,A,k)) && attacker(k)) ==> (event(Dishonest(B)) || event(Dishonest(A)));
+*)
+(*** Sanity check: executability (holds) *)
+(event(SanityA(true,x)));
+(event(SanityA(false,x)));
+(event(SanityB(true,x)));
+(event(SanityB(false,x)));
+(* Sanity check chosenPrefix theory: *)
+attacker(secr).
+
+const SA_INIT:bitstring.
+const AUTH:bitstring.
+const noCookie:bitstring.
+
+(** Role models *)
+const initTag:bitstring.
+const respTag:bitstring.
+letfun init = initTag.
+letfun resp = ifdef(`noRole',`initTag',`respTag').
+
+(* Compared to the NDSS'16 paper, we use A/B instead of I/R. *)
+let A(skA:t_sk, pkB:t_pk) =
+   let pkA:t_pk = pk(skA) in
+   if pk(skA) <> pkB ifdef(`refl',`|| true') then (* To avoid a reflection attack that violates agreement A --> B without a weak hash function *)
+   new x: t_exponent;
+   new nA: bitstring;
+   new sA: bitstring;
+   let m1':bitstring = (sA, nA, exp(g,x)) in
+   out(c, m1');
+   in(c, mC:bitstring); (* Not used if A does not receive a cookie (m2 can be any message then). *)
+   let cookie = (let (=SA_INIT, ck:bitstring) = mC in ck else noCookie) in
+   ifdef(`noCook',`if cookie = noCookie then')
+   ifdef(`forceCook',`if cookie <> noCookie then')
+   
+   (* If A received a cookie, then A resends the first message prefixed with the cookie: *)
+(*   if ck <> noCookie
+   then out(c, (SA_INIT,ck,SA_A,exp(g,x),nA,infoA));  *) (* NOT needed for an active adversary*) (* m1 in the paper *)
+   let m1:bitstring = (if cookie = noCookie then m1' else (cookie,sA,nA,exp(g,x))) in
+
+   in(c, m2:bitstring);
+   let (sB:bitstring, nB:bitstring, gy:G) = m2 in
+   if gy <> g && not(isCol(G2bs(gy))) then
+   let k1:t_key = KDF(exp(gy,x),(nA,nB),1) in
+   let k2:t_key = KDF(exp(gy,x),(nA,nB),2) in
+   let kA:t_key = KDF(exp(gy,x),(nA,nB),3) in
+   let kB:t_key = KDF(exp(gy,x),(nA,nB),4) in
+   let macA:bitstring = MAC(pk2bs(pkA), kA) in
+   let macB:bitstring = MAC(pk2bs(pkB), kB) in
+
+   let transcriptA:bitstring =
+        if cookie <> noCookie
+        then (cookie, sA,nA,exp(g,x),nB, macA)
+        else (sA, nA, exp(g,x), nB, macA)
+      in
+   let H:bitstring = MDH(transcriptA) in
+   let T:bitstring = ifdef(`withoutList',`H',`MDH_(transcriptA)') in 
+   event initA(pk(skA),pkB,(nA,nB), (m1,nB), T, H);
+   event initA2(pk(skA),sA);
+   out(c, senc((pkA,sign(H, skA)), k1));
+   in(c, cipher:bitstring);
+   let (=pkB,sm:bitstring) = sdec(cipher, k2) in
+   let transcriptB:bitstring = (sB, nB, gy, nA, macB) in
+   if signCheck( MDH(transcriptB), sm, pkB) then
+      event SanityA(cookie=noCookie, (m1,m2));
+      event acceptA(pk(skA),pkB,(nA,nB),(m1,m2), H);
+      event sessionKeyA(pk(skA),pkB,k1 ).
+     
+let B(skB:t_sk, pkA:t_pk) =
+   let pkB:t_pk = pk(skB) in
+   if pk(skB) <> pkA ifdef(`refl',`|| true') then (* To avoid a reflection attack *)
+   in(c, m1':bitstring);
+   new ck:bitstring;
+   out(c, ck); (* B always send a cookie WLOG. *)
+
+   in(c, withCookie:bool); (* Attacker-provided bit deciding whether R is expecting the cookie back in m1. *)
+   in(c, mC:bitstring); (* Not used if B does not request A to send back SA_INIT with ck (m2 can be any message then). *)
+   ifdef(`noCook',`if withCookie then 0 else')
+   ifdef(`forceCook',`if withCookie then')
+
+   let m1 = if withCookie then mC else m1' in
+   let (sA:bitstring, nA:bitstring, gx:G) =
+      if withCookie
+      then (let (=ck, sA:bitstring, nA:bitstring, gx:G) = m1 in
+         (sA, nA, gx))
+      else (let (sA:bitstring, nA:bitstring, gx:G) = m1 in
+         (sA, nA, gx)) in
+
+   if gx <> g && not(isCol(G2bs(gx))) then
+   new y: t_exponent;
+   new nB: bitstring;
+   new sB: bitstring;
+   let m2:bitstring = (sB, nB, exp(g,y)) in
+   let k1:t_key = KDF(exp(gx,y),(nA,nB),1) in
+   let k2:t_key = KDF(exp(gx,y),(nA,nB),2) in
+   let kA:t_key = KDF(exp(gx,y),(nA,nB),3) in
+   let kB:t_key = KDF(exp(gx,y),(nA,nB),4) in
+   let macA:bitstring = MAC(pk2bs(pkA), kA) in
+   let macB:bitstring = MAC(pk2bs(pkB), kB) in
+   let transcriptA:bitstring =
+        if withCookie
+        then (ck,sA,nA,gx,nB,macA)
+        else (sA,nA,gx,nB,macA)
+      in
+   let H:bitstring = MDH(transcriptA) in
+   event initB(pk(skB),pkA, (nA,nB),(m1,nB), H);
+   out(c, m2);
+
+   in(c, cipher:bitstring);
+   let (=pkA,sm:bitstring) = sdec(cipher, k1) in
+   if signCheck( H, sm, pkA) then
+   
+(*   let transcriptB:bitstring = (nB, exp(g,y), nA, macB) in
+   out(c, senc((pkB,sign(MDH(transcriptB), skB)), k2)); *)
+   let T:bitstring = ifdef(`withoutList',`H',`MDH_(transcriptA)') in 
+   event acceptB(pk(skB),pkA, (nA,nB), (m1,nB), T, H);
+   event acceptB2(pk(skB),pkA, sA);
+   event sessionKeyB(pk(skB),pkA, k1 );
+   event SanityB(withCookie=false, (m1,m2)).
+
+
+table Keys(t_sk).
+
+process
+   ! (new sk:t_sk;
+      out(c, pk(sk));
+      insert Keys(sk))
+ | ! (get Keys(skA:t_sk) in
+      get Keys(skB:t_sk) in
+      (  A(skA, pk(skB))
+       | B(skB, pk(skA))))
+ | ! (get Keys(sk:t_sk) in
+      event Dishonest(pk(sk));
+      out(c,sk))
+       
+
+(* [1] Transcript Collision Attacks: Breaking Authentication in TLS, IKE, and SSH. Bhargavan and Leurent. NDSS'16.
+   [2] Bhargavan, Karthikeyan, Bruno Blanchet, and Nadim Kobeissi. Verified models and reference implementations for the TLS 1.3 standard candidate. SP'17 *)

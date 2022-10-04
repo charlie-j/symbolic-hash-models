@@ -1,0 +1,297 @@
+(* Library to encode the Merkle–Damgård hash *)
+
+(** Main hash function *)
+
+const Nil:bitstring.
+fun H(bitstring,bitstring):bitstring.
+
+(* Though this librairie does not consider Chosen Prefix collision, we start the declaration
+  here to make the function MDH more generic. *)
+
+fun CPcol1(bitstring,bitstring):bitstring [private].
+fun CPcol2(bitstring,bitstring):bitstring [private].
+
+
+(** Main predicate representing the equality of hash *)
+
+(* Transform the term in its normal form w.r.t. MDH construct *)
+compfun MDH(bitstring):bitstring =
+  forall x:bitstring; MDH(x) if is_var(x) || x = Nil -> x
+  otherwise forall h1,h2,h3:bitstring; MDH(H(CPcol1(h1,h2),h3)) -> H(CPcol1(MDH(h1),MDH(h2)),MDH(h3))
+  otherwise forall h1,h2,h3:bitstring; MDH(H(CPcol2(h1,h2),h3)) -> H(CPcol2(MDH(h1),MDH(h2)),MDH(h3))
+  otherwise forall x1,x2,h:bitstring; MDH(H((x1,x2),h)) -> MDH(H(x2,H(x1,h)))
+  otherwise forall x,h:bitstring; MDH(H(x,h)) -> H(x,MDH(h))
+  [mayFail]
+.
+
+compfun ground_eq_hash(bitstring,bitstring):bool =
+  forall h1,h2:bitstring; ground_eq_hash(h1,h2) ->
+    let h1':bitstring = MDH(h1) in
+    let h2':bitstring = MDH(h2) in
+    h1' = h2'
+  [display]
+.
+
+pred eq_hash(bitstring,bitstring) [block,evalGround=ground_eq_hash].
+
+(* The process should call buildH(x) to generate a hash from x.
+  Ideally, we would model Merkle-Damgard hash with the following equational theory:
+    H((x1,x2),h) = H(x2,H(x1,h))
+  But this cannot be done directly by ProVerif. Instead we encode the equality
+  of hash through a uninterpreted predicate "eq_hash". This can be declared in
+  ProVerif by adding the option [block] to the declaration of eq_hash.
+*)
+
+letfun buildH(x:bitstring) = H(x,Nil).
+letfun equal_hash(x:bitstring,y:bitstring) = eq_hash(x,y).
+
+(** Basic axioms *)
+
+axiom x1,x2,h1,h2,h1',h2':bitstring;
+  eq_hash(Nil,h2) ==> h2 = Nil;
+  eq_hash(h1,Nil) ==> h1 = Nil;
+  eq_hash(H(x1,h1'),h2) ==> h2 = H(x2,h2');
+  eq_hash(h1,H(x2,h2)) ==> h1 = H(x1,h1')
+.
+
+(** Axioms to transform the hash in the predicates in their normal form. *)
+
+(* Test if the the term is in normal form w.r.t. MDH construct *)
+compfun is_normal_MDH(bitstring):bool =
+  forall x:bitstring; is_normal_MDH(x) if is_var(x) || x = Nil -> true
+  otherwise forall h1,h2,h3:bitstring; is_normal_MDH(H(CPcol1(h1,h2),h3)) ->
+    is_normal_MDH(h1) && is_normal_MDH(h2) && is_normal_MDH(h3)
+    otherwise forall h1,h2,h3:bitstring; is_normal_MDH(H(CPcol2(h1,h2),h3)) ->
+      is_normal_MDH(h1) && is_normal_MDH(h2) && is_normal_MDH(h3)
+  otherwise forall x1,x2,h:bitstring; is_normal_MDH(H((x1,x2),h)) -> false
+  otherwise forall x,h:bitstring; is_normal_MDH(H(x,h)) -> is_normal_MDH(h)
+.
+
+(* We put the term inside the predicate in its normal form *)
+axiom h,h1,h2,h1',h2':bitstring;
+  eq_hash(h,h) ==> true;
+  eq_hash(h1,h2) && not(is_normal_MDH(h1)) && h1' <-- MDH(h1) ==> eq_hash(h1',h2);
+  eq_hash(h1,h2) && not(is_normal_MDH(h2)) && h2' <-- MDH(h2) ==> eq_hash(h1,h2')
+  [forcedRemove,fullSat,fullVerif]
+.
+
+axiom x1,x2:bitstring;
+  eq_hash(H(x1,Nil),H(x2,Nil)) && attacker(x1) ==> x1 = x2;
+  eq_hash(H(x1,Nil),H(x2,Nil)) && attacker(x2) ==> x1 = x2
+.
+
+(** Axiom that simlify the equality predicate when extremities of the hash are
+  syntactically equal *)
+
+(* split_last_term(h) returns the pair (x,h',was_ended) when
+    - h = H(x | rest) and h' = H(rest) and with was_ended = true
+    - h = H(x' | rest) and h' = H(rest) and x is the variable representing H(x')
+*)
+compfun split_last_term(bitstring):bitstring =
+  forall x:bitstring; split_last_term(H(x,Nil)) -> (x,Nil,true)
+  otherwise forall x,h:bitstring; split_last_term(H(x,h)) if is_var(h) -> (h,H(x,Nil),false)
+  otherwise forall x,h:bitstring; split_last_term(H(x,h)) ->
+    let (x':bitstring,h':bitstring,was_ended:bool) = split_last_term(h) in
+    (x',H(x,h'),was_ended)
+.
+
+(* last_term_equal(h1,h2) returns (h1',h2') when
+    - h1 = H(h | h1)
+    - h2 = H(h | h2)
+  h and h' must be in their normal form.
+*)
+compfun last_term_equal(bitstring,bitstring):bitstring =
+  forall h1,h2:bitstring; last_term_equal(h1,h2) if not(is_var(h1)) && not(is_var(h2))->
+    let (x1:bitstring,h1':bitstring,was_ended1:bool) = split_last_term(h1) in
+    let (x2:bitstring,h2':bitstring,was_ended2:bool) = split_last_term(h2) in
+    if x1 = x2 && was_ended1 = was_ended2
+    then (h1',h2')
+  [mayFail]
+.
+
+(* if H( x | h1 ) = H( x | h2) or H( h1 | x) = H( h2 | x)
+  then H(h1) = H(h2)
+*)
+axiom x,h1',h2',h1,h2:bitstring;
+  eq_hash(H(x,h1),H(x,h2)) ==> eq_hash(h1,h2);
+  eq_hash(h1,h2) && is_normal_MDH(h1) && is_normal_MDH(h2) && (h1',h2') <-- last_term_equal(h1,h2) ==> eq_hash(h1',h2')
+  [forcedRemove,fullSat]
+.
+
+(** Axiom that detect when the equality predicate is false *)
+
+(* occurs(x,t) returns true when x occurs in t.*)
+compfun occurs(any_type,any_type):bool =
+  forall x:any_type; occurs(x,x) -> true
+  otherwise forall x,t:any_type; occurs(x,t) if is_fun(t) -> occurs_args(x,t,0)
+  otherwise forall x,t:any_type; occurs(x,t) -> false
+.
+
+compfun occurs_args(any_type,any_type,int):bool =
+  forall x,t:any_type, n:int; occurs_args(x,t,n) if n >= arity(t) -> false
+  otherwise forall x,t:any_type, n:int; occurs_args(x,t,n) if n < arity(t) ->
+    if occurs(x,nth_arg(t,n)) then true else occurs_args(x,t,n+1)
+.
+
+(* all_occurs takes as argument a list l of variables and a term t.
+  The list l should be encoded as H(x1,H(x2,...H(xn,Nil)...))
+  It returns true if all variables in l occurs in t. *)
+compfun all_occurs(bitstring,bitstring):bool =
+  forall t:bitstring; all_occurs(Nil,t) -> true
+  otherwise forall x,h,t:bitstring; all_occurs(H(x,h),t) ->
+    if occurs(x,t) then all_occurs(h,t) else false
+.
+
+(* Reverse a H(x1 | ... | xn) into H(xn | ... | x1). Note that it fails if the
+  inner part of the hash given as argument is of the form H(x,h) with h a variable. *)
+compfun rev_hash(bitstring,bitstring):bitstring =
+  forall acc:bitstring; rev_hash(Nil,acc) -> acc
+  otherwise forall x,h,acc:bitstring; rev_hash(H(x,h),acc) -> rev_hash(h,H(x,acc))
+  [mayFail]
+.
+
+compfun false_hash_var(bitstring,bitstring,bitstring):bool =
+  forall h1,h2,acc:bitstring; false_hash_var(h1,h2,acc) if is_var(h2) || h1 = Nil || h2 = Nil -> false
+  otherwise forall h1,x2,h2,acc:bitstring; false_hash_var(h1,H(x2,h2),acc) if is_var(h1) -> not(is_var(x2)) && all_occurs(H(h1,acc),x2)
+  otherwise forall x1,h1,x2,h2,acc:bitstring; false_hash_var(H(x1,h1),H(x2,h2),acc) ->
+    if is_var(x1) && not(is_var(x2))
+    then
+      if all_occurs(H(x1,acc),x2)
+      then true
+      else false_hash_var(h1,h2,H(x1,acc))
+    else false
+.
+
+(*
+  if H( x1 || ..|| xk || h1 ) = H( u1 || ... || uk || h2 )
+  with
+    u1,...,uk not variables
+    x1,...,xk variables in uk
+  then the two hash cannot be equal
+
+  and its symmetrical (i.e, H( h1 || xk || ..|| x1 ) = H( h2 || uk || ... || u1 ))
+*)
+axiom h1,h2,h1',h2':bitstring;
+  eq_hash(h1,h2) && is_normal_MDH(h1) && is_normal_MDH(h2) && h1 <> h2 && false_hash_var(h1,h2,Nil) ==> false;
+  eq_hash(h2,h1) && is_normal_MDH(h1) && is_normal_MDH(h2) && h1 <> h2 && false_hash_var(h1,h2,Nil) ==> false;
+  eq_hash(h1,h2) && is_normal_MDH(h1) && is_normal_MDH(h2) && h1' <-- rev_hash(h1,Nil) && h2' <-- rev_hash(h2,Nil) && false_hash_var(h1',h2',Nil) ==> false;
+  eq_hash(h2,h1) && is_normal_MDH(h1) && is_normal_MDH(h2) && h1' <-- rev_hash(h1,Nil) && h2' <-- rev_hash(h2,Nil) && false_hash_var(h1',h2',Nil) ==> false
+.
+
+compfun nb_element(bitstring):int =
+  forall x:bitstring; nb_element(x) if is_var(x) -> 0
+  otherwise nb_element(Nil) -> 0
+  otherwise forall x,h:bitstring; nb_element(H(x,h)) -> 1 + nb_element(h)
+.
+
+compfun all_not_var(bitstring):bool =
+  forall x:bitstring; all_not_var(x) if is_var(x) -> false
+  otherwise all_not_var(Nil) -> true
+  otherwise forall x,h:bitstring; all_not_var(H(x,h)) ->
+    if not(is_var(x)) then all_not_var(h) else false
+.
+
+(*
+  if H( h1 ) = H( u1 || ... || uk )
+  with
+    u1,...,uk not variables
+    size(h1) > k
+  then the two hash cannot be equal
+*)
+axiom h1,h2:bitstring;
+  eq_hash(h1,h2) && all_not_var(h2) && nb_element(h1) > nb_element(h2) ==> false;
+  eq_hash(h1,h2) && all_not_var(h1) && nb_element(h2) > nb_element(h1) ==> false
+  [fullSat]
+.
+
+
+(* Case where we can directly instantiate:
+    - H( u1 || h1 ) = H( u2 || h2 ) implies u1 = u2
+    - H( h1 || u1 ) = H( h2 || u2 ) implies u1 = u2
+*)
+axiom u1,h1,h1',h1'',u2,h2,h2',h2'':bitstring;
+  eq_hash(H(u1,h1),H(u2,h2)) && not(is_var(u1)) && not(is_var(u2)) ==> u1 = u2;  (* CAUTION: we may loose soundness here (possible when u1 or u2 contains H()) *)
+  eq_hash(h1,h2) && H(u1,h1') <-- rev_hash(h1,Nil) && H(u2,h2') <-- rev_hash(h2,Nil) && not(is_var(u1)) && not(is_var(u2)) ==> u1 = u2
+.
+
+compfun instantiate_allowed(bitstring,bitstring):bool =
+  forall x1:bitstring; instantiate_allowed(x1,Nil) -> true
+  otherwise forall x1,x2:bitstring; instantiate_allowed(x1,x2) if is_var(x2) -> false
+  otherwise forall x1,x2,h2:bitstring; instantiate_allowed(x1,H(x2,h2)) -> not(is_var(x2)) && (occurs(x1,x2) || instantiate_allowed(x1,h2))
+.
+
+(*
+  Case where we can do a case analysis without looping (i.e. x1 = u1 || x1 = (x2,x3)):
+    - H( x1 || h1 ) = H (u1 || ... || uk || h2)
+      with x1 occuring in uk and u1 ... uk-1 not variables
+    - H( h1 || x1 ) = H (h2 || uk || ... || u1)
+      with x1 occuring in uk and u1 ... uk-1 not variables
+    - H( x1 || h1 ) = H (u1 || ... || uk)
+      with u1 ... uk not variables
+*)
+axiom x1,x1',x1'',x2,h1,h2,h1',h2':bitstring;
+  eq_hash(H(x1,h1),H(x2,h2)) && is_normal_MDH(H(x1,h1)) && is_normal_MDH(H(x2,h2)) && is_var(x1) && instantiate_allowed(x1,H(x2,h2)) ==> x1 = x2 || x1 = (x1',x1'');
+  eq_hash(H(x2,h2),H(x1,h1)) && is_normal_MDH(H(x1,h1)) && is_normal_MDH(H(x2,h2)) && is_var(x1) && instantiate_allowed(x1,H(x2,h2)) ==> x1 = x2 || x1 = (x1',x1'');
+  eq_hash(h1,h2) && is_normal_MDH(h1) && is_normal_MDH(h2)  && H(x1,h1') <-- rev_hash(h1,Nil) && H(x2,h2') <-- rev_hash(h2,Nil) && is_var(x1) && instantiate_allowed(x1,H(x2,h2')) ==> x1 = x2 || x1 = (x1',x1'');
+  eq_hash(h2,h1) && is_normal_MDH(h1) && is_normal_MDH(h2)  && H(x1,h1') <-- rev_hash(h1,Nil) && H(x2,h2') <-- rev_hash(h2,Nil) && is_var(x1) && instantiate_allowed(x1,H(x2,h2')) ==> x1 = x2 || x1 = (x1',x1'')
+.
+
+(* Axiom that not not sound w.r.t. equational theory but should be sound for trace property *)
+
+(*
+  If H( x1 ) = H ( x2 )
+  with x1 and x2 variables and attacker(x1) and attacker(x2) then x1 = x2.
+  This should be sound if the process never apply an equality test that affect the variables
+  containing hashes
+*)
+(* axiom x1,x2:bitstring;
+  eq_hash(H(x1,Nil),H(x2,Nil)) && attacker(x1) && attacker(x2) ==> x1 = x2
+. *)
+
+compfun last_term(bitstring):bitstring =
+  forall x:bitstring; last_term(H(x,Nil)) -> x
+  otherwise forall x,h:bitstring; last_term(H(x,h)) -> last_term(h)
+  [mayFail]
+.
+
+(*
+  If H( x1 || h1 ) = H( x2 || h2 )
+  with attacker(x1) and x2 is not a variable
+  then
+    - the attacker must know x2 (cannot be expressed in the axiom (yet))
+    - x1 must contain x2. The issue is that x1 could be equal to ((..(x2,y1)..,yk),yk+1)
+*)
+(* axiom x1,x2,x1',h1,h2:bitstring;
+  eq_hash(H(x1,h1),H(x2,h2)) && attacker(x1) && not(is_var(x2)) ==> x1 = x2 || x1 = (x1',x2);
+  eq_hash(H(x2,h2),H(x1,h1)) && attacker(x2) && not(is_var(x1)) ==> x1 = x2 || x2 = (x1',x2);
+  eq_hash(h1,h2) && (x1,x2) <-- (last_term(h1),last_term(h2)) && attacker(x1) && not(is_var(x2)) ==> x1 = x2 || x1 = (x2,x1');
+  eq_hash(h2,h1) && (x1,x2) <-- (last_term(h1),last_term(h2)) && attacker(x1) && not(is_var(x2)) ==> x1 = x2 || x1 = (x2,x1')
+  [forTraceReconstruction]
+. *)
+
+(*
+  In other cases, we do not want to instantiate
+*)
+
+(* axiom h1,h2,h1',h2':bitstring;
+  eq_hash(h1,h2) && h1' <-- MDH(h1) && h2' <-- MDH(h2) ==> h1' = h2'
+  [forTraceReconstruction]
+. *)
+
+compfun cond_var(bitstring,bitstring):bool =
+  forall x,y:bitstring; cond_var(x,y) ->
+    not(is_var(x) && is_var(y))
+.
+
+axiom x1,x1',h1,h1',x2,x2':bitstring;
+  eq_hash(H(x1,h1),H(x1',h1')) && cond_var(x1',h1') && cond_var(x1,h1) ==> x1 = x1' || x1 = (x2,x1') || x1' = (x2',x1);
+  eq_hash(H(x1,h1),H(x1',h1')) && cond_var(x1',h1') && not(cond_var(x1,h1)) ==> x1 = x1' || x1 = (x2,x1');
+  eq_hash(H(x1,h1),H(x1',h1')) && not(cond_var(x1',h1')) && cond_var(x1,h1) ==> x1 = x1' || x1' = (x2',x1);
+  eq_hash(H(x1,h1),H(x1',h1')) && not(cond_var(x1',h1')) && not(cond_var(x1,h1)) ==> x1 = x1'
+  [forTraceReconstruction]
+.
+
+(* axiom x1,x1',h1,h1',x2,x2':bitstring;
+  eq_hash(H(x1,h1),H(x1',h1')) ==> x1 = x1' || x1 = (x2,x1') || x1' = (x2',x1)
+  [forTraceReconstruction]
+. *)

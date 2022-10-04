@@ -1,0 +1,70 @@
+
+
+theory Sigma
+begin
+
+builtins: concatenation
+
+
+
+rule Test:
+[ Fr(~n1), Fr(~n2), Fr(~n3)]--[Conc(~n1 || (~n2 || ~n3), (~n1|| ~n2) || ~n3)  ]->[]
+
+
+rule Test3:
+[ In(x), In(y), In(z), In(x1), In(y1), In(z1)]--[ConcC(x || y || z, z1 || y1)  ]->[]
+
+
+lemma test_true:
+ "All x y #i. Conc(x,y)@i ==> x=y"
+
+
+lemma test2_true:
+ exists-trace
+ "Ex x #i. ConcC(x,x)@i"
+
+rule pt:
+[In(x||y), In(<z,t>)]--[_restrict( y=z||t),Test()]->[]
+
+
+
+lemma trst3_true:
+exists-trace
+ "Ex  #i. Test()@i"
+
+// rule Testing:
+// [ Fr(~n1), In(n2), Fr(~n3)]--[Shares(~n1,n2,~n3) ]->[Out(cons(~n1,cons(n2,~n3)))]
+
+
+
+// lemma att:
+//  exists-trace
+//  "Ex x1 x2 x3 #i #j. Shares(x1,x2,x3)@i & K(<x1,x2,x3>)@j"
+
+
+
+
+// Check that rule N5 is enforced
+
+lemma N5test_true:
+ "All x y z t1 t2 #i1 #i2 #i #j. KU(t1)@i1 & t1 = x || y &
+      	       	      KU(t2)@i2 & t2 = y || z
+      & KU(x || t2)@i & KU(t1 || z)@j ==> #i=#j"
+
+
+lemma N5test2_true:
+ "All x y z  #i1 #i2. KU((x || y) || z)@i1 &
+      	       	      KU(x || (y || z))@i2 ==> #i1=#i2"
+
+
+
+
+rule NotAC:
+[ Fr(~x), Fr(~y)]--[ConcAC(~x || ~y, ~y || ~x)  ]->[]
+
+
+lemma test_false:
+ "All x y #i. ConcAC(x,y)@i ==> x=y"
+
+
+end
